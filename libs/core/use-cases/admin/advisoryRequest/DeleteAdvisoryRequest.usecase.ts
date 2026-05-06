@@ -2,7 +2,7 @@ import {
   IAdvisoryRequestGateway,
   IAdvisoryRequest,
   IDeleteAdvisoryRequestUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 import { NotFoundException } from '../../../middleware';
 
 /**

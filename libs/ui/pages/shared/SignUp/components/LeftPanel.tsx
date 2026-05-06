@@ -1,15 +1,20 @@
 import { Box, Typography } from '@mui/material';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import SecurityIcon from '@mui/icons-material/Security';
-import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import NfcIcon from '@mui/icons-material/Nfc';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
+import ElectricRickshawIcon from '@mui/icons-material/ElectricRickshaw';
 
 const FEATURES = [
-  { icon: DashboardCustomizeIcon, label: 'Unified incident & request management' },
-  { icon: SecurityIcon, label: 'Role-based access control' },
-  { icon: NotificationsActiveIcon, label: 'Real-time alerts & notifications' },
-  { icon: CheckCircleIcon, label: 'Enterprise-grade audit trails' },
+  { icon: TwoWheelerIcon, label: 'Bikes, cars & all vehicle categories' },
+  { icon: ElectricRickshawIcon, label: 'Autos & three-wheelers' },
+  { icon: DirectionsBusIcon, label: 'DCMs, lorries & Tata Ace freight' },
+  { icon: NfcIcon, label: 'FASTag & toll expense management' },
+  { icon: GpsFixedIcon, label: 'Live GPS fleet tracking' },
+  { icon: AccountBalanceWalletIcon, label: 'Trip cost & consultant settlements' },
+  { icon: LocalShippingIcon, label: 'End-to-end logistics visibility' },
 ];
 
 interface LeftPanelProps {
@@ -25,20 +30,21 @@ const LeftPanel = ({ classes, onNavigateSignIn }: LeftPanelProps) => (
 
     <Box className={classes.brand}>
       <Box className={classes.brandIcon}>
-        <AssignmentIndIcon className={classes.brandIcon28} />
+        <LocalShippingIcon className={classes.brandIcon28} />
       </Box>
       <Typography variant='h4' fontWeight={800} className={classes.brandTitle}>
-        ServiceOps
+        infyenergy
       </Typography>
     </Box>
 
     <Typography variant='h5' fontWeight={700} className={classes.heroHeading}>
       One platform for
       <br />
-      everything ITIL
+      all your vehicles
     </Typography>
     <Typography className={classes.heroSubtitle}>
-      Join IT professionals managing incidents, requests, and changes — all in one place.
+      Join fleet managers tracking bikes, cars, lorries, DCMs, and Tata Aces — with FASTag and toll
+      integration built in.
     </Typography>
 
     {FEATURES.map(({ icon: Icon, label }) => (

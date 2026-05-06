@@ -3,9 +3,9 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { IncidentController } from './Incident.controller';
-import { prisma } from '@serviceops/database';
+import { prisma } from '@infyenergy/database';
 import { PrismaClient } from '@prisma/client';
-import { PrismaIncidentGateway } from '@serviceops/core/infrastructure';
+import { PrismaIncidentGateway } from '@infyenergy/core/infrastructure';
 import {
   CreateIncidentUseCase,
   GetIncidentUseCase,
@@ -14,7 +14,7 @@ import {
   UpdateIncidentUseCase,
   DeleteIncidentUseCase,
   CleanupExpiredDraftsUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 // Dependency injection - Gateway Pattern
 const incidentGateway = new PrismaIncidentGateway(prisma as PrismaClient);

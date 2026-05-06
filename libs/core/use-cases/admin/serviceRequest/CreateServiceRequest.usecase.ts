@@ -4,7 +4,7 @@ import {
   ICreateServiceRequestInput,
   ICreateServiceRequestUseCase,
   ServiceRequestStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Create Service Request Use Case
@@ -18,7 +18,7 @@ export class CreateServiceRequestUseCase implements ICreateServiceRequestUseCase
     const number = input.number || (await this.serviceRequestGateway.getNextNumber());
 
     // Auto-set draftExpiresAt to 30 days from now for drafts
-    let draftExpiresAt: string | undefined = input.draftExpiresAt;
+    let { draftExpiresAt } = input;
     if (input.status === ServiceRequestStatus.DRAFT && !draftExpiresAt) {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 30);

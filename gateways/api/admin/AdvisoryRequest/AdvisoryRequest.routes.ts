@@ -3,8 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { AdvisoryRequestController } from './AdvisoryRequest.controller';
-import { prisma, pool } from '@serviceops/database';
-import { PrismaAdvisoryRequestGateway } from '@serviceops/core/infrastructure';
+import { prisma, pool } from '@infyenergy/database';
+import { PrismaAdvisoryRequestGateway } from '@infyenergy/core/infrastructure';
 import {
   CreateAdvisoryRequestUseCase,
   GetAdvisoryRequestUseCase,
@@ -12,7 +12,7 @@ import {
   GetAllAdvisoryRequestsUseCase,
   UpdateAdvisoryRequestUseCase,
   DeleteAdvisoryRequestUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 // Dependency injection - Gateway Pattern
 const advisoryRequestGateway = new PrismaAdvisoryRequestGateway(prisma, pool);

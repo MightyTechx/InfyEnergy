@@ -1,4 +1,4 @@
-import { IHeaderGateway, IHeader, IDeleteHeaderUseCase } from '@serviceops/interfaces';
+import { IHeaderGateway, IHeader, IDeleteHeaderUseCase } from '@infyenergy/interfaces';
 import { NotFoundException } from '../../../middleware';
 
 /**

@@ -1,5 +1,5 @@
-import { prisma } from '@serviceops/database';
-import { BaseRepository } from '@serviceops/core/repository';
+import { prisma } from '@infyenergy/database';
+import { BaseRepository } from '@infyenergy/core/repository';
 import { CreateNotFoundDto, UpdateNotFoundDto } from './NotFound.dto';
 import { UserNotFound, PrismaClient } from '@prisma/client';
 

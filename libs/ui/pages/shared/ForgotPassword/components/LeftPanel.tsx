@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import type { Step } from '../hooks/useForgotPassword';
 
 const LEFT_STEPS = [
@@ -23,10 +23,10 @@ const LeftPanel = ({ stepIndex, classes, onNavigateSignIn }: LeftPanelProps) => 
 
     <Box className={classes.brand}>
       <Box className={classes.brandIcon}>
-        <AssignmentIndIcon className={classes.brandIcon28} />
+        <LocalShippingIcon className={classes.brandIcon28} />
       </Box>
       <Typography variant='h4' fontWeight={800} className={classes.brandTitle}>
-        ServiceOps
+        infyenergy
       </Typography>
     </Box>
 
@@ -36,7 +36,7 @@ const LeftPanel = ({ stepIndex, classes, onNavigateSignIn }: LeftPanelProps) => 
       Recovery
     </Typography>
     <Typography className={classes.heroSubtitle}>
-      Regain secure access to your ServiceOps account in just a few steps.
+      Regain secure access to your infyenergy fleet management account in just a few steps.
     </Typography>
 
     {LEFT_STEPS.map((s, i) => (
@@ -65,7 +65,7 @@ const LeftPanel = ({ stepIndex, classes, onNavigateSignIn }: LeftPanelProps) => 
 
     <Box className={classes.securityNote}>
       <Typography className={classes.securityNoteText}>
-        🔒 All recovery codes expire in 15 minutes for your security.
+        🔒 Recovery codes expire in 15 minutes. Your fleet data stays protected.
       </Typography>
     </Box>
 

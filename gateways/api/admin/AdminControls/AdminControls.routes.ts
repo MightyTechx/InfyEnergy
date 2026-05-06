@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { prisma } from '@serviceops/database';
+import { prisma } from '@infyenergy/database';
 import { AdminControlsController } from './AdminControls.controller';
 
 const controller = new AdminControlsController(prisma);

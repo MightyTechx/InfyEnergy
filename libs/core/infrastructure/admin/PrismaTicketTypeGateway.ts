@@ -4,7 +4,7 @@ import {
   ICreateTicketTypeInput,
   IUpdateTicketTypeInput,
   IReorderTicketTypeInput,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Prisma implementation of TicketType Gateway

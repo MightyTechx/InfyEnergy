@@ -3,7 +3,7 @@ import {
   IConfigurationGateway,
   IUpdateConfigurationInput,
   IUpdateConfigurationUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 export class UpdateConfigurationUseCase implements IUpdateConfigurationUseCase {
   constructor(private readonly configurationGateway: IConfigurationGateway) {}

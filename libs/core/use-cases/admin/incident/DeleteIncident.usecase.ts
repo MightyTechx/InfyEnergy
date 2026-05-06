@@ -1,4 +1,4 @@
-import { IIncidentGateway, IIncident, IDeleteIncidentUseCase } from '@serviceops/interfaces';
+import { IIncidentGateway, IIncident, IDeleteIncidentUseCase } from '@infyenergy/interfaces';
 import { NotFoundException } from '../../../middleware';
 
 /**

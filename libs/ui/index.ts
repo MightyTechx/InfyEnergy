@@ -3,15 +3,13 @@
 // Components
 export * from './components';
 
-// Store
-export * from './store';
-
 // Hooks
 export * from './hooks';
 
-// State management
-export * from './state';
-export * from './slices';
+// State management - re-export from services
+export { store } from '@infyenergy/services';
+export type { RootState, AppDispatch } from '@infyenergy/services';
+export * from '@infyenergy/services';
 
 // Test utilities
 export * from './test-utils';

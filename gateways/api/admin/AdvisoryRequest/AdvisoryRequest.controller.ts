@@ -5,14 +5,14 @@ import {
   DraftAdvisoryRequestSchema,
   UpdateAdvisoryRequestSchema,
 } from './AdvisoryRequest.dto';
-import { BadRequestException } from '@serviceops/middleware';
+import { BadRequestException } from '@infyenergy/middleware';
 import {
   AdvisoryRequestStatus,
   IUpdateAdvisoryRequestInput,
   CommentSchema,
   TimeEntrySchema,
   ResolutionSchema,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 import {
   CreateAdvisoryRequestUseCase,
   GetAdvisoryRequestUseCase,
@@ -20,7 +20,7 @@ import {
   GetAllAdvisoryRequestsUseCase,
   UpdateAdvisoryRequestUseCase,
   DeleteAdvisoryRequestUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 /**
  * Controller for AdminAdvisoryRequest endpoints

@@ -47,6 +47,7 @@ export interface DataTableProps<T> {
   initialRowsPerPage?: number;
   elevation?: number;
   activeRowKey?: T[keyof T];
+  pinnedRows?: T[];
 }
 
 type Order = 'asc' | 'desc';

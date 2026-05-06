@@ -2,7 +2,7 @@ import {
   IConfiguration,
   IConfigurationGateway,
   IGetConfigurationUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 export class GetConfigurationUseCase implements IGetConfigurationUseCase {
   constructor(private readonly configurationGateway: IConfigurationGateway) {}

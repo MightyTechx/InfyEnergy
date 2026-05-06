@@ -9,11 +9,11 @@ import {
   ForgotPasswordSchema,
   VerifyOtpSchema,
   ResetPasswordSchema,
-} from '@serviceops/interfaces';
-import { BadRequestException, HttpException, UnauthorizedException } from '@serviceops/middleware';
-import { prisma } from '@serviceops/database';
+} from '@infyenergy/interfaces';
+import { BadRequestException, HttpException, UnauthorizedException } from '@infyenergy/middleware';
+import { prisma } from '@infyenergy/database';
 import { PrismaClient } from '@prisma/client';
-import { sendEmail, generateOtp } from '@serviceops/config';
+import { sendEmail, generateOtp } from '@infyenergy/config';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'serivceops-jwt-secret-key';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h') as jwt.SignOptions['expiresIn'];
@@ -339,7 +339,7 @@ export class AuthController {
 
     // Notify admin (fire and forget)
     sendEmail(
-      process.env.ADMIN_EMAIL || 'admin@serviceops.tech',
+      process.env.ADMIN_EMAIL || 'admin@infyenergy.com',
       'serivceops — New Access Request',
       `<h2>New Access Request</h2>
        <p><strong>${fullName}</strong> (${validatedData.email}) has signed up and is requesting <strong>${validatedData.role}</strong> access.</p>
@@ -826,8 +826,8 @@ export class AuthController {
           return;
         }
 
-        if (!/@serviceops\.com$/i.test(email)) {
-          res.status(400).json({ message: 'Email must be a @serviceops.tech address' });
+        if (!/@infyenergy\.com$/i.test(email)) {
+          res.status(400).json({ message: 'Email must be a @infyenergy.com address' });
           return;
         }
 
@@ -907,8 +907,8 @@ export class AuthController {
           return;
         }
 
-        if (!/@serviceops\.com$/i.test(email)) {
-          res.status(400).json({ message: 'Email must be a @serviceops.tech address' });
+        if (!/@infyenergy\.com$/i.test(email)) {
+          res.status(400).json({ message: 'Email must be a @infyenergy.com address' });
           return;
         }
 

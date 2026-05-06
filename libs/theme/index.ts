@@ -1,6 +1,6 @@
 /**
  * theme barrel export
- * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@serviceops/theme'
+ * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@infyenergy/theme'
  *
  * Includes:
  * - Theme configuration (theme, palette)

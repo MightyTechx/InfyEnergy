@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { ValidationError } from 'yup';
 import { CreateIncidentSchema, DraftIncidentSchema, UpdateIncidentSchema } from './Incident.dto';
-import { BadRequestException } from '@serviceops/middleware';
+import { BadRequestException } from '@infyenergy/middleware';
 import {
   IncidentStatus,
   IUpdateIncidentInput,
   CommentSchema,
   TimeEntrySchema,
   ResolutionSchema,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 import {
   CreateIncidentUseCase,
   GetIncidentUseCase,
@@ -17,7 +17,7 @@ import {
   UpdateIncidentUseCase,
   DeleteIncidentUseCase,
   CleanupExpiredDraftsUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 import { PrismaClient } from '@prisma/client';
 
 /**

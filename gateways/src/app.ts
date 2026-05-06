@@ -8,7 +8,7 @@ import path from 'path';
 import fs from 'fs';
 
 // Centralized error handling middleware
-import { errorHandler, notFoundHandler } from '@serviceops/middleware';
+import { errorHandler, notFoundHandler } from '@infyenergy/middleware';
 
 // Import route modules
 import authRoutes from '../api/auth/Auth.routes';
@@ -17,7 +17,7 @@ import userRoutes from '../api/user/routes';
 import consultantRoutes from '../api/consultant/routes';
 
 // Constants for route paths
-import { ADMIN_PATHS, USER_PATHS, CONSULTANT_PATHS } from '@serviceops/constants';
+import { ADMIN_PATHS, USER_PATHS, CONSULTANT_PATHS } from '@infyenergy/constants';
 
 const app = express();
 

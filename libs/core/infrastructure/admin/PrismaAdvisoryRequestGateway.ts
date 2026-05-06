@@ -5,7 +5,7 @@ import {
   ICreateAdvisoryRequestInput,
   IUpdateAdvisoryRequestInput,
   AdvisoryRequestStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Prisma implementation of Advisory Request Gateway

@@ -4,7 +4,7 @@ import {
   ICreateAdvisoryRequestInput,
   ICreateAdvisoryRequestUseCase,
   AdvisoryRequestStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Create Advisory Request Use Case
@@ -18,7 +18,7 @@ export class CreateAdvisoryRequestUseCase implements ICreateAdvisoryRequestUseCa
     const number = input.number || (await this.advisoryRequestGateway.getNextNumber());
 
     // Auto-set draftExpiresAt to 30 days from now for drafts
-    let draftExpiresAt: string | undefined = input.draftExpiresAt;
+    let { draftExpiresAt } = input;
     if (input.status === AdvisoryRequestStatus.DRAFT && !draftExpiresAt) {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 30);

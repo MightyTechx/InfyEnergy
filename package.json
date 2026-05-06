@@ -1,5 +1,5 @@
 {
-  "name": "@serviceops/source",
+  "name": "@infyenergy/source",
   "version": "1.0.0",
   "license": "MIT",
   "keywords": [
@@ -13,14 +13,14 @@
     "typescript"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx run-many --target=build --all",
+    "build": "cross-env NODE_OPTIONS=--no-warnings NX_DAEMON=false NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx run-many --target=build --all",
     "build:administration": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build administration",
-    "build:generale-partner": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build generale-partner",
+    "build:wind-tree": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build wind-tree",
     "build:shared": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build shared",
     "build:backend": "tsc --project tsconfig.backend.json",
     "build:backend:clean": "rimraf dist && npm run build:backend",
-    "serve:administration": "vite --config web/apps/administration/vite.config.ts",
-    "serve:generale-partner": "vite --config web/tenants/generale-partner/vite.config.ts",
+    "serve:administration": "vite --config web/apps/vite.config.ts",
+    "serve:wind-tree": "vite --config web/tenants/wind-tree/vite.config.ts",
     "start:backend": "tsx --tsconfig tsconfig.app.json gateways/src/index.ts",
     "dev:backend": "nodemon --config nodemon.json",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -32,7 +32,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:shared": "jest --project=libs/shared",
-    "test:administration": "jest --project=web/apps/administration",
+    "test:administration": "jest --project=web/apps",
     "type-check": "tsc --noEmit",
     "validate": "npm run format:check && npm run lint && npm run type-check",
     "prisma:generate": "prisma generate --config=gateways/prisma/prisma.config.ts",
@@ -80,6 +80,7 @@
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "6.29.0",
+    "tesseract.js": "^7.0.0",
     "tss-react": "^4.9.19",
     "winston": "^3.19.0",
     "yup": "^1.7.1"

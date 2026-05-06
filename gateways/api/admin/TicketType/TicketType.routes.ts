@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { TicketTypeController } from './TicketType.controller';
-import { prisma } from '@serviceops/database';
+import { prisma } from '@infyenergy/database';
 import { PrismaClient } from '@prisma/client';
-import { PrismaTicketTypeGateway } from '@serviceops/core/infrastructure';
+import { PrismaTicketTypeGateway } from '@infyenergy/core/infrastructure';
 import {
   CreateTicketTypeUseCase,
   GetTicketTypeUseCase,
@@ -10,7 +10,7 @@ import {
   UpdateTicketTypeUseCase,
   DeleteTicketTypeUseCase,
   ReorderTicketTypesUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 // Dependency injection - Gateway Pattern
 const ticketTypeGateway = new PrismaTicketTypeGateway(prisma as PrismaClient);

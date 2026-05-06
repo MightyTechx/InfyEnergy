@@ -9,11 +9,16 @@
     "jsx": "react-jsx",
     "outDir": "../../dist/out-tsc/shared"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../libs/vite-env.d.ts",
+    "../typings/vite-env.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",
-"**/*.spec.ts",
+    "**/*.spec.ts",
     "**/*.test.ts",
     "**/*.stories.ts",
     "**/*.stories.tsx"

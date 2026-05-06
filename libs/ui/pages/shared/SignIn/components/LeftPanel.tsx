@@ -1,15 +1,20 @@
 import { Box, Typography } from '@mui/material';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import ElectricRickshawIcon from '@mui/icons-material/ElectricRickshaw';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
+import NfcIcon from '@mui/icons-material/Nfc';
 import SpeedIcon from '@mui/icons-material/Speed';
-import GroupsIcon from '@mui/icons-material/Groups';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
-const FEATURES = [
-  { icon: SpeedIcon, label: 'Blazing-fast incident resolution' },
-  { icon: GroupsIcon, label: 'Collaborative cross-team workflows' },
-  { icon: BarChartIcon, label: 'Real-time SLA dashboards' },
-  { icon: VerifiedUserIcon, label: 'Enterprise-grade audit trails' },
+const VEHICLES = [
+  { icon: TwoWheelerIcon, label: 'Bikes & two-wheelers' },
+  { icon: DirectionsCarIcon, label: 'Cars & passenger vehicles' },
+  { icon: ElectricRickshawIcon, label: 'Autos & three-wheelers' },
+  { icon: LocalShippingIcon, label: 'Lorries, DCMs & heavy freight' },
+  { icon: AirportShuttleIcon, label: 'Tata Ace & light commercial' },
+  { icon: NfcIcon, label: 'FASTag toll-lane automation' },
+  { icon: SpeedIcon, label: 'Real-time fleet tracking' },
 ];
 
 interface LeftPanelProps {
@@ -25,23 +30,24 @@ const LeftPanel = ({ classes, onNavigateSignUp }: LeftPanelProps) => (
 
     <Box className={classes.brand}>
       <Box className={classes.brandIcon}>
-        <AssignmentIndIcon className={classes.brandIcon28} />
+        <LocalShippingIcon className={classes.brandIcon28} />
       </Box>
       <Typography variant='h4' fontWeight={800} className={classes.brandTitle}>
-        ServiceOps
+        GoGaadi
       </Typography>
     </Box>
 
     <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
-      Your ITIL
+      Your Fleet,
       <br />
-      Command Center
+      One Platform
     </Typography>
     <Typography className={classes.heroSubtitle}>
-      Manage incidents, service requests, and change workflows — with clarity and speed.
+      Manage bikes, cars, lorries, DCMs, Tata Aces and more — with FASTag integration and real-time
+      tracking.
     </Typography>
 
-    {FEATURES.map(({ icon: Icon, label }) => (
+    {VEHICLES.map(({ icon: Icon, label }) => (
       <Box key={label} className={classes.featureRow}>
         <Box className={classes.featureIconWrap}>
           <Icon className={classes.featureIconInner} />
@@ -51,7 +57,7 @@ const LeftPanel = ({ classes, onNavigateSignUp }: LeftPanelProps) => (
     ))}
 
     <Box className={classes.signupLink} onClick={onNavigateSignUp}>
-      New to ServiceOps? <strong>Create an account</strong>
+      New to infyenergy? <strong>Create an account</strong>
     </Box>
   </Box>
 );

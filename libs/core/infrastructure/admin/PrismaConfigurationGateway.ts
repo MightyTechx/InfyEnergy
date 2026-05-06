@@ -11,7 +11,7 @@ import {
   IConfigBillingCode,
   IConfigApplicationQueue,
   IConfigTimesheetConversionCode,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Manages the singleton AdminConfiguration row.
@@ -196,7 +196,9 @@ export class PrismaConfigurationGateway implements IConfigurationGateway {
         calendarConsultants: data.calendars?.calendarConsultants ?? [],
       },
       timesheets: {
-        conversionReasonCodes: ((data.timesheets?.conversionReasonCodes ?? []) as IConfigTimesheetConversionCode[]).map((r) => ({
+        conversionReasonCodes: (
+          (data.timesheets?.conversionReasonCodes ?? []) as IConfigTimesheetConversionCode[]
+        ).map((r) => ({
           ...r,
           serviceLines: r.serviceLines ?? [],
           applications: r.applications ?? [],

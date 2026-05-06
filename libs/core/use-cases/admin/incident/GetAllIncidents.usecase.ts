@@ -1,4 +1,4 @@
-import { IIncidentGateway, IIncident, IGetAllIncidentsUseCase } from '@serviceops/interfaces';
+import { IIncidentGateway, IIncident, IGetAllIncidentsUseCase } from '@infyenergy/interfaces';
 
 /**
  * Get All Incidents Use Case

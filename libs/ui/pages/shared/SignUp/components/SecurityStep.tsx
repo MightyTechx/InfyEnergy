@@ -1,8 +1,14 @@
-import { Box, Typography, Grid, Alert, InputAdornment, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Grid,
+  Alert,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
+} from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useFieldError } from '@serviceops/hooks';
+import { useFieldError } from '@infyenergy/hooks';
 import TextField from '../../../../components/TextField/TextField';
 
 function getStrength(pw: string) {
@@ -18,7 +24,7 @@ function getStrength(pw: string) {
 }
 
 interface SecurityStepProps {
-  values: { password: string; confirmPassword: string };
+  values: { password: string; confirmPassword: string; agreeToTerms: boolean };
   errors: Partial<Record<string, string>>;
   step2Touched: { password: boolean; confirmPassword: boolean };
   step2Submitted: boolean;
@@ -26,10 +32,7 @@ interface SecurityStepProps {
   onPasswordBlur: (e: React.FocusEvent) => void;
   onConfirmChange: React.ChangeEventHandler;
   onConfirmBlur: (e: React.FocusEvent) => void;
-  showPassword: boolean;
-  onTogglePassword: () => void;
-  showConfirmPassword: boolean;
-  onToggleConfirmPassword: () => void;
+  onTermsChange: (checked: boolean) => void;
   classes: Record<string, string>;
 }
 
@@ -42,10 +45,7 @@ const SecurityStep = ({
   onPasswordBlur,
   onConfirmChange,
   onConfirmBlur,
-  showPassword,
-  onTogglePassword,
-  showConfirmPassword,
-  onToggleConfirmPassword,
+  onTermsChange,
   classes,
 }: SecurityStepProps) => {
   const reqError = useFieldError();
@@ -68,27 +68,15 @@ const SecurityStep = ({
               id='password'
               name='password'
               label='Password'
-              type={showPassword ? 'text' : 'password'}
-              placeholder='Create a strong password'
+              type='password'
+              placeholder='Min. 8 chars, 1 uppercase, 1 number'
               value={values.password}
               onChange={onPasswordChange}
               onBlur={onPasswordBlur}
               error={(step2Touched.password || step2Submitted) && Boolean(errors.password)}
               errorText={reqError(step2Touched.password || step2Submitted, errors.password)}
               fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={onTogglePassword} edge='end' size='small' tabIndex={-1}>
-                      {showPassword ? (
-                        <VisibilityOffIcon fontSize='small' />
-                      ) : (
-                        <VisibilityIcon fontSize='small' />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+              required
             />
             {values.password && (
               <Box sx={{ mt: 1 }}>
@@ -117,7 +105,7 @@ const SecurityStep = ({
               id='confirmPassword'
               name='confirmPassword'
               label='Confirm Password'
-              type={showConfirmPassword ? 'text' : 'password'}
+              type='password'
               placeholder='Re-enter your password'
               value={values.confirmPassword}
               onChange={onConfirmChange}
@@ -130,30 +118,65 @@ const SecurityStep = ({
                 errors.confirmPassword,
               )}
               fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton
-                      onClick={onToggleConfirmPassword}
-                      edge='end'
-                      size='small'
-                      tabIndex={-1}
-                    >
-                      {showConfirmPassword ? (
-                        <VisibilityOffIcon fontSize='small' />
-                      ) : (
-                        <VisibilityIcon fontSize='small' />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+              required
             />
           </Grid>
+
+          {/* Terms & Conditions */}
+          <Grid size={{ xs: 12 }}>
+            <Box sx={{ mt: 0.5 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.agreeToTerms}
+                    onChange={(e) => onTermsChange(e.target.checked)}
+                    color='primary'
+                    size='small'
+                  />
+                }
+                label={
+                  <Typography variant='body2' color='text.secondary'>
+                    I agree to the{' '}
+                    <Typography
+                      component='span'
+                      variant='body2'
+                      color='primary'
+                      sx={{
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        '&:hover': { textDecoration: 'underline' },
+                      }}
+                    >
+                      Terms of Service
+                    </Typography>{' '}
+                    and{' '}
+                    <Typography
+                      component='span'
+                      variant='body2'
+                      color='primary'
+                      sx={{
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        '&:hover': { textDecoration: 'underline' },
+                      }}
+                    >
+                      Privacy Policy
+                    </Typography>
+                  </Typography>
+                }
+              />
+              {step2Submitted && errors.agreeToTerms && (
+                <FormHelperText error sx={{ ml: 4 }}>
+                  {errors.agreeToTerms}
+                </FormHelperText>
+              )}
+            </Box>
+          </Grid>
         </Grid>
+
         <Alert severity='info' sx={{ mt: 2, borderRadius: 2 }}>
-          Admin approval may take a minimum of 3 days. You will be notified once your account is
-          approved.
+          Admin approval may take up to 3 business days. You will be notified via email and SMS once
+          your account is approved.
         </Alert>
       </Box>
     </Box>

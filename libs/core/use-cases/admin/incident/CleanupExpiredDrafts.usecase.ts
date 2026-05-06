@@ -1,4 +1,4 @@
-import { IIncidentGateway, ICleanupExpiredDraftsUseCase } from '@serviceops/interfaces';
+import { IIncidentGateway, ICleanupExpiredDraftsUseCase } from '@infyenergy/interfaces';
 
 /**
  * Cleanup Expired Drafts Use Case

@@ -3,8 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { ServiceRequestController } from './ServiceRequest.controller';
-import { prisma, pool } from '@serviceops/database';
-import { PrismaServiceRequestGateway } from '@serviceops/core/infrastructure';
+import { prisma, pool } from '@infyenergy/database';
+import { PrismaServiceRequestGateway } from '@infyenergy/core/infrastructure';
 import {
   CreateServiceRequestUseCase,
   GetServiceRequestUseCase,
@@ -12,7 +12,7 @@ import {
   GetAllServiceRequestsUseCase,
   UpdateServiceRequestUseCase,
   DeleteServiceRequestUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 // Dependency injection - Gateway Pattern
 const serviceRequestGateway = new PrismaServiceRequestGateway(prisma, pool);

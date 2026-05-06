@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
+import { createAppStyles } from '@infyenergy/theme';
 import { getBaseStyles } from './ForgotPassword.styles.shared';
-import { createAppStyles } from '@serviceops/theme';
 
 export const useStyles = createAppStyles((theme: Theme) => getBaseStyles(theme), {});

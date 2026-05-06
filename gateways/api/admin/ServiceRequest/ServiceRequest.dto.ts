@@ -5,4 +5,4 @@ export {
   ServiceRequestIdSchema,
   type CreateServiceRequestDto,
   type UpdateServiceRequestDto,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';

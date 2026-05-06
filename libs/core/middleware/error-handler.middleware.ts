@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { logger } from '@serviceops/config';
+import { logger } from '@infyenergy/config';
 
 export interface ApiError extends Error {
   statusCode?: number;

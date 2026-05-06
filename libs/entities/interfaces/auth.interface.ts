@@ -75,6 +75,10 @@ export interface IAuthUser {
   failedLoginAttempts?: number | null;
   lockedUntil?: string | null;
   passwordChangedAt?: string | null;
+  customUserId?: string | null;
+  gender?: string | null;
+  city?: string | null;
+  createdByName?: string | null;
 }
 
 export interface IUserChangeLog {
@@ -147,7 +151,18 @@ export type AuthAction =
   | 'delete-consultant-role'
   | 'get-login-logs'
   | 'deactivate-user'
-  | 'activate-user';
+  | 'activate-user'
+  | 'get-customer-onboardings'
+  | 'get-driver-hire-requests'
+  | 'get-vehicle-rental-requests'
+  | 'get-parcel-requests'
+  | 'get-management-drafts'
+  | 'update-customer-onboarding'
+  | 'check-availability'
+  | 'create-management-request'
+  | 'delete-draft'
+  | 'save-draft'
+  | 'create-customer-onboarding';
 
 export interface IAuthActionRequest {
   action: AuthAction;

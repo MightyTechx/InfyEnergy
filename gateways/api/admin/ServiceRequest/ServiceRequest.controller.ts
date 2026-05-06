@@ -5,14 +5,14 @@ import {
   DraftServiceRequestSchema,
   UpdateServiceRequestSchema,
 } from './ServiceRequest.dto';
-import { BadRequestException } from '@serviceops/middleware';
+import { BadRequestException } from '@infyenergy/middleware';
 import {
   ServiceRequestStatus,
   IUpdateServiceRequestInput,
   CommentSchema,
   TimeEntrySchema,
   ResolutionSchema,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 import {
   CreateServiceRequestUseCase,
   GetServiceRequestUseCase,
@@ -20,7 +20,7 @@ import {
   GetAllServiceRequestsUseCase,
   UpdateServiceRequestUseCase,
   DeleteServiceRequestUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 /**
  * Controller for AdminServiceRequest endpoints

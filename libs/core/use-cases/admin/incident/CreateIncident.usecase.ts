@@ -4,7 +4,7 @@ import {
   ICreateIncidentInput,
   ICreateIncidentUseCase,
   IncidentStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Create Incident Use Case
@@ -18,7 +18,7 @@ export class CreateIncidentUseCase implements ICreateIncidentUseCase {
     const number = input.number || (await this.incidentGateway.getNextNumber());
 
     // Auto-set draftExpiresAt to 30 days from now for drafts
-    let draftExpiresAt: string | undefined = input.draftExpiresAt;
+    let { draftExpiresAt } = input;
     if (input.status === IncidentStatus.DRAFT && !draftExpiresAt) {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 30);

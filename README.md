@@ -86,7 +86,7 @@ SerivceOps is an ITIL Service Management Platform built with clean architecture 
 │         │                                                        │
 │         ▼                                                        │
 │  ┌─────────────────────────────────────────────────────────────┐│
-│  │              @serviceops/interfaces (Shared Types)                ││
+│  │              @infyenergy/interfaces (Shared Types)                ││
 │  │   IHeader, IJob, ICreateHeaderInput, IHeaderResponse, etc.  ││
 │  └─────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
@@ -273,14 +273,14 @@ SerivceOps/
 │
 ├── web/                               # FRONTEND APPLICATIONS
 │   ├── apps/
-│   │   └── administration/            # Administration web app (port 1600)
+│   │                    # Administration web app (port 1600)
 │   └── tenants/
-│       └── generale-partner/          # Generale Partner tenant (port 1700)
+│       └── wind-tree/          # Generale Partner tenant (port 1700)
 │
 ├── env/src/                           # Environment configs per app
 │   ├── env.administration.json        # Administration app config
 │   ├── env.gateway.json               # Backend gateway config
-│   └── env.generale-partner.json      # Generale Partner tenant config
+│   └── env.wind-tree.json      # Generale Partner tenant config
 │
 ├── docker-compose.yml                 # Docker services
 ├── Dockerfile                         # Docker build
@@ -333,7 +333,7 @@ npm run dev:backend
 
 # Start frontend apps
 npm run serve:administration        # http://localhost:1600
-npm run serve:generale-partner      # http://localhost:1700
+npm run serve:wind-tree      # http://localhost:1700
 
 # Start Storybook (component library)
 npm run storybook                   # http://localhost:6006
@@ -344,7 +344,7 @@ npm run storybook                   # http://localhost:6006
 | App | Command | Port |
 |-----|---------|------|
 | **Administration** | `serve:administration` | 1600 |
-| **Generale Partner** | `serve:generale-partner` | 1700 |
+| **Generale Partner** | `serve:wind-tree` | 1700 |
 | **Backend API** | `dev:backend` | 3001 |
 | **Storybook** | `storybook` | 6006 |
 
@@ -410,7 +410,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password-here
-SMTP_FROM=serivceops App <noreply@serviceops.tech>
+SMTP_FROM=serivceops App <noreply@infyenergy.com>
 ```
 
 #### Gmail SMTP Setup
@@ -507,9 +507,9 @@ serivceops implements a comprehensive role-based access control system with thre
 ### Default Test Credentials (after seeding)
 
 ```
-admin@serviceops.tech       / admin123
-user@serviceops.tech        / user123
-consultant@serviceops.tech  / consultant123
+admin@infyenergy.com       / admin123
+user@infyenergy.com        / user123
+consultant@infyenergy.com  / consultant123
 ```
 
 ---
@@ -584,10 +584,10 @@ export interface IJob {
 
 ```typescript
 // Backend
-import { IJob, JobStatus } from '@serviceops/interfaces';
+import { IJob, JobStatus } from '@infyenergy/interfaces';
 
 // Frontend
-import { IJob, JOB_STATUS_CONFIG, JOB_PRIORITY_COLORS } from '@serviceops/interfaces';
+import { IJob, JOB_STATUS_CONFIG, JOB_PRIORITY_COLORS } from '@infyenergy/interfaces';
 ```
 
 ---
@@ -801,7 +801,7 @@ npm run prisma:deploy
 
 ```typescript
 import { CreateHeaderUseCase } from '../CreateHeader.usecase';
-import { InMemoryHeaderGateway } from '@serviceops/core/infrastructure';
+import { InMemoryHeaderGateway } from '@infyenergy/core/infrastructure';
 
 describe('CreateHeaderUseCase', () => {
   let useCase: CreateHeaderUseCase;
@@ -847,11 +847,11 @@ npm run build:backend:clean      # Clean dist and rebuild
 ```bash
 # Serve apps
 npm run serve:administration     # Administration app (http://localhost:1600)
-npm run serve:generale-partner   # Generale Partner tenant (http://localhost:1700)
+npm run serve:wind-tree   # Generale Partner tenant (http://localhost:1700)
 
 # Build apps
 npm run build:administration     # Build Administration app
-npm run build:generale-partner   # Build Generale Partner tenant
+npm run build:wind-tree   # Build Generale Partner tenant
 npm run build:shared             # Build shared libraries
 npm run build                    # Build all apps
 ```
@@ -929,7 +929,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 #### Sign In
 
 ```json
-{ "action": "signin", "email": "admin@serviceops.tech", "password": "admin123" }
+{ "action": "signin", "email": "admin@infyenergy.com", "password": "admin123" }
 ```
 
 **Response (201):**
@@ -938,7 +938,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 {
   "message": "Sign in successful",
   "data": {
-    "user": { "userId": 1, "userName": "Admin User", "userEmail": "admin@serviceops.tech", "role": "admin", "isActive": true },
+    "user": { "userId": 1, "userName": "Admin User", "userEmail": "admin@infyenergy.com", "role": "admin", "isActive": true },
     "token": "eyJhbGciOiJIUzI1NiIs..."
   }
 }
@@ -948,9 +948,9 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@serviceops.tech` | `admin123` | admin |
-| `user@serviceops.tech` | `user123` | user |
-| `consultant@serviceops.tech` | `consultant123` | consultant |
+| `admin@infyenergy.com` | `admin123` | admin |
+| `user@infyenergy.com` | `user123` | user |
+| `consultant@infyenergy.com` | `consultant123` | consultant |
 
 #### Sign Up
 
@@ -958,7 +958,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 {
   "action": "signup",
   "firstName": "John", "lastName": "Doe",
-  "email": "john@serviceops.tech",
+  "email": "john@infyenergy.com",
   "password": "password123", "confirmPassword": "password123",
   "phone": "+1-555-0000",
   "workLocation": "NYC", "department": "IT",
@@ -973,7 +973,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 #### Forgot Password
 
 ```json
-{ "action": "forgot-password", "email": "user@serviceops.tech" }
+{ "action": "forgot-password", "email": "user@infyenergy.com" }
 ```
 
 **Response (200):** `{ "message": "If the email exists, an OTP has been sent." }`
@@ -981,7 +981,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 #### Verify OTP
 
 ```json
-{ "action": "verify-otp", "email": "user@serviceops.tech", "otp": "123456" }
+{ "action": "verify-otp", "email": "user@infyenergy.com", "otp": "123456" }
 ```
 
 **Response (200):** `{ "message": "OTP verified successfully", "data": { "verified": true, "resetToken": "jwt-reset-token" } }`
@@ -991,7 +991,7 @@ All auth actions use a single **POST** `/api/auth` with an `action` field.
 ```json
 {
   "action": "reset-password",
-  "email": "user@serviceops.tech",
+  "email": "user@infyenergy.com",
   "resetToken": "jwt-reset-token",
   "newPassword": "newpassword123", "confirmPassword": "newpassword123"
 }
@@ -1048,7 +1048,7 @@ Base path: `/api/admin/incidents` — all endpoints require auth.
   "application": "Windows", "shortDescription": "Printer not working",
   "description": "Network printer on floor 3 not responding",
   "impact": "medium", "urgency": "medium", "channel": "portal",
-  "assignmentGroup": "IT Support Team", "createdBy": "admin@serviceops.tech",
+  "assignmentGroup": "IT Support Team", "createdBy": "admin@infyenergy.com",
   "status": "new", "client": "Acme Corp", "isRecurring": false, "isMajor": false
 }
 ```
@@ -1079,7 +1079,7 @@ Base path: `/api/admin/incidents/:id/comments`
   "subject": "Follow-up needed",
   "message": "User confirmed the issue persists",
   "isInternal": false, "isSelfNote": false, "notifyAssigneesOnly": false,
-  "status": "in_progress", "createdBy": "admin@serviceops.tech"
+  "status": "in_progress", "createdBy": "admin@infyenergy.com"
 }
 ```
 
@@ -1102,7 +1102,7 @@ Base path: `/api/admin/incidents/:id/time-entries`
   "billingCode": "PROJECT-001", "activityTask": "Troubleshooting printer drivers",
   "externalComment": "Investigated driver compatibility",
   "internalComment": "Need to escalate to vendor",
-  "isNonBillable": false, "createdBy": "admin@serviceops.tech"
+  "isNonBillable": false, "createdBy": "admin@infyenergy.com"
 }
 ```
 
@@ -1127,7 +1127,7 @@ Base path: `/api/admin/incidents/:id/resolutions`
   "customerConfirmation": true, "isRecurring": false,
   "rootCauseIdentified": true, "rootCause": "Outdated drivers caused compatibility issue",
   "internalNote": "Recommend updating all printers on floor 3",
-  "createdBy": "admin@serviceops.tech"
+  "createdBy": "admin@infyenergy.com"
 }
 ```
 
@@ -1145,7 +1145,7 @@ Base path: `/api/admin/incidents/:id/resolutions`
     "id": 1, "incidentId": 1, "activityType": "status_change",
     "description": "Status changed from new to in_progress",
     "previousValue": "new", "newValue": "in_progress",
-    "performedBy": "admin@serviceops.tech", "createdAt": "2025-02-12T10:00:00Z"
+    "performedBy": "admin@infyenergy.com", "createdAt": "2025-02-12T10:00:00Z"
   }]
 }
 ```
@@ -1256,33 +1256,33 @@ Priority is auto-calculated from **Impact × Urgency**:
 
 ```typescript
 // Shared interfaces (FE + BE)
-import { IHeader, IJob } from '@serviceops/interfaces';
+import { IHeader, IJob } from '@infyenergy/interfaces';
 
 // Backend core
-import { CreateHeaderUseCase } from '@serviceops/core/use-cases';
-import { PrismaHeaderGateway } from '@serviceops/core/infrastructure';
+import { CreateHeaderUseCase } from '@infyenergy/core/use-cases';
+import { PrismaHeaderGateway } from '@infyenergy/core/infrastructure';
 
 // Frontend components
-import { JobStatusCard, DataTable, Button } from '@serviceops/component';
+import { JobStatusCard, DataTable, Button } from '@infyenergy/component';
 
 // Mock data
-import { mockJobInProgress } from '@serviceops/mocks';
+import { mockJobInProgress } from '@infyenergy/mocks';
 
 // Theme & Styles
-import { createAppStyles } from '@serviceops/theme';
+import { createAppStyles } from '@infyenergy/theme';
 
 // Hooks
-import { useDebounce } from '@serviceops/hooks';
+import { useDebounce } from '@infyenergy/hooks';
 
 // Services
-import { adminService } from '@serviceops/services';
+import { adminService } from '@infyenergy/services';
 
 // Constants
-import { API_ROUTES } from '@serviceops/constants';
+import { API_ROUTES } from '@infyenergy/constants';
 
 // Store & State
-import { store } from '@serviceops/store';
-import { useAppSelector } from '@serviceops/state';
+import { store } from '@infyenergy/store';
+import { useAppSelector } from '@infyenergy/state';
 ```
 
 ---

@@ -5,7 +5,7 @@ import {
   ICreateIncidentInput,
   IUpdateIncidentInput,
   IncidentStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Prisma implementation of Incident Gateway

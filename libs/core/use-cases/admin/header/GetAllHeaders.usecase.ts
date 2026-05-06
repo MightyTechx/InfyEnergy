@@ -1,4 +1,4 @@
-import { IHeaderGateway, IHeader, IGetAllHeadersUseCase } from '@serviceops/interfaces';
+import { IHeaderGateway, IHeader, IGetAllHeadersUseCase } from '@infyenergy/interfaces';
 
 /**
  * Get All Headers Use Case

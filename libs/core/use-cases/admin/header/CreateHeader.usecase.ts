@@ -3,7 +3,7 @@ import {
   IHeader,
   ICreateHeaderInput,
   ICreateHeaderUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 import { ConflictException } from '../../../middleware';
 
 /**

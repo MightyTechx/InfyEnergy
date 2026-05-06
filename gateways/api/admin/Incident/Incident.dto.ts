@@ -1,6 +1,6 @@
 /**
  * Incident DTO - Re-exports shared validation schemas
- * Validation logic is centralized in @serviceops/interfaces (using Yup)
+ * Validation logic is centralized in @infyenergy/interfaces (using Yup)
  */
 export {
   CreateIncidentSchema,
@@ -9,4 +9,4 @@ export {
   IncidentIdSchema,
   type CreateIncidentDto,
   type UpdateIncidentDto,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IConfigurationData } from '@serviceops/interfaces';
+import { IConfigurationData } from '@infyenergy/interfaces';
 import { GetConfigurationUseCase } from '../../../../libs/core/use-cases/admin/configuration/GetConfiguration.usecase';
 import { UpdateConfigurationUseCase } from '../../../../libs/core/use-cases/admin/configuration/UpdateConfiguration.usecase';
 import { UpdateConfigurationSectionUseCase } from '../../../../libs/core/use-cases/admin/configuration/UpdateConfigurationSection.usecase';

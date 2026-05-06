@@ -4,7 +4,7 @@ import {
   ICreateIncidentInput,
   IUpdateIncidentInput,
   IncidentStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * In-Memory implementation of Incident Gateway

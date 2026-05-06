@@ -2,7 +2,7 @@ import {
   IServiceRequestGateway,
   IServiceRequest,
   IGetAllServiceRequestsUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Get All Service Requests Use Case

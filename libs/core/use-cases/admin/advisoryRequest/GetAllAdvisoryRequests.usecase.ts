@@ -2,7 +2,7 @@ import {
   IAdvisoryRequestGateway,
   IAdvisoryRequest,
   IGetAllAdvisoryRequestsUseCase,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Get All Advisory Requests Use Case

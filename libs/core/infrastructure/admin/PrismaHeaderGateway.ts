@@ -4,7 +4,7 @@ import {
   IHeader,
   ICreateHeaderInput,
   IUpdateHeaderInput,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Prisma implementation of Header Gateway

@@ -1,12 +1,12 @@
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
-import { setCredentials, logout as logoutAction } from '../store/authStore';
-import { useAuthActionMutation } from '@serviceops/services';
-import { UserRole, ISignInResponse } from '@serviceops/interfaces';
+import { setCredentials, logout as logoutAction, enterConsultantMode, exitConsultantMode } from '@infyenergy/services';
+import { useAuthActionMutation } from '@infyenergy/services';
+import { UserRole, ISignInResponse } from '@infyenergy/interfaces';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
-  const { user, token, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, token, isAuthenticated, isConsultantMode } = useAppSelector((state) => state.auth);
   const [authAction, { isLoading, error }] = useAuthActionMutation();
 
   const login = async (email: string, password: string) => {
@@ -23,6 +23,14 @@ export const useAuth = () => {
     dispatch(logoutAction());
   };
 
+  const enterMode = () => {
+    dispatch(enterConsultantMode());
+  };
+
+  const exitMode = () => {
+    dispatch(exitConsultantMode());
+  };
+
   const isAdmin = user?.role === UserRole.ADMIN;
   const isConsultant = user?.role === UserRole.CONSULTANT;
 
@@ -32,8 +40,11 @@ export const useAuth = () => {
     isAuthenticated,
     isAdmin,
     isConsultant,
+    isConsultantMode,
     login,
     logout,
+    enterConsultantMode: enterMode,
+    exitConsultantMode: exitMode,
     isLoading,
     error,
   };

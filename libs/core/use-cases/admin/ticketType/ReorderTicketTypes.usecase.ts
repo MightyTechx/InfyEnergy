@@ -1,4 +1,4 @@
-import { ITicketTypeGateway, IReorderTicketTypeInput } from '@serviceops/interfaces';
+import { ITicketTypeGateway, IReorderTicketTypeInput } from '@infyenergy/interfaces';
 
 export class ReorderTicketTypesUseCase {
   constructor(private readonly ticketTypeGateway: ITicketTypeGateway) {}

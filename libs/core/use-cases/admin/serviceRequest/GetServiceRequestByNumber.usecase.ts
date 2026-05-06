@@ -1,4 +1,4 @@
-import { IServiceRequestGateway, IServiceRequest } from '@serviceops/interfaces';
+import { IServiceRequestGateway, IServiceRequest } from '@infyenergy/interfaces';
 import { NotFoundException } from '../../../middleware';
 
 /**

@@ -1,4 +1,4 @@
-import { ITicketTypeGateway, ITicketType, IGetTicketTypeUseCase } from '@serviceops/interfaces';
+import { ITicketTypeGateway, ITicketType, IGetTicketTypeUseCase } from '@infyenergy/interfaces';
 import { NotFoundException } from '../../../middleware';
 
 /**

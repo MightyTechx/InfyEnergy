@@ -28,13 +28,13 @@ try {
 import app from './app';
 
 // Custom Winston logger
-import { logger } from '@serviceops/config';
+import { logger } from '@infyenergy/config';
 
 // Prisma client for database access
-import { prisma } from '@serviceops/database';
+import { prisma } from '@infyenergy/database';
 
 // Draft cleanup
-import { CleanupExpiredDraftsUseCase } from '@serviceops/core/use-cases';
+import { CleanupExpiredDraftsUseCase } from '@infyenergy/core/use-cases';
 import { incidentGateway } from '../api/admin/Incident/Incident.routes';
 
 // Server configuration

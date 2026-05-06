@@ -5,7 +5,7 @@ import {
   ICreateServiceRequestInput,
   IUpdateServiceRequestInput,
   ServiceRequestStatus,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';
 
 /**
  * Prisma implementation of Service Request Gateway

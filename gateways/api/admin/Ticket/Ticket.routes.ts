@@ -3,13 +3,13 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
-import { prisma } from '@serviceops/database';
+import { prisma } from '@infyenergy/database';
 import { TicketController } from './Ticket.controller';
 import {
   PrismaIncidentGateway,
   PrismaServiceRequestGateway,
   PrismaAdvisoryRequestGateway,
-} from '@serviceops/core/infrastructure';
+} from '@infyenergy/core/infrastructure';
 import {
   CreateIncidentUseCase,
   CreateServiceRequestUseCase,
@@ -17,7 +17,7 @@ import {
   GetIncidentByNumberUseCase,
   GetServiceRequestByNumberUseCase,
   GetAdvisoryRequestByNumberUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 // ── Gateways ─────────────────────────────────────────────────────────────────
 const incidentGateway = new PrismaIncidentGateway(prisma as PrismaClient);

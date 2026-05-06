@@ -5,4 +5,4 @@ export {
   AdvisoryRequestIdSchema,
   type CreateAdvisoryRequestDto,
   type UpdateAdvisoryRequestDto,
-} from '@serviceops/interfaces';
+} from '@infyenergy/interfaces';

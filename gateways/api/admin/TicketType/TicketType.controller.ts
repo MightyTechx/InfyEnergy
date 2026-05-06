@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ValidationError } from 'yup';
 import { CreateTicketTypeSchema, UpdateTicketTypeSchema } from './TicketType.dto';
-import { BadRequestException } from '@serviceops/middleware';
+import { BadRequestException } from '@infyenergy/middleware';
 import {
   CreateTicketTypeUseCase,
   GetTicketTypeUseCase,
@@ -9,7 +9,7 @@ import {
   UpdateTicketTypeUseCase,
   DeleteTicketTypeUseCase,
   ReorderTicketTypesUseCase,
-} from '@serviceops/core/use-cases';
+} from '@infyenergy/core/use-cases';
 
 /**
  * Controller for AdminTicketType endpoints

@@ -1,3 +1,3 @@
-// Admin gateway interfaces are defined in @serviceops/interfaces
-// Import directly from @serviceops/interfaces instead of this barrel
+// Admin gateway interfaces are defined in @infyenergy/interfaces
+// Import directly from @infyenergy/interfaces instead of this barrel
 export {};

@@ -1,4 +1,4 @@
-import { ITicketTypeGateway, ITicketType, IGetAllTicketTypesUseCase } from '@serviceops/interfaces';
+import { ITicketTypeGateway, ITicketType, IGetAllTicketTypesUseCase } from '@infyenergy/interfaces';
 
 /**
  * Get All TicketTypes Use Case
