@@ -184,11 +184,11 @@ const CUSTOMER_CARDS: CardDef[] = [
     displayName: 'Petrol Bunk',
     tagline: 'Fuel Station Partner',
     description:
-      'Register a petrol bunk or fuel station as a GoGaadi partner — Petrol, Diesel, and CNG refuelling stops mapped on the platform.',
+      'Register a petrol bunk or fuel station as a Infy Energy partner — Petrol, Diesel, and CNG refuelling stops mapped on the platform.',
     perks: [
       { icon: LocalGasStationIcon, text: 'Petrol, Diesel & CNG' },
       { icon: MyLocationIcon, text: 'Listed on driver route maps' },
-      { icon: CurrencyRupeeIcon, text: 'Offer discounts to GoGaadi users' },
+      { icon: CurrencyRupeeIcon, text: 'Offer discounts to Infy Energy users' },
     ],
     icon: LocalGasStationIcon,
     color: '#dc2626',
@@ -214,10 +214,10 @@ const CUSTOMER_CARDS: CardDef[] = [
     displayName: 'Vehicle Showroom',
     tagline: 'Dealership & Sales Partner',
     description:
-      'Partner a vehicle showroom or dealership with GoGaadi — list new & used vehicles and connect with buyers on the platform.',
+      'Partner a vehicle showroom or dealership with Infy Energy — list new & used vehicles and connect with buyers on the platform.',
     perks: [
       { icon: StoreIcon, text: 'New & used vehicle listings' },
-      { icon: GroupsIcon, text: 'Connect with GoGaadi operators' },
+      { icon: GroupsIcon, text: 'Connect with Infy Energy operators' },
       { icon: AutoAwesomeIcon, text: 'Exclusive partner deals' },
     ],
     icon: StoreIcon,
@@ -244,7 +244,7 @@ const CUSTOMER_CARDS: CardDef[] = [
     displayName: 'Finance Broker',
     tagline: 'DSA & Loan Agent Partner',
     description:
-      'Onboard a finance broker or DSA agent who facilitates vehicle loans for GoGaadi operators — earn referral commissions.',
+      'Onboard a finance broker or DSA agent who facilitates vehicle loans for Infy Energy operators — earn referral commissions.',
     perks: [
       { icon: HandshakeIcon, text: 'Multiple lender tie-ups' },
       { icon: CurrencyRupeeIcon, text: 'Commission on each referral' },
@@ -259,7 +259,7 @@ const CUSTOMER_CARDS: CardDef[] = [
     displayName: 'Insurance Partner',
     tagline: 'Vehicle & Driver Insurance Provider',
     description:
-      'Partner an insurance provider with GoGaadi — offer vehicle insurance, health cover, and driver protection plans.',
+      'Partner an insurance provider with Infy Energy — offer vehicle insurance, health cover, and driver protection plans.',
     perks: [
       { icon: SecurityIcon, text: 'Vehicle & commercial insurance' },
       { icon: HealthAndSafetyIcon, text: 'Driver health & accident cover' },

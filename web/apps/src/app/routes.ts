@@ -9,6 +9,7 @@ export const LazyMenuItems = {
   AdminProfilePage: lazy(() => import('@infyenergy/pages/shared/Profile')),
 
   // Auth pages (shared/public)
+  IntroPage: lazy(() => import('@infyenergy/pages/shared/Intro')),
   SignInPage: lazy(() => import('@infyenergy/pages/shared/SignIn')),
   SignUpPage: lazy(() => import('@infyenergy/pages/shared/SignUp')),
   ForgotPasswordPage: lazy(() => import('@infyenergy/pages/shared/ForgotPassword')),

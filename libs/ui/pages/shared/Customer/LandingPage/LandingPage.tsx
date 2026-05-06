@@ -130,7 +130,7 @@ function buildAccessTypes(
       displayName: 'Petrol Bunk Access',
       tagline: 'Fuel Station Partners',
       description:
-        'Review petrol bunk and fuel station partner requests — Petrol, Diesel, and CNG stops for the GoGaadi network.',
+        'Review petrol bunk and fuel station partner requests — Petrol, Diesel, and CNG stops for the Infy Energy network.',
       icon: LocalGasStationIcon,
       color: '#dc2626',
       path: p.PETROL_BUNK_ACCESS,
@@ -190,7 +190,7 @@ function buildAccessTypes(
       displayName: 'User Access',
       tagline: 'Platform User Registrations',
       description:
-        'Review and approve platform user registration requests — grant or deny access to the GoGaadi application.',
+        'Review and approve platform user registration requests — grant or deny access to the Infy Energy application.',
       icon: PersonSearchIcon,
       color: '#be185d',
       path: p.USER_ACCESS,

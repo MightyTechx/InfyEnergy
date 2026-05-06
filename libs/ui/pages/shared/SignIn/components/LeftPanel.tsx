@@ -33,7 +33,7 @@ const LeftPanel = ({ classes, onNavigateSignUp }: LeftPanelProps) => (
         <LocalShippingIcon className={classes.brandIcon28} />
       </Box>
       <Typography variant='h4' fontWeight={800} className={classes.brandTitle}>
-        GoGaadi
+        Infy Energy
       </Typography>
     </Box>
 

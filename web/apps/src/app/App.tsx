@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -16,6 +16,7 @@ const {
   AdminProfilePage,
 
   // Auth pages
+  IntroPage,
   SignInPage,
   SignUpPage,
   ForgotPasswordPage,
@@ -43,12 +44,17 @@ const AppRoutes = () => {
   const { AdminPath, UserPath, ConsultantPath, AuthPath, Path, DefalutPage } = constants;
   const { isAuthenticated, isAdmin, isConsultant } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Not authenticated — show auth pages
+  // Not authenticated — show Intro page with Sign In
   if (!isAuthenticated) {
     return (
       <ErrorBoundary>
         <Routes>
+          <Route
+            path={Path.DEFAULT_PAGE}
+            element={<IntroPage onSignIn={() => navigate(AuthPath.SIGNIN)} />}
+          />
           <Route path={AuthPath.SIGNIN} element={<SignInPage />} />
           <Route path={AuthPath.SIGNUP} element={<SignUpPage />} />
           <Route path={AuthPath.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />

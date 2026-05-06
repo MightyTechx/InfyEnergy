@@ -48,7 +48,7 @@ export function useFormWithSessionStorage<T extends FormikValues = FormikValues>
 
   // Wrap resetForm to also clear sessionStorage
   const originalResetForm = formik.resetForm;
-  const resetForm: typeof formik.resetForm = (...args) => {
+  const resetForm: (...args: Parameters<typeof formik.resetForm>) => void = (...args) => {
     removeStoredValues();
     originalResetForm(...args);
   };
