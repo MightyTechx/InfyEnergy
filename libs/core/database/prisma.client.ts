@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
+import { Pool, PoolConfig } from 'pg';
 import dns from 'dns';
 
 // Force IPv4 DNS resolution before any network connections
@@ -35,7 +35,7 @@ function getPool(): Pool {
     const parsed = parseDbUrl(dbUrl);
     // DB_PASSWORD overrides the password from DATABASE_URL — avoids all URL encoding issues
     if (process.env.DB_PASSWORD) parsed.password = process.env.DB_PASSWORD;
-    g._pool = new Pool({
+    const poolConfig: PoolConfig = {
       ...parsed,
       max: 10,
       min: 2,
@@ -44,9 +44,10 @@ function getPool(): Pool {
       ssl: { rejectUnauthorized: false },
       keepAlive: true,
       keepAliveInitialDelayMillis: 10000,
-      // Force IPv4 connection — Render free tier blocks outbound IPv6
-      family: 4,
-    });
+    };
+    // Force IPv4 — Render free tier blocks outbound IPv6
+    (poolConfig as Record<string, unknown>).family = 4;
+    g._pool = new Pool(poolConfig);
   }
   return g._pool;
 }

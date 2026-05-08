@@ -1,8 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { CSSObject } from 'tss-react';
 
-// Dialog-specific styles are in Configuration.styles.shared.ts
-// This file re-exports them for the dialog's own useStyles hook.
 export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   // ── Full-page wrapper ──────────────────────────────────────────────────────
   pageWrapper: {
@@ -57,21 +55,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     pointerEvents: 'none',
   },
 
-  logoContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
-    position: 'relative',
-    zIndex: 1,
-    fontFamily: 'Orbitron, sans-serif',
-    color: '#fff',
-    fontWeight: 700,
-    fontSize: '1rem',
-    letterSpacing: 2,
-    textShadow: '0 0 12px rgba(0,242,255,0.5)',
-    cursor: 'default',
-  },
-
   brand: {
     display: 'flex',
     alignItems: 'center',
@@ -90,17 +73,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-  },
-
-  brandIcon28: {
-    width: 40,
-    height: 40,
-  },
-
-  brandTitle: {
-    color: '#fff !important',
-    letterSpacing: '-0.5px !important',
-    fontWeight: '800 !important',
   },
 
   // ── Numbered recovery steps on left panel ──────────────────────────────────
@@ -223,6 +195,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ── Step progress strip ────────────────────────────────────────────────────
   stepRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
     position: 'relative',
     marginBottom: theme.spacing(3),
     padding: theme.spacing(2, 4, 1.5),
@@ -356,6 +330,17 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     fontWeight: 500,
     borderRadius: 8,
     border: `1px solid ${theme.palette.primary.main}30`,
+  },
+
+  brandIcon28: {
+    fontSize: '28px !important',
+    color: '#fff !important',
+  },
+
+  brandTitle: {
+    color: '#fff !important',
+    letterSpacing: '-0.5px !important',
+    fontWeight: '800 !important',
   },
 
   heroHeading: {

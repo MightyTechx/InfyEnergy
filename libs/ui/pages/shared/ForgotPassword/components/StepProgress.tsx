@@ -18,49 +18,39 @@ interface StepProgressProps {
 
 const StepProgress = ({ step, classes }: StepProgressProps) => {
   const stepIndex = step === 'email' ? 0 : step === 'otp' ? 1 : 2;
-  const fillFraction = stepIndex / (RECOVERY_STEPS.length - 1);
 
   return (
     <Box className={classes.stepRow}>
-      {/* Desktop: absolute track line */}
-      <Box className={classes.stepTrackBg} />
-      <Box
-        className={classes.stepTrackFill}
-        sx={{ width: `calc(${fillFraction} * (100% - 64px))` }}
-      />
-
-      {/* Desktop: circles + labels column layout */}
-      <Box className={classes.stepItemsRow}>
-        {RECOVERY_STEPS.map((s, i) => {
-          const StepIcon = s.icon;
-          const done = i < stepIndex;
-          const active = i === stepIndex;
-          return (
-            <Box key={s.label} className={classes.stepItem}>
-              <Box
-                className={`${classes.stepCircle} ${done ? classes.stepDone : active ? classes.stepActive : classes.stepIdle}`}
-              >
-                {done ? (
-                  <CheckIcon className={classes.stepIcon} />
-                ) : (
-                  <StepIcon className={classes.stepIcon} />
-                )}
-              </Box>
-              <Typography
-                className={`${classes.stepLabel} ${active ? classes.stepLabelActive : ''}`}
-              >
-                {s.label}
-              </Typography>
-              {/* Mobile: connector line between steps */}
-              {i < RECOVERY_STEPS.length - 1 && (
-                <Box
-                  className={`${classes.stepConnector} ${done ? classes.stepConnectorDone : ''}`}
-                />
+      {RECOVERY_STEPS.map((s, i) => {
+        const StepIcon = s.icon;
+        const done = i < stepIndex;
+        const active = i === stepIndex;
+        return (
+          <Box key={s.label} className={classes.stepItem}>
+            <Box
+              className={`${classes.stepCircle} ${done ? classes.stepDone : active ? classes.stepActive : classes.stepIdle}`}
+            >
+              {done ? (
+                <CheckIcon className={classes.stepIcon} />
+              ) : (
+                <StepIcon className={classes.stepIcon} />
               )}
             </Box>
-          );
-        })}
-      </Box>
+            <Typography className={`${classes.stepLabel} ${active ? classes.stepLabelActive : ''}`}>
+              {s.label}
+            </Typography>
+          </Box>
+        );
+      })}
+      {RECOVERY_STEPS.slice(0, -1).map((_, i) => {
+        const done = i < stepIndex;
+        return (
+          <Box
+            key={i}
+            className={`${classes.stepConnector} ${done ? classes.stepConnectorDone : ''}`}
+          />
+        );
+      })}
     </Box>
   );
 };
