@@ -44,6 +44,8 @@ function getPool(): Pool {
       ssl: { rejectUnauthorized: false },
       keepAlive: true,
       keepAliveInitialDelayMillis: 10000,
+      // Force IPv4 connection — Render free tier blocks outbound IPv6
+      family: 4,
     });
   }
   return g._pool;
