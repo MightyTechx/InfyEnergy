@@ -7,6 +7,6 @@
     "rootDir": ".",
     "types": ["node"]
   },
-  "include": ["gateways/**/*", "libs/core/**/*", "libs/shared/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["gateways/src/**/*", "libs/core/**/*", "libs/shared/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "gateways/prisma/**/*"]
 }

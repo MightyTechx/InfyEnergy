@@ -17,7 +17,7 @@
     "build:administration": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build administration",
     "build:wind-tree": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build wind-tree",
     "build:shared": "cross-env NODE_OPTIONS=--no-warnings NX_CACHE_DIRECTORY=C:/temp/nx-cache NX_WORKSPACE_DATA_DIRECTORY=C:/temp/nx-data nx build shared",
-    "build:backend": "tsc --project tsconfig.backend.json",
+    "build:backend": "tsc --project tsconfig.app.json",
     "build:backend:clean": "rimraf dist && npm run build:backend",
     "serve:administration": "vite --config web/apps/vite.config.ts",
     "serve:wind-tree": "vite --config web/tenants/wind-tree/vite.config.ts",

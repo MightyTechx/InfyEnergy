@@ -1,0 +1,25 @@
+# Render Blueprint - Backend API
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: infyenergy-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm run prisma:generate && npm run build:backend
+    startCommand: npm run start:backend
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: "3001"
+      - key: HOST
+        value: "0.0.0.0"
