@@ -1,11 +1,10 @@
 import { baseApi } from './baseServices';
 import type {
   IConfiguration,
-  IConfigurationData,
   IConfigurationResponse,
 } from '../../entities/interfaces/admin/configuration.interface';
 
-export type { IConfiguration, IConfigurationData, IConfigurationResponse };
+export type { IConfiguration, IConfigurationResponse };
 
 export const configurationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

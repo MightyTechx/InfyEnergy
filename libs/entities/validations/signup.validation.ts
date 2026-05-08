@@ -7,7 +7,7 @@ export const SignUpSchema = yup.object({
     .string()
     .email('Invalid email')
     .required('required')
-    .matches(/@infyenergy\.tech$/i, 'Email must be a @infyenergy.com address'),
+    .matches(/@infyenergy\.com$/i, 'Email must be a @infyenergy.com address'),
   phone: yup
     .string()
     .matches(/^[\d\s+\-()]*$/, 'Phone number must contain only numbers')

@@ -15,7 +15,7 @@ process.env.PARTNER = PARTNER;
 
 const partnerConfig = loadPartnerEnv(ROOT);
 
-console.log('\u{1F535} Building Generale Partner App');
+console.log('\u{1F535} Building Wind Tree App');
 console.log('\u{1F4E6} PARTNER:', PARTNER);
 
 export default defineConfig(({ mode }) => ({

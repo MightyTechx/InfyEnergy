@@ -1,20 +1,31 @@
 import { Box, Typography } from '@mui/material';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import NfcIcon from '@mui/icons-material/Nfc';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
-import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
-import ElectricRickshawIcon from '@mui/icons-material/ElectricRickshaw';
+import { useMetadata } from '../metadata';
+
+const TurbineSVG = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox='0 0 100 100'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    style={{ width: 32, height: 32 }}
+  >
+    <path d='M47 42 L53 42 L56 92 L44 92 Z' stroke='rgba(255,255,255,0.2)' strokeWidth={2} />
+    <g style={{ transformOrigin: '50px 42px', animation: 'spin 5s linear infinite' }}>
+      <circle cx={50} cy={42} r={3} fill='var(--neon-cyan)' />
+      <path d='M50 42 L50 4 Q61 4 56 42 Z' fill='var(--neon-cyan)' />
+      <path d='M50 42 L84 64 Q89 74 50 48 Z' fill='var(--neon-cyan)' />
+      <path d='M50 42 L16 64 Q11 74 50 48 Z' fill='var(--neon-cyan)' />
+    </g>
+  </svg>
+);
 
 const FEATURES = [
-  { icon: TwoWheelerIcon, label: 'Bikes, cars & all vehicle categories' },
-  { icon: ElectricRickshawIcon, label: 'Autos & three-wheelers' },
-  { icon: DirectionsBusIcon, label: 'DCMs, lorries & Tata Ace freight' },
-  { icon: NfcIcon, label: 'FASTag & toll expense management' },
-  { icon: GpsFixedIcon, label: 'Live GPS fleet tracking' },
-  { icon: AccountBalanceWalletIcon, label: 'Trip cost & consultant settlements' },
-  { icon: LocalShippingIcon, label: 'End-to-end logistics visibility' },
+  { label: 'SCADA Monitoring' },
+  { label: 'Real-Time Wind Tracking' },
+  { label: 'Grid Integration' },
+  { label: 'Predictive Maintenance' },
+  { label: 'Energy Analytics' },
+  { label: 'Fleet Lifecycle Management' },
 ];
 
 interface LeftPanelProps {
@@ -22,44 +33,47 @@ interface LeftPanelProps {
   onNavigateSignIn: () => void;
 }
 
-const LeftPanel = ({ classes, onNavigateSignIn }: LeftPanelProps) => (
-  <Box className={classes.leftPanel}>
-    <Box className={classes.circle1} />
-    <Box className={classes.circle2} />
-    <Box className={classes.circle3} />
+const LeftPanel = ({ classes, onNavigateSignIn }: LeftPanelProps) => {
+  const metadata = useMetadata();
+  return (
+    <Box className={classes.leftPanel}>
+      <Box className={classes.circle1} />
+      <Box className={classes.circle2} />
+      <Box className={classes.circle3} />
 
-    <Box className={classes.brand}>
-      <Box className={classes.brandIcon}>
-        <LocalShippingIcon className={classes.brandIcon28} />
-      </Box>
-      <Typography variant='h4' fontWeight={800} className={classes.brandTitle}>
-        infyenergy
-      </Typography>
-    </Box>
-
-    <Typography variant='h5' fontWeight={700} className={classes.heroHeading}>
-      One platform for
-      <br />
-      all your vehicles
-    </Typography>
-    <Typography className={classes.heroSubtitle}>
-      Join fleet managers tracking bikes, cars, lorries, DCMs, and Tata Aces — with FASTag and toll
-      integration built in.
-    </Typography>
-
-    {FEATURES.map(({ icon: Icon, label }) => (
-      <Box key={label} className={classes.featureRow}>
-        <Box className={classes.featureIconWrap}>
-          <Icon className={classes.featureIconInner} />
+      <Box className={classes.logoContainer}>
+        <Box component='span' className={classes.brandIcon}>
+          <TurbineSVG />
         </Box>
-        <Typography className={classes.featureLabel}>{label}</Typography>
+        <Typography component='span' className={classes.brandTitle}>
+          {metadata.tenet}
+        </Typography>
       </Box>
-    ))}
 
-    <Box className={classes.signinLink} onClick={onNavigateSignIn}>
-      Already have an account? <strong>Sign in</strong>
+      <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
+        Wind Service
+        <br />
+        Matrix Platform
+      </Typography>
+      <Typography className={classes.heroSubtitle}>
+        Join the {metadata.tenet} operations platform for centralized wind farm monitoring, SCADA
+        integration, and predictive analytics.
+      </Typography>
+
+      {FEATURES.map(({ label }) => (
+        <Box key={label} className={classes.featureRow}>
+          <Box className={classes.featureIconWrap}>
+            <Box component='span' className={classes.featureDot} />
+          </Box>
+          <Typography className={classes.featureLabel}>{label}</Typography>
+        </Box>
+      ))}
+
+      <Box className={classes.signinLink} onClick={onNavigateSignIn}>
+        Already have an account? <strong>Sign in</strong>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default LeftPanel;

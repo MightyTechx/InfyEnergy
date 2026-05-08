@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { GlobalStyles } from '@mui/material';
 
 import { LazyMenuItems } from './routes';
 import { constants } from '@infyenergy/utils';
@@ -22,23 +23,30 @@ const {
   ForgotPasswordPage,
   NotFoundPage,
 
-  // Service pages
-  ServiceCreatePage,
-  ServiceCreateManagementPage,
-  ServiceCreateManagementFormPage,
-  ServiceCreateCustomerFormPage,
-  ServiceReviewModalPage,
-
-  // Customer pages
-  CustomerLandingPage,
-  CustomerAccessPage,
-  CustomerDetailPage,
-  CustomerManagementPage,
-
   // Layout
   HeaderPage,
   SideNavPage,
 } = LazyMenuItems;
+
+const GlobalCSS = () => (
+  <GlobalStyles
+    styles={`
+      :root {
+        --neon-cyan: #00f2ff;
+        --neon-cyan-dim: rgba(0,242,255,0.15);
+        --pen-blue: #01315b;
+        --deep-blue: #020b16;
+        --mid-blue: #041e36;
+        --border-glow: rgba(0,242,255,0.25);
+        --accent-green: #3dfcad;
+        --accent-green-dim: rgba(61,252,173,0.15);
+        --gold: #f5c518;
+        --text-muted: rgba(255,255,255,0.55);
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    `}
+  />
+);
 
 const AppRoutes = () => {
   const { AdminPath, UserPath, ConsultantPath, AuthPath, Path, DefalutPage } = constants;
@@ -83,23 +91,8 @@ const AppRoutes = () => {
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={AdminPath.ROLE_REQUESTS} element={<AdminPeopleRequestsPage />} />
+            <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />
-
-            {/* Service routes */}
-            <Route path={AdminPath.CREATE_TICKET} element={<ServiceCreatePage />} />
-            <Route path={AdminPath.CREATE_MANAGEMENT} element={<ServiceCreateManagementPage />} />
-            <Route path={AdminPath.CREATE_MANAGEMENT_TYPE} element={<ServiceCreateManagementFormPage />} />
-            <Route path={AdminPath.CREATE_CUSTOMER} element={<ServiceCreatePage />} />
-            <Route path={AdminPath.CREATE_CUSTOMER_TYPE} element={<ServiceCreateCustomerFormPage />} />
-
-            {/* Customer routes */}
-            <Route path={AdminPath.MOBILITY_ACCESS} element={<CustomerAccessPage />} />
-            <Route path={AdminPath.LOGISTICS_ACCESS} element={<CustomerAccessPage />} />
-            <Route path={AdminPath.PARCEL_ACCESS} element={<CustomerAccessPage />} />
-            <Route path={AdminPath.MOBILITY_MANAGEMENT} element={<CustomerManagementPage />} />
-            <Route path={AdminPath.LOGISTICS_MANAGEMENT} element={<CustomerManagementPage />} />
-            <Route path={AdminPath.PARCEL_MANAGEMENT} element={<CustomerManagementPage />} />
-            <Route path={AdminPath.CUSTOMER_DETAIL} element={<CustomerDetailPage />} />
 
             {/* User routes */}
             <Route path={UserPath.DASHBOARD} element={<AdminDashboardPage />} />
@@ -117,6 +110,7 @@ const AppRoutes = () => {
 
 const App = () => (
   <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <GlobalCSS />
     <AppRoutes />
   </LocalizationProvider>
 );

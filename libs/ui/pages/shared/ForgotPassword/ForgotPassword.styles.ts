@@ -17,7 +17,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
     padding: theme.spacing(6, 5),
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     overflow: 'hidden',
     [theme.breakpoints.down('md')]: { display: 'none' },
   },
@@ -35,7 +35,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
   circle2: {
     position: 'absolute',
-    bottom: 120,
+    bottom: 100,
     left: -60,
     width: 240,
     height: 240,
@@ -47,12 +47,27 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   circle3: {
     position: 'absolute',
     bottom: -40,
-    right: 50,
-    width: 170,
-    height: 170,
+    right: 40,
+    width: 160,
+    height: 160,
     borderRadius: '50%',
     background: 'rgba(255,255,255,0.07)',
     pointerEvents: 'none',
+  },
+
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    position: 'relative',
+    zIndex: 1,
+    fontFamily: 'Orbitron, sans-serif',
+    color: '#fff',
+    fontWeight: 700,
+    fontSize: '1rem',
+    letterSpacing: 2,
+    textShadow: '0 0 12px rgba(0,242,255,0.5)',
+    cursor: 'default',
   },
 
   brand: {
@@ -75,7 +90,30 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     flexShrink: 0,
   },
 
-  // ── Numbered recovery steps on left panel ──────────────────────────────────
+  brandTitle: {
+    color: '#fff !important',
+    letterSpacing: '-0.5px !important',
+    fontWeight: '800 !important',
+  },
+
+  heroHeading: {
+    color: '#fff !important',
+    marginTop: `${theme.spacing(5)} !important`,
+    marginBottom: `${theme.spacing(1.5)} !important`,
+    lineHeight: '1.3 !important',
+    position: 'relative',
+    zIndex: 1,
+    fontWeight: '700 !important',
+  },
+
+  heroSubtitle: {
+    color: 'rgba(255,255,255,0.7) !important',
+    fontSize: '0.9rem !important',
+    marginBottom: `${theme.spacing(4)} !important`,
+    position: 'relative',
+    zIndex: 1,
+  },
+
   recoveryStep: {
     display: 'flex',
     alignItems: 'flex-start',
@@ -108,8 +146,31 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
   },
 
+  recoveryStepTitle: {
+    fontSize: '0.9rem !important',
+    lineHeight: '1.3 !important',
+  },
+
+  recoveryStepActiveTitle: {
+    color: '#fff !important',
+  },
+
+  recoveryStepInactiveTitle: {
+    color: 'rgba(255,255,255,0.45) !important',
+  },
+
+  recoveryStepCaption: {},
+
+  recoveryStepActiveCaption: {
+    color: 'rgba(255,255,255,0.65) !important',
+  },
+
+  recoveryStepInactiveCaption: {
+    color: 'rgba(255,255,255,0.3) !important',
+  },
+
   signinLink: {
-    marginTop: 'auto' as const,
+    marginTop: 'auto',
     color: 'rgba(255,255,255,0.7)',
     fontSize: '0.875rem',
     cursor: 'pointer',
@@ -117,6 +178,21 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     zIndex: 1,
     '&:hover': { color: '#fff' },
     '& strong': { color: '#fff' },
+  },
+
+  securityNote: {
+    marginTop: theme.spacing(3),
+    padding: '10px 16px',
+    borderRadius: (theme.shape.borderRadius as number) * 2,
+    background: 'rgba(255,255,255,0.08)',
+    border: '1px solid rgba(255,255,255,0.15)',
+    position: 'relative',
+    zIndex: 1,
+  },
+
+  securityNoteText: {
+    color: 'rgba(255,255,255,0.65) !important',
+    fontSize: '0.78rem !important',
   },
 
   // ── Right panel ────────────────────────────────────────────────────────────
@@ -193,7 +269,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
 
-  // ── Step progress strip ────────────────────────────────────────────────────
   stepRow: {
     position: 'relative',
     marginBottom: theme.spacing(3),
@@ -201,7 +276,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.grey[50],
     borderRadius: 10,
     border: `1px solid ${theme.palette.divider}`,
-    // Mobile: match SignUp's horizontal connector style
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       alignItems: 'center',
@@ -211,117 +285,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
 
-  stepTrackBg: {
-    position: 'absolute' as const,
-    top: 28,
-    left: 48,
-    right: 48,
-    height: 2,
-    background: theme.palette.grey[200],
-    borderRadius: 1,
-    // Hide on mobile (connector lines used instead)
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
-
-  stepTrackFill: {
-    position: 'absolute' as const,
-    top: 28,
-    left: 48,
-    height: 2,
-    background: 'linear-gradient(90deg, #16a34a, #22c55e)',
-    borderRadius: 1,
-    transition: 'width 0.4s ease',
-    // Hide on mobile (connector lines used instead)
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
-
-  stepItemsRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    position: 'relative' as const,
-    zIndex: 1,
-    // Mobile: stretch to fill the stepRow flex container
-    [theme.breakpoints.down('sm')]: {
-      flex: 1,
-      justifyContent: 'space-between',
-    },
-  },
-
-  stepItem: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    gap: theme.spacing(0.75),
-    // Mobile: horizontal layout matching SignUp
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'row' as const,
-      alignItems: 'center',
-      flex: 1,
-      gap: 0,
-    },
-  },
-
-  stepCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-    transition: 'all 0.3s ease',
-  },
-
-  stepDone: {
-    background: 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)',
-    color: '#fff',
-    boxShadow: '0 2px 8px rgba(22,163,74,0.35)',
-  },
-
-  stepActive: {
-    background: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
-    color: '#fff',
-    boxShadow: '0 2px 10px rgba(37,99,235,0.4)',
-  },
-
-  stepIdle: {
-    background: theme.palette.grey[100],
-    color: theme.palette.text.disabled,
-    border: `1px solid ${theme.palette.divider}`,
-  },
-
-  stepLabel: {
-    fontSize: '0.65rem',
-    fontWeight: 500,
-    color: theme.palette.text.disabled,
-    textAlign: 'center' as const,
-    lineHeight: 1.2,
-    maxWidth: 64,
-    // Mobile: show label beside icon like SignUp
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'left' as const,
-      marginLeft: theme.spacing(0.75),
-      whiteSpace: 'nowrap' as const,
-      maxWidth: 'unset',
-    },
-  },
-
-  stepLabelActive: {
-    color: theme.palette.primary.main,
-    fontWeight: 700,
-  },
-
-  stepConnector: {
-    display: 'none',
-  },
-
-  stepConnectorDone: {},
-
-  // ── Email chip in OTP step ─────────────────────────────────────────────────
   emailChip: {
     backgroundColor: `${theme.palette.primary.main}14`,
     color: theme.palette.primary.main,
@@ -333,68 +296,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   brandIcon28: {
     fontSize: '28px !important',
     color: '#fff !important',
-  },
-
-  brandTitle: {
-    color: '#fff !important',
-    letterSpacing: '-0.5px !important',
-    fontWeight: '800 !important',
-  },
-
-  heroHeading: {
-    color: '#fff !important',
-    marginTop: `${theme.spacing(5)} !important`,
-    marginBottom: `${theme.spacing(1.5)} !important`,
-    lineHeight: '1.3 !important',
-    position: 'relative' as const,
-    zIndex: 1,
-    fontWeight: '700 !important',
-  },
-
-  heroSubtitle: {
-    color: 'rgba(255,255,255,0.7) !important',
-    fontSize: '0.9rem !important',
-    marginBottom: `${theme.spacing(4)} !important`,
-    position: 'relative' as const,
-    zIndex: 1,
-  },
-
-  recoveryStepTitle: {
-    fontSize: '0.9rem !important',
-    lineHeight: '1.3 !important',
-  },
-
-  recoveryStepActiveTitle: {
-    color: '#fff !important',
-  },
-
-  recoveryStepInactiveTitle: {
-    color: 'rgba(255,255,255,0.45) !important',
-  },
-
-  recoveryStepCaption: {},
-
-  recoveryStepActiveCaption: {
-    color: 'rgba(255,255,255,0.65) !important',
-  },
-
-  recoveryStepInactiveCaption: {
-    color: 'rgba(255,255,255,0.3) !important',
-  },
-
-  securityNote: {
-    marginTop: theme.spacing(3),
-    padding: '10px 16px',
-    borderRadius: (theme.shape.borderRadius as number) * 2,
-    background: 'rgba(255,255,255,0.08)',
-    border: '1px solid rgba(255,255,255,0.15)',
-    position: 'relative' as const,
-    zIndex: 1,
-  },
-
-  securityNoteText: {
-    color: 'rgba(255,255,255,0.65) !important',
-    fontSize: '0.78rem !important',
   },
 
   stepIcon: {

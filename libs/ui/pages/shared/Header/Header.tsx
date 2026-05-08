@@ -13,11 +13,9 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
 import LogoMark from './components/LogoMark';
-import SearchBar from './components/SearchBar';
 import NotificationsMenu from './components/NotificationsMenu';
 import UserMenu from './components/UserMenu';
 
@@ -45,28 +43,18 @@ const Header = () => {
 
   const {
     isAdmin,
-    isConsultantMode,
     consultantMode,
     anchorEl,
     notifAnchorEl,
     notifications,
-    ticketSearch,
-    showSearchResults,
-    filteredIncidents,
-    handleTicketSearchChange,
-    handleSelectIncident,
-    handleCloseSearchResults,
     handleSettingsOpen,
     handleSettingsClose,
     handleNotifOpen,
     handleNotifClose,
     handleNotifClick,
     handleNotifItemClick,
-    handleAddNew,
     handleLogout,
     handleProfile,
-    handleConsultantPage,
-    handleAdminPage,
     handleLogoClick,
   } = useSharedHeader();
 
@@ -87,7 +75,7 @@ const Header = () => {
 
           <Box className={classes.logoDivider} />
 
-          {/* Left: mode chip + notifications + add new */}
+          {/* Left: mode chip + notifications */}
           <Box className={classes.headerLeft}>
             <Chip
               className={classes.adminChip}
@@ -115,12 +103,6 @@ const Header = () => {
                 </Badge>
               </IconButton>
             </Tooltip>
-
-            <Tooltip title='Create New User' placement='bottom'>
-              <IconButton onClick={handleAddNew} size='small' className={classes.iconBtnBase}>
-                <AddCircleOutlineIcon sx={{ fontSize: '1.25rem' }} />
-              </IconButton>
-            </Tooltip>
           </Box>
 
           <NotificationsMenu
@@ -131,41 +113,8 @@ const Header = () => {
             notifications={notifications}
           />
 
-          {/* Center: mobile search */}
-          <Box className={classes.centerSearchWrap}>
-            <Box className={classes.mobileSearch}>
-              <SearchBar
-                value={ticketSearch}
-                onChange={handleTicketSearchChange}
-                onClickAway={handleCloseSearchResults}
-                showResults={showSearchResults}
-                incidents={filteredIncidents}
-                onSelectIncident={handleSelectIncident}
-                className={classes.mobileSearchField}
-                wrapperClassName={classes.ticketSearchWrapper}
-                dropdownClassName={classes.searchDropdown}
-                noResultsClassName={classes.searchNoResults}
-              />
-            </Box>
-          </Box>
-
-          {/* Right: desktop search + settings */}
+          {/* Right: settings */}
           <Box className={classes.headerRight}>
-            <Box className={classes.headerFields}>
-              <SearchBar
-                value={ticketSearch}
-                onChange={handleTicketSearchChange}
-                onClickAway={handleCloseSearchResults}
-                showResults={showSearchResults}
-                incidents={filteredIncidents}
-                onSelectIncident={handleSelectIncident}
-                className={classes.textField}
-                wrapperClassName={classes.ticketSearchWrapper}
-                dropdownClassName={classes.searchDropdown}
-                noResultsClassName={classes.searchNoResults}
-              />
-            </Box>
-
             <Tooltip title='Settings' placement='bottom'>
               <IconButton size='small' className={classes.iconBtnBase} onClick={handleSettingsOpen}>
                 <SettingsIcon className={classes.icon} />
@@ -176,11 +125,8 @@ const Header = () => {
               anchorEl={anchorEl}
               onClose={handleSettingsClose}
               onProfile={handleProfile}
-              onConsultantPage={handleConsultantPage}
-              onAdminPage={handleAdminPage}
               onLogout={handleLogout}
               isAdmin={isAdmin}
-              isConsultantMode={isConsultantMode}
             />
           </Box>
         </Toolbar>

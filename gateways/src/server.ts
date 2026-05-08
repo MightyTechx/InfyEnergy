@@ -33,10 +33,6 @@ import { logger } from '@infyenergy/config';
 // Prisma client for database access
 import { prisma } from '@infyenergy/database';
 
-// Draft cleanup
-import { CleanupExpiredDraftsUseCase } from '@infyenergy/core/use-cases';
-import { incidentGateway } from '../api/admin/Incident/Incident.routes';
-
 // Server configuration
 const PORT = parseInt(process.env.PORT || '3001', 10);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -51,9 +47,9 @@ const HOST = process.env.HOST || '0.0.0.0';
 async function checkDatabaseConnection() {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    logger.info('✅ Database connection established');
+    logger.info('Database connection established');
   } catch (error) {
-    logger.error('❌ Failed to connect to database:', error);
+    logger.error('Failed to connect to database:', error);
     process.exit(1); // Stop app if DB is unavailable
   }
 }
@@ -71,28 +67,12 @@ async function startServer() {
     // Start HTTP server
     const server = app.listen(PORT, HOST, () => {
       logger.info('='.repeat(60));
-      logger.info(`🚀 Unified SerivceOps Backend API Server Started`);
+      logger.info(`Infy Energy Backend API Server Started`);
       logger.info('='.repeat(60));
-      logger.info(`📍 Server running on: http://${HOST}:${PORT}`);
-      logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`📚 Swagger docs: http://localhost:${PORT}/api/docs`);
-      logger.info(`💚 Health check: http://localhost:${PORT}/health`);
+      logger.info(`Server running on: http://${HOST}:${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`Health check: http://localhost:${PORT}/health`);
       logger.info('='.repeat(60));
-
-      // Run expired draft cleanup on startup and every 24 hours
-      const cleanupUseCase = new CleanupExpiredDraftsUseCase(incidentGateway);
-      const runCleanup = async () => {
-        try {
-          const count = await cleanupUseCase.execute();
-          if (count > 0) {
-            logger.info(`🗑️ Cleaned up ${count} expired draft incident(s)`);
-          }
-        } catch (error) {
-          logger.error('Failed to cleanup expired drafts:', error);
-        }
-      };
-      setTimeout(runCleanup, 10_000); // delay initial run until pool is warmed up
-      setInterval(runCleanup, 24 * 60 * 60 * 1000);
     });
 
     /**
@@ -112,7 +92,7 @@ async function startServer() {
           // Close Prisma DB connection
           await prisma.$disconnect();
           logger.info('Database connection closed');
-          logger.info('✅ Graceful shutdown completed');
+          logger.info('Graceful shutdown completed');
           process.exit(0);
         } catch (error) {
           logger.error('Error during shutdown:', error);

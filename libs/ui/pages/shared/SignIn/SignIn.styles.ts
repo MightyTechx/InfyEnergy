@@ -17,7 +17,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
     padding: theme.spacing(6, 5),
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     overflow: 'hidden',
     [theme.breakpoints.down('md')]: { display: 'none' },
   },
@@ -35,10 +35,10 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
   circle2: {
     position: 'absolute',
-    bottom: 120,
-    left: -70,
-    width: 260,
-    height: 260,
+    bottom: 100,
+    left: -60,
+    width: 240,
+    height: 240,
     borderRadius: '50%',
     background: 'rgba(255,255,255,0.05)',
     pointerEvents: 'none',
@@ -46,13 +46,28 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
   circle3: {
     position: 'absolute',
-    bottom: -50,
-    right: 60,
-    width: 180,
-    height: 180,
+    bottom: -40,
+    right: 40,
+    width: 160,
+    height: 160,
     borderRadius: '50%',
     background: 'rgba(255,255,255,0.07)',
     pointerEvents: 'none',
+  },
+
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    position: 'relative',
+    zIndex: 1,
+    fontFamily: 'Orbitron, sans-serif',
+    color: '#fff',
+    fontWeight: 700,
+    fontSize: '1rem',
+    letterSpacing: 2,
+    textShadow: '0 0 12px rgba(0,242,255,0.5)',
+    cursor: 'default',
   },
 
   brand: {
@@ -73,6 +88,17 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+  },
+
+  brandIcon28: {
+    width: 40,
+    height: 40,
+  },
+
+  brandTitle: {
+    color: '#fff !important',
+    letterSpacing: '-0.5px !important',
+    fontWeight: '800 !important',
   },
 
   featureRow: {
@@ -96,7 +122,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   signupLink: {
-    marginTop: 'auto' as const,
+    marginTop: 'auto',
     color: 'rgba(255,255,255,0.7)',
     fontSize: '0.875rem',
     cursor: 'pointer',
@@ -177,34 +203,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     padding: theme.spacing(3.5, 4, 4),
   },
 
-  oldContainer: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.background.default,
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-
-  oldCard: {
-    width: '100%',
-    maxWidth: 420,
-    borderRadius: '12px',
-    padding: theme.spacing(4),
-  },
-
-  oldCardHeader: {
-    textAlign: 'center' as const,
-    marginBottom: theme.spacing(3),
-  },
-
-  oldCardIcon: {
-    fontSize: '48px !important',
-    color: `${theme.palette.primary.main} !important`,
-    marginBottom: `${theme.spacing(1)} !important`,
-  },
-
   divider: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -216,7 +214,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   signupLinkBox: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
   },
 
   signupLinkText: {
@@ -227,12 +225,12 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   formTitle: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.spacing(0.5),
   },
 
   formSubtitle: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.spacing(3.5),
   },
 
@@ -241,23 +239,12 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     color: '#fff !important',
   },
 
-  brandIcon28: {
-    fontSize: '28px !important',
-    color: '#fff !important',
-  },
-
-  brandTitle: {
-    color: '#fff !important',
-    letterSpacing: '-0.5px !important',
-    fontWeight: '800 !important',
-  },
-
   heroHeading: {
     color: '#fff !important',
     marginTop: `${theme.spacing(5)} !important`,
     marginBottom: `${theme.spacing(1.5)} !important`,
     lineHeight: '1.3 !important',
-    position: 'relative' as const,
+    position: 'relative',
     zIndex: 1,
     fontWeight: '700 !important',
   },
@@ -265,14 +252,17 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   heroSubtitle: {
     color: 'rgba(255,255,255,0.7) !important',
     fontSize: '0.9rem !important',
-    marginBottom: `${theme.spacing(5)} !important`,
-    position: 'relative' as const,
+    marginBottom: `${theme.spacing(4)} !important`,
+    position: 'relative',
     zIndex: 1,
   },
 
-  featureIconInner: {
-    fontSize: '17px !important',
-    color: '#fff !important',
+  featureDot: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    background: '#00f2ff',
+    display: 'block',
   },
 
   featureLabel: {

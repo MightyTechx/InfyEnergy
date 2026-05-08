@@ -15,7 +15,7 @@ export const PARTNER_CONFIGS: Record<string, PartnerConfig> = {
     apiUrl: '/api',
   },
   'wind-tree': {
-    name: 'Generale Partner',
+    name: 'Wind Tree',
     theme: 'wind-tree',
     features: ['admin', 'user', 'reports'],
     apiUrl: '/api',
