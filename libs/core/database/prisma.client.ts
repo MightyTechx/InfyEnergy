@@ -1,6 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
+import * as dns from 'dns';
+
+// Force all DNS lookups to IPv4 — Render free tier blocks outbound IPv6
+dns.setDefaultResultOrder('ipv4first');
+
+function resolveHostIPv4(host: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    dns.lookup(host, { family: 4 }, (err, address) => {
+      if (err) reject(err);
+      else resolve(address);
+    });
+  });
+}
 
 // Lazily-initialized singletons.
 // Prisma v7 uses the "client" engine which requires a driver adapter (PrismaPg).
@@ -10,7 +23,7 @@ import { Pool } from 'pg';
 // runs in server.ts. If we called `new Pool(...)` here, DATABASE_URL would
 // be undefined. Deferring creation to first use (during the first request)
 // guarantees the env vars are already loaded.
-const g = global as unknown as { _pool?: Pool; _prisma?: PrismaClient };
+const g = global as unknown as { _pool?: Pool; _prisma?: PrismaClient; _poolInit?: Promise<Pool> };
 
 function parseDbUrl(raw: string) {
   const u = new URL(raw);
@@ -23,15 +36,22 @@ function parseDbUrl(raw: string) {
   };
 }
 
-function getPool(): Pool {
-  if (!g._pool) {
+async function getPool(): Promise<Pool> {
+  if (g._pool) return g._pool;
+  if (g._poolInit) return g._poolInit;
+
+  g._poolInit = (async () => {
     const dbUrl = process.env.DATABASE_URL;
     if (!dbUrl) throw new Error('DATABASE_URL is not set');
     const parsed = parseDbUrl(dbUrl);
-    // DB_PASSWORD overrides the password from DATABASE_URL — avoids all URL encoding issues
     if (process.env.DB_PASSWORD) parsed.password = process.env.DB_PASSWORD;
+
+    // Resolve hostname to IPv4 address before connecting
+    const resolvedHost = await resolveHostIPv4(parsed.host);
+
     g._pool = new Pool({
       ...parsed,
+      host: resolvedHost,
       max: 10,
       min: 2,
       idleTimeoutMillis: 30000,
@@ -40,36 +60,27 @@ function getPool(): Pool {
       keepAlive: true,
       keepAliveInitialDelayMillis: 10000,
     });
-  }
-  return g._pool;
+    return g._pool;
+  })();
+
+  return g._poolInit;
 }
 
-function getPrisma(): PrismaClient {
-  if (!g._prisma) {
-    const pool = getPool();
-    g._prisma = new PrismaClient({
-      adapter: new PrismaPg(pool),
-      log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    });
-  }
+async function getPrisma(): Promise<PrismaClient> {
+  if (g._prisma) return g._prisma;
+  const pool = await getPool();
+  g._prisma = new PrismaClient({
+    adapter: new PrismaPg(pool),
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
   return g._prisma;
 }
 
-// Proxy forwards property access to the real instance, creating it on first use.
-// typeof checks handle PrismaClient methods (which need the correct `this`).
-export const pool: Pool = new Proxy({} as Pool, {
-  get(_, prop: string | symbol) {
-    const p = getPool();
-    const val = (p as any)[prop];
-    return typeof val === 'function' ? val.bind(p) : val;
-  },
-});
-
 export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
   get(_, prop: string | symbol) {
-    const p = getPrisma();
-    const val = (p as any)[prop];
-    return typeof val === 'function' ? val.bind(p) : val;
+    const p = getPrisma().then(p => p as any);
+    if (prop === 'then') return undefined; // prevent unhandled promise rejection
+    return (...args: unknown[]) => getPrisma().then(p => (p as any)[prop](...args));
   },
 });
 
