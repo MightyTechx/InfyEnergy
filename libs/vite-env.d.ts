@@ -11,5 +11,6 @@ interface Window {
     partner?: string;
     partnerId?: string;
     partnerName?: string;
+    apiUrl?: string;
   };
 }

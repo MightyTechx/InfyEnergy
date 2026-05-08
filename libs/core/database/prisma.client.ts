@@ -1,6 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
+import dns from 'dns';
+
+// Force IPv4 DNS resolution before any network connections
+// Render free tier does not support outbound IPv6; Node 18+ defaults to IPv6-first
+dns.setDefaultResultOrder('ipv4first');
 
 // Lazily-initialized singletons.
 // Prisma v7 uses the "client" engine which requires a driver adapter (PrismaPg).

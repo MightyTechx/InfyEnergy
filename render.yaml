@@ -23,3 +23,5 @@ services:
         value: "3001"
       - key: HOST
         value: "0.0.0.0"
+      - key: NODE_OPTIONS
+        value: "--dns-result-order=ipv4first"

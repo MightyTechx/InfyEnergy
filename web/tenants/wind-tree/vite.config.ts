@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
     'process.env.PARTNER': JSON.stringify(partnerConfig.partner || PARTNER),
     'process.env.PARTNER_ID': JSON.stringify(partnerConfig.partnerId),
     'process.env.PARTNER_NAME': JSON.stringify(partnerConfig.partnerName),
-    'process.env.API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:3001'),
+    'process.env.API_URL': JSON.stringify(partnerConfig.apiUrl || 'http://localhost:3001'),
     __PARTNER_CONFIG__: JSON.stringify(partnerConfig),
     APP_NAME: JSON.stringify('administration'),
     PARTNER: JSON.stringify(PARTNER),

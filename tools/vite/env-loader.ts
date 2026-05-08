@@ -5,16 +5,19 @@ interface PartnerConfig {
   partner: string;
   partnerId: number;
   partnerName: string;
+  apiUrl?: string;
 }
 
 export function loadPartnerEnv(root: string): PartnerConfig {
   const partner = process.env.PARTNER;
+  const apiUrl = process.env.API_URL || 'http://localhost:3001';
   const envDir = path.join(root, 'env', 'src');
 
   if (partner) {
     const partnerFile = path.join(envDir, `env.${partner}.json`);
     if (fs.existsSync(partnerFile)) {
       const config = JSON.parse(fs.readFileSync(partnerFile, 'utf-8')) as PartnerConfig;
+      config.apiUrl = apiUrl;
       console.log(`\u{1F535} Active PARTNER: ${config.partner} (ID: ${config.partnerId})`);
       return config;
     }
@@ -25,6 +28,7 @@ export function loadPartnerEnv(root: string): PartnerConfig {
 
   if (fs.existsSync(defaultFile)) {
     const config = JSON.parse(fs.readFileSync(defaultFile, 'utf-8')) as PartnerConfig;
+    config.apiUrl = apiUrl;
     console.log(`\u{1F535} Active PARTNER: ${config.partner} (ID: ${config.partnerId})`);
     return config;
   }
@@ -32,6 +36,7 @@ export function loadPartnerEnv(root: string): PartnerConfig {
   const fallbackFile = path.join(envDir, 'env.administration.json');
   if (fs.existsSync(fallbackFile)) {
     const config = JSON.parse(fs.readFileSync(fallbackFile, 'utf-8')) as PartnerConfig;
+    config.apiUrl = apiUrl;
     console.log(`\u{1F535} Active PARTNER: ${config.partner} (ID: ${config.partnerId}) [fallback]`);
     return config;
   }
