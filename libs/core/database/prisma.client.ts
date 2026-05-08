@@ -1,11 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool, PoolConfig } from 'pg';
-import dns from 'dns';
-
-// Force IPv4 DNS resolution before any network connections
-// Render free tier does not support outbound IPv6; Node 18+ defaults to IPv6-first
-dns.setDefaultResultOrder('ipv4first');
+import { Pool } from 'pg';
 
 // Lazily-initialized singletons.
 // Prisma v7 uses the "client" engine which requires a driver adapter (PrismaPg).
@@ -35,7 +30,7 @@ function getPool(): Pool {
     const parsed = parseDbUrl(dbUrl);
     // DB_PASSWORD overrides the password from DATABASE_URL — avoids all URL encoding issues
     if (process.env.DB_PASSWORD) parsed.password = process.env.DB_PASSWORD;
-    const poolConfig: PoolConfig = {
+    g._pool = new Pool({
       ...parsed,
       max: 10,
       min: 2,
@@ -44,10 +39,7 @@ function getPool(): Pool {
       ssl: { rejectUnauthorized: false },
       keepAlive: true,
       keepAliveInitialDelayMillis: 10000,
-    };
-    // Force IPv4 — Render free tier blocks outbound IPv6
-    (poolConfig as Record<string, unknown>).family = 4;
-    g._pool = new Pool(poolConfig);
+    });
   }
   return g._pool;
 }
