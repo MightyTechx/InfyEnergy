@@ -1,8 +1,5 @@
 import { useAppRole } from './AppRoleContext';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const __PARTNER_CONFIG__: any;
-
 /**
  * App-specific metadata configuration type
  */
@@ -19,6 +16,31 @@ export interface AppMetadataConfig<T = Record<string, unknown>> {
 export interface TenantMetadataConfig<T = Record<string, unknown>> {
   [tenant: string]: T;
 }
+
+/**
+ * Gets the current partner from runtime constants.
+ * During build, Vite replaces the PARTNER constant with the actual partner name.
+ */
+interface PartnerConfig {
+  partner?: string;
+  partnerId?: string;
+  partnerName?: string;
+  [key: string]: unknown;
+}
+
+const getPartner = (): string | undefined => {
+  const config = (window as unknown as { __PARTNER_CONFIG__?: PartnerConfig }).__PARTNER_CONFIG__;
+  // __PARTNER_CONFIG__ is defined as JSON.stringify() in vite.config, so it's a string at runtime
+  if (typeof config === 'string') {
+    try {
+      const parsed = JSON.parse(config);
+      return parsed.partner;
+    } catch {
+      return undefined;
+    }
+  }
+  return config?.partner;
+};
 
 /**
  * Creates a metadata hook that works across all apps with app-specific and tenant-specific overrides.
@@ -58,17 +80,9 @@ export const createAppMetadata = <T extends Record<string, unknown>>(
     let merged = { ...baseMetadata } as Record<string, unknown>;
 
     // 1. Apply tenant-specific override first (higher priority for public pages)
-    // Reads PARTNER from __PARTNER_CONFIG__ which is injected at build time by vite
-    if (tenantConfig) {
-      try {
-        const partner = (window as unknown as { __PARTNER_CONFIG__?: { partner?: string } })
-          .__PARTNER_CONFIG__?.partner;
-        if (partner && partner in tenantConfig) {
-          merged = { ...merged, ...tenantConfig[partner] };
-        }
-      } catch {
-        // __PARTNER_CONFIG__ not available at runtime — skip tenant overrides
-      }
+    const partner = getPartner();
+    if (partner && tenantConfig && partner in tenantConfig) {
+      merged = { ...merged, ...tenantConfig[partner] };
     }
 
     // 2. Apply role-specific override (for authenticated pages inside AppRoleContext)
@@ -77,22 +91,5 @@ export const createAppMetadata = <T extends Record<string, unknown>>(
     merged = { ...merged, ...appOverrides };
 
     return merged as T;
-  };
-};
-
-/**
- * Simplified hook for metadata that doesn't need tenant overrides
- * Useful for pages that only need role-specific metadata
- *
- * @deprecated Use createAppMetadata with empty tenantConfig instead
- */
-export const createAppMetadataSimple = <T extends Record<string, unknown>>(
-  baseMetadata: T,
-  appConfig?: AppMetadataConfig<Partial<T>>,
-) => {
-  return (): T => {
-    const appRole = useAppRole();
-    const overrides = appConfig?.[appRole] || {};
-    return { ...baseMetadata, ...overrides } as T;
   };
 };

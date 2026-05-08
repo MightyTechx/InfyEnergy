@@ -4,7 +4,5 @@ import { getBaseMetadata } from './metadata.shared';
 export const useMetadata = createAppMetadata(
   getBaseMetadata(),
   {},
-  {
-    'wind-tree': { tenet: 'Wind Tree' },
-  },
+  { 'wind-tree': { tenet: 'Wind Tree' } },
 );

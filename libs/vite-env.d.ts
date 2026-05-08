@@ -5,3 +5,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  __PARTNER_CONFIG__?: {
+    partner?: string;
+    partnerId?: string;
+    partnerName?: string;
+  };
+}
