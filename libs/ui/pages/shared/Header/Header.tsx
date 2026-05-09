@@ -45,7 +45,7 @@ const Header = () => {
     isAdmin,
     consultantMode,
     anchorEl,
-    notifAnchorEl,
+    notifOpen,
     notifications,
     handleSettingsOpen,
     handleSettingsClose,
@@ -53,15 +53,26 @@ const Header = () => {
     handleNotifClose,
     handleNotifClick,
     handleNotifItemClick,
+    refreshNotifications,
     handleLogout,
     handleProfile,
     handleLogoClick,
+    handleSwitchToConsultant,
+    handleSwitchToAdmin,
   } = useSharedHeader();
 
   const colors = consultantMode ? CONSULTANT_COLORS : ADMIN_COLORS;
 
   return (
     <>
+      <NotificationsMenu
+        open={notifOpen}
+        onClose={handleNotifClose}
+        onViewAll={handleNotifClick}
+        onItemClick={handleNotifItemClick}
+        notifications={notifications}
+        onRefresh={refreshNotifications}
+      />
       <AppBar
         position='fixed'
         className={classes.headerAppbar}
@@ -75,60 +86,53 @@ const Header = () => {
 
           <Box className={classes.logoDivider} />
 
-          {/* Left: mode chip + notifications */}
-          <Box className={classes.headerLeft}>
-            <Chip
-              className={classes.adminChip}
-              icon={
-                consultantMode ? (
-                  <BadgeIcon sx={{ fontSize: '15px !important' }} />
-                ) : (
-                  <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />
-                )
-              }
-              label={consultantMode ? 'CONSULTANT' : 'ADMIN'}
-              size='small'
-              sx={{
-                background: `${colors.chipBg} !important`,
-                color: `${colors.chipColor} !important`,
-                border: `1px solid ${colors.chipBorder} !important`,
-                '& .MuiChip-icon': { color: `${colors.chipIconColor} !important` },
-              }}
-            />
-
-            <Tooltip title='Notifications' placement='bottom'>
-              <IconButton onClick={handleNotifOpen} size='small' className={classes.iconBtnBase}>
-                <Badge badgeContent={notifications.length} color='error'>
-                  <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-          </Box>
-
-          <NotificationsMenu
-            anchorEl={notifAnchorEl}
-            onClose={handleNotifClose}
-            onViewAll={handleNotifClick}
-            onItemClick={handleNotifItemClick}
-            notifications={notifications}
+          {/* Chip + Bell — side by side after logo */}
+          <Chip
+            className={classes.adminChip}
+            icon={
+              consultantMode ? (
+                <BadgeIcon sx={{ fontSize: '15px !important' }} />
+              ) : (
+                <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />
+              )
+            }
+            label={consultantMode ? 'CONSULTANT' : 'ADMIN'}
+            size='small'
+            sx={{
+              background: `${colors.chipBg} !important`,
+              color: `${colors.chipColor} !important`,
+              border: `1px solid ${colors.chipBorder} !important`,
+              '& .MuiChip-icon': { color: `${colors.chipIconColor} !important` },
+            }}
           />
 
-          {/* Right: settings */}
-          <Box className={classes.headerRight}>
-            <Tooltip title='Settings' placement='bottom'>
-              <IconButton size='small' className={classes.iconBtnBase} onClick={handleSettingsOpen}>
-                <SettingsIcon className={classes.icon} />
-              </IconButton>
-            </Tooltip>
+          <Tooltip title='Notifications' placement='bottom'>
+            <IconButton onClick={() => handleNotifOpen()} size='small' className={classes.iconBtnBase}>
+              <Badge badgeContent={notifications.length} color='error' max={99}>
+                <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
 
-            <UserMenu
-              anchorEl={anchorEl}
-              onClose={handleSettingsClose}
-              onProfile={handleProfile}
-              onLogout={handleLogout}
-              isAdmin={isAdmin}
-            />
-          </Box>
+          <Box className={classes.headerRightSpacer} />
+
+          {/* Settings */}
+          <Tooltip title='Settings' placement='bottom'>
+            <IconButton size='small' className={classes.iconBtnBase} onClick={handleSettingsOpen}>
+              <SettingsIcon className={classes.icon} />
+            </IconButton>
+          </Tooltip>
+
+          <UserMenu
+            anchorEl={anchorEl}
+            onClose={handleSettingsClose}
+            onProfile={handleProfile}
+            onLogout={handleLogout}
+            isAdmin={isAdmin}
+            consultantMode={consultantMode}
+            onSwitchToConsultant={handleSwitchToConsultant}
+            onSwitchToAdmin={handleSwitchToAdmin}
+          />
         </Toolbar>
       </AppBar>
     </>

@@ -12,29 +12,43 @@ export class NotFoundRepository extends BaseRepository<
   CreateNotFoundDto,
   UpdateNotFoundDto
 > {
+  private _prisma: PrismaClient | null = null;
+
   constructor() {
-    super(prisma as PrismaClient);
+    super({} as PrismaClient);
+  }
+
+  private async getPrisma(): Promise<PrismaClient> {
+    if (!this._prisma) {
+      this._prisma = await prisma;
+    }
+    return this._prisma;
   }
 
   async create(data: CreateNotFoundDto): Promise<ConsultantNotFound> {
-    return this.prisma.consultantNotFound.create({ data });
+    const db = await this.getPrisma();
+    return db.consultantNotFound.create({ data });
   }
 
   async findAll(): Promise<ConsultantNotFound[]> {
-    return this.prisma.consultantNotFound.findMany({
+    const db = await this.getPrisma();
+    return db.consultantNotFound.findMany({
       orderBy: { name: 'asc' },
     });
   }
 
   async findById(id: string): Promise<ConsultantNotFound | null> {
-    return this.prisma.consultantNotFound.findUnique({ where: { id } });
+    const db = await this.getPrisma();
+    return db.consultantNotFound.findUnique({ where: { id } });
   }
 
   async update(id: string, data: UpdateNotFoundDto): Promise<ConsultantNotFound> {
-    return this.prisma.consultantNotFound.update({ where: { id }, data });
+    const db = await this.getPrisma();
+    return db.consultantNotFound.update({ where: { id }, data });
   }
 
   async delete(id: string): Promise<ConsultantNotFound> {
-    return this.prisma.consultantNotFound.delete({ where: { id } });
+    const db = await this.getPrisma();
+    return db.consultantNotFound.delete({ where: { id } });
   }
 }

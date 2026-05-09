@@ -14,16 +14,12 @@ import { useFieldError } from '@infyenergy/hooks';
 import TextField from '../../../../components/TextField/TextField';
 
 const DEPARTMENT_OPTIONS = [
-  'Operations',
-  'Fleet Management',
-  'Finance & Accounts',
-  'Technology & Engineering',
-  'Sales & Business Development',
-  'Customer Support',
-  'Driver / Consultant Onboarding',
-  'Compliance & Legal',
+  'IT Administration',
+  'Maintenance',
   'Human Resources',
-  'Marketing',
+  'Operations',
+  'Service',
+  'External Consulting',
   'Other',
 ];
 

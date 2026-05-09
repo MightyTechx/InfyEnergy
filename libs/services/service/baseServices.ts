@@ -9,8 +9,18 @@ import {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
 
+// API URL priority: VITE_API_URL env var (for custom deployments) > window.API_URL (from Render env vars)
+const getApiBaseUrl = (): string => {
+  // 1. VITE_API_URL — use this if set (e.g. in .env for local dev or production deployments)
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  // 2. window.API_URL — injected by Render with the live backend URL
+  if (typeof window !== 'undefined' && (window as any).API_URL) return (window as any).API_URL;
+  // 3. Fallback for local dev
+  return 'http://localhost:3001';
+};
+
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL || '',
+  baseUrl: getApiBaseUrl(),
   prepareHeaders: (headers) => {
     const token = localStorage.getItem('infyenergy_token');
     if (token) {

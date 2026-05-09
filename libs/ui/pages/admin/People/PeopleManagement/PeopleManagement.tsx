@@ -1,14 +1,21 @@
+import { useState } from 'react';
 import { Box, Loader, DataTable } from '@infyenergy/component';
-import { Typography, Grid, Tabs, Tab, Divider, TextField, InputAdornment } from '@mui/material';
+import { Typography, Grid, Tabs, Tab, Divider, TextField, InputAdornment, Chip, Button, Stack } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import SearchIcon from '@mui/icons-material/Search';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import TabPanel from './components/TabPanel';
 import usePeopleManagement from './hooks/useAccessManagement';
 import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
 import { useStyles } from './styles';
+import { AccessRequestRow } from '../PeopleRequests/types/accessRequests.types';
+import { IAuthUser } from '@infyenergy/interfaces';
+import { UserDetailDialog } from '../UserDetail';
+// UserRow / constants imports removed — openDetail uses plain number ids
 
 const PeopleManagement = () => {
   const { classes } = useStyles();
@@ -19,6 +26,7 @@ const PeopleManagement = () => {
     admins,
     consultants,
     dbDraftUsers,
+    pendingRequests,
     isLoading,
     isMobile,
     tabValue,
@@ -30,7 +38,17 @@ const PeopleManagement = () => {
     columns,
     getTableData,
     draftRow,
+    actionInProgress,
+    handlePendingAction,
   } = usePeopleManagement();
+
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailUserId, setDetailUserId] = useState<number | null>(null);
+
+  const openDetail = (id: number) => {
+    setDetailUserId(id);
+    setDetailOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -44,6 +62,7 @@ const PeopleManagement = () => {
   }
 
   const draftCount = dbDraftUsers.length + (draftRow ? 1 : 0);
+  const pendingCount = pendingRequests.length;
 
   const statCards = [
     {
@@ -51,7 +70,7 @@ const PeopleManagement = () => {
       value: allUsers.length,
       Icon: GroupIcon,
       cls: classes.statCard0,
-      sub: 'Platform Registrations',
+      sub: 'System Registrations',
       color: '#4f46e5',
       tabIndex: 0,
     },
@@ -60,7 +79,7 @@ const PeopleManagement = () => {
       value: admins.length,
       Icon: AdminPanelSettingsIcon,
       cls: classes.statCard1,
-      sub: 'Platform Administrators',
+      sub: 'System Administrators',
       color: '#f59e0b',
       tabIndex: 1,
     },
@@ -69,17 +88,17 @@ const PeopleManagement = () => {
       value: consultants.length,
       Icon: BusinessCenterIcon,
       cls: classes.statCard2,
-      sub: 'Platform Consultants',
+      sub: 'Energy Consultants',
       color: '#10b981',
       tabIndex: 2,
     },
     {
-      label: 'Drafts',
-      value: draftCount,
-      Icon: EditNoteIcon,
+      label: 'Pending',
+      value: pendingCount,
+      Icon: PendingActionsIcon,
       cls: classes.statCard3,
-      sub: 'Saved / In-Progress',
-      color: '#64748b',
+      sub: 'Awaiting Approval',
+      color: '#ef4444',
       tabIndex: 3,
     },
   ];
@@ -178,9 +197,9 @@ const PeopleManagement = () => {
               label={isMobile ? undefined : 'Consultants'}
             />
             <Tab
-              icon={<EditNoteIcon />}
+              icon={<PendingActionsIcon />}
               iconPosition='start'
-              label={isMobile ? undefined : `Drafts${draftCount > 0 ? ` (${draftCount})` : ''}`}
+              label={isMobile ? undefined : `Pending${pendingCount > 0 ? ` (${pendingCount})` : ''}`}
             />
           </Tabs>
           <TextField
@@ -201,20 +220,37 @@ const PeopleManagement = () => {
         </Box>
 
         {/* ── Tab panels with DataTable ── */}
-        {[allUsers, admins, consultants, dbDraftUsers].map((list, idx) => {
+        {[allUsers, admins, consultants, pendingRequests].map((list, idx) => {
           const showLocalDraft = (idx === 0 || idx === 3) && draftRow;
-          const tableData = getTableData(list, showLocalDraft ? 2 : 1);
-          const filteredData = tableSearch
-            ? tableData.filter((row) =>
-                Object.values(row).some(
-                  (val) =>
-                    val !== null &&
-                    val !== undefined &&
-                    String(val).toLowerCase().includes(tableSearch.toLowerCase()),
-                ),
-              )
-            : tableData;
-          const pinnedData = showLocalDraft
+          const tableData = idx < 3 ? getTableData(list as IAuthUser[], showLocalDraft ? 2 : 1) : [];
+          const filteredData = idx < 3
+            ? tableSearch
+              ? tableData.filter((row) =>
+                  Object.values(row).some(
+                    (val) =>
+                      val !== null &&
+                      val !== undefined &&
+                      String(val).toLowerCase().includes(tableSearch.toLowerCase()),
+                  ),
+                )
+              : tableData
+            : [];
+
+          // Pending tab specific filtering
+          const pendingFiltered = idx === 3
+            ? tableSearch
+              ? (list as AccessRequestRow[]).filter((row) =>
+                  Object.values(row).some(
+                    (val) =>
+                      val !== null &&
+                      val !== undefined &&
+                      String(val).toLowerCase().includes(tableSearch.toLowerCase()),
+                  ),
+                )
+              : list
+            : [];
+
+          const pinnedData = idx < 3 && showLocalDraft
             ? tableSearch
               ? Object.values(draftRow).some(
                   (val) =>
@@ -226,24 +262,135 @@ const PeopleManagement = () => {
                 : []
               : [{ ...draftRow, sno: 1 }]
             : [];
+
           return (
             <TabPanel key={idx} value={tabValue} index={idx}>
-              <Box className={classes.tableContainer}>
-                <DataTable
-                  columns={columns}
-                  data={filteredData}
-                  rowKey='id'
-                  searchable={false}
-                  initialRowsPerPage={10}
-                  onRowClick={handleRowSelect}
-                  activeRowKey={selectedRow?.id as number}
-                  pinnedRows={pinnedData}
-                />
-              </Box>
+              {idx === 3 ? (
+                /* Pending Requests Tab with Approve/Reject */
+                <Box className={classes.tableContainer}>
+                  {pendingFiltered.length === 0 ? (
+                    <Box sx={{ textAlign: 'center', py: 8 }}>
+                      <PendingActionsIcon sx={{ fontSize: 64, color: '#94a3b8', mb: 2 }} />
+                      <Typography variant='h6' color='text.secondary'>
+                        {tableSearch ? 'No matching requests' : 'No pending requests'}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <DataTable
+                      columns={[
+                        { id: 'sno', label: 'S.No', minWidth: 60, sortable: false },
+                        {
+                          id: 'name',
+                          label: 'Name',
+                          minWidth: 150,
+                          format: (v, row: AccessRequestRow) => (
+                            <Typography
+                              variant='body2'
+                              sx={{ color: '#1976d2', cursor: 'pointer', fontWeight: 500, '&:hover': { textDecoration: 'underline' } }}
+                              onClick={(e) => { e.stopPropagation(); openDetail(row.id as number); }}
+                            >
+                              {String(v || '-')}
+                            </Typography>
+                          ),
+                        },
+                        { id: 'email', label: 'Email', minWidth: 200, format: (v) => String(v || '-') },
+                        { id: 'businessUnit', label: 'Department', minWidth: 150, format: (v) => String(v || '-') },
+                        {
+                          id: 'requestedRole',
+                          label: 'Role',
+                          minWidth: 120,
+                          align: 'center',
+                          format: (v) => {
+                            const role = String(v || '');
+                            const isAdmin = role === 'admin';
+                            return (
+                              <Chip
+                                label={isAdmin ? 'Admin' : 'Consultant'}
+                                size='small'
+                                variant='outlined'
+                                sx={{
+                                  borderColor: isAdmin ? '#dc2626' : '#0ea5e9',
+                                  color: isAdmin ? '#dc2626' : '#0ea5e9',
+                                  fontWeight: 600,
+                                }}
+                              />
+                            );
+                          },
+                        },
+                        {
+                          id: 'actions',
+                          label: 'Actions',
+                          minWidth: 200,
+                          align: 'center',
+                          sortable: false,
+                          format: (_v, row: AccessRequestRow) => {
+                            const isProcessing = actionInProgress === row.id;
+                            return (
+                              <Stack direction='row' spacing={1} justifyContent='center'>
+                                <Button
+                                  variant='contained'
+                                  color='success'
+                                  size='small'
+                                  startIcon={<CheckCircleOutlineIcon />}
+                                  disabled={isProcessing}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handlePendingAction(row, 'approve');
+                                  }}
+                                >
+                                  Approve
+                                </Button>
+                                <Button
+                                  variant='outlined'
+                                  color='error'
+                                  size='small'
+                                  startIcon={<CancelOutlinedIcon />}
+                                  disabled={isProcessing}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handlePendingAction(row, 'reject');
+                                  }}
+                                >
+                                  Reject
+                                </Button>
+                              </Stack>
+                            );
+                          },
+                        },
+                      ]}
+                      data={(pendingFiltered as AccessRequestRow[]).map((row, i) => ({ ...row, sno: i + 1 }))}
+                      rowKey='id'
+                      searchable={false}
+                      initialRowsPerPage={10}
+                      onRowClick={(row) => openDetail((row as AccessRequestRow).id as number)}
+                    />
+                  )}
+                </Box>
+              ) : (
+                <Box className={classes.tableContainer}>
+                  <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    rowKey='id'
+                    searchable={false}
+                    initialRowsPerPage={10}
+                    onRowClick={(row) => openDetail(row.id as number)}
+                    activeRowKey={selectedRow?.id as number}
+                    pinnedRows={pinnedData}
+                  />
+                </Box>
+              )}
             </TabPanel>
           );
         })}
       </Grid>
+
+      <UserDetailDialog
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        userId={detailUserId}
+        onActionComplete={() => { setDetailOpen(false); }}
+      />
     </>
   );
 };

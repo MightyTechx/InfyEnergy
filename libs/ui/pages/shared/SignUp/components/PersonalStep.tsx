@@ -206,21 +206,11 @@ const PersonalStep = ({
                 sx={{ width: '100%' }}
                 slotProps={{
                   textField: {
-                    size: 'small',
                     fullWidth: true,
                     required: true,
                     onBlur,
                     error: touched.dateOfBirth && Boolean(errors.dateOfBirth),
                     helperText: reqError(touched.dateOfBirth, errors.dateOfBirth),
-                    sx: {
-                      '& .MuiOutlinedInput-root': {
-                        height: '40px',
-                        paddingRight: '8px',
-                      },
-                      '& .MuiOutlinedInput-input': {
-                        padding: '8.5px 14px',
-                      },
-                    },
                   },
                 }}
               />

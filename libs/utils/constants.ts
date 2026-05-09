@@ -4,10 +4,10 @@ const CONSULTANT_BASE = '/app/consultant';
 
 const AdminPath = {
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
-  ROLE_REQUESTS: `${ADMIN_BASE}/access-requests`,
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
+  SETTINGS: `${ADMIN_BASE}/settings`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
 };
 
@@ -20,6 +20,7 @@ const ConsultantPath = {
   ACCESS_MANAGEMENT: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_ACCESS: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_MANAGEMENT: `${CONSULTANT_BASE}/people-management`,
+  SETTINGS: `${CONSULTANT_BASE}/settings`,
 };
 
 const AuthPath = {

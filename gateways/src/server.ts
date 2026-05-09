@@ -46,7 +46,8 @@ const HOST = process.env.HOST || '0.0.0.0';
  */
 async function checkDatabaseConnection() {
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    const db = await prisma;
+    await db.$queryRaw`SELECT 1`;
     logger.info('Database connection established');
   } catch (error) {
     logger.error('Failed to connect to database:', error);
@@ -90,7 +91,8 @@ async function startServer() {
 
         try {
           // Close Prisma DB connection
-          await prisma.$disconnect();
+          const db = await prisma;
+          await db.$disconnect();
           logger.info('Database connection closed');
           logger.info('Graceful shutdown completed');
           process.exit(0);

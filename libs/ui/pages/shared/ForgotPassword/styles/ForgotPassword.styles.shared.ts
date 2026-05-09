@@ -63,6 +63,22 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     zIndex: 1,
   },
 
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    position: 'relative',
+    zIndex: 1,
+    fontFamily: 'Orbitron, sans-serif',
+    color: '#fff',
+    fontWeight: 700,
+    fontSize: '1rem',
+    letterSpacing: 2,
+    textShadow: '0 0 12px rgba(0,242,255,0.5)',
+    cursor: 'default',
+    flexShrink: 0,
+  },
+
   brandIcon: {
     width: 52,
     height: 52,

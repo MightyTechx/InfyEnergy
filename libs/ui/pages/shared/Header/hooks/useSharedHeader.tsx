@@ -20,7 +20,7 @@ export interface NotificationItem {
 export const useSharedHeader = () => {
   const navigate = useNavigate();
   const { AdminPath, AuthPath, ConsultantPath } = constants;
-  const { user, isAdmin, isConsultant, isConsultantMode, logout } = useAuth();
+  const { user, isAdmin, isConsultant, isConsultantMode, logout, enterConsultantMode, exitConsultantMode } = useAuth();
   const [authAction] = useAuthActionMutation();
   const { show: showLoader, hide: hideLoader } = useLoader();
 
@@ -28,44 +28,41 @@ export const useSharedHeader = () => {
 
   // Menus
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notifAnchorEl, setNotifAnchorEl] = useState<null | HTMLElement>(null);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   // Notifications
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const items: NotificationItem[] = [];
-
-      // ── Pending role requests (admin only) ─────────────────────────────────
-      if (!consultantMode) {
-        try {
-          const res = await authAction({ action: 'get-pending-role-requests' }).unwrap();
-          const users: IAuthUser[] = res.data || [];
-          users.forEach((u) => {
-            items.push({
-              id: `role-${u.id}`,
-              type: 'role-request',
-              name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Unknown',
-              subtitle:
-                u.requestedRole === 'admin' ? 'Admin Access Request' : 'Consultant Access Request',
-              createdAt: u.createdAt,
-              navigateTo: AdminPath.ROLE_REQUESTS,
-              color: u.requestedRole === 'admin' ? '#6366f1' : '#0ea5e9',
-              rawUser: u,
-            });
+  const fetchNotifications = useCallback(async () => {
+    const items: NotificationItem[] = [];
+    if (!consultantMode) {
+      try {
+        const res = await authAction({ action: 'get-pending-role-requests' }).unwrap();
+        const users: IAuthUser[] = res.data || [];
+        users.forEach((u) => {
+          items.push({
+            id: `role-${u.id}`,
+            type: 'role-request',
+            name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Unknown',
+            subtitle: u.requestedRole === 'admin' ? 'Admin Access Request' : 'Consultant Access Request',
+            createdAt: u.createdAt,
+            navigateTo: AdminPath.ACCESS_MANAGEMENT,
+            color: u.requestedRole === 'admin' ? '#6366f1' : '#0ea5e9',
+            rawUser: u,
           });
-        } catch {
-          /* non-critical */
-        }
+        });
+      } catch {
+        /* non-critical */
       }
-
-      setNotifications(items);
-    };
-
-    fetchNotifications();
+    }
+    setNotifications(items);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authAction, consultantMode]);
+
+  useEffect(() => {
+    fetchNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchNotifications]);
 
   const userName =
     user?.name || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User';
@@ -73,12 +70,12 @@ export const useSharedHeader = () => {
   // Menu handlers
   const handleSettingsOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleSettingsClose = () => setAnchorEl(null);
-  const handleNotifOpen = (e: React.MouseEvent<HTMLElement>) => setNotifAnchorEl(e.currentTarget);
-  const handleNotifClose = () => setNotifAnchorEl(null);
+  const handleNotifOpen = () => setNotifOpen(true);
+  const handleNotifClose = () => setNotifOpen(false);
 
   const handleNotifClick = () => {
     handleNotifClose();
-    navigate(AdminPath.ROLE_REQUESTS);
+    navigate(AdminPath.ACCESS_MANAGEMENT);
   };
 
   const handleNotifItemClick = useCallback(
@@ -101,6 +98,24 @@ export const useSharedHeader = () => {
     navigate(AdminPath.PROFILE);
   };
 
+  const handleSwitchToConsultant = async () => {
+    handleSettingsClose();
+    showLoader('Switching to Consultant Mode…');
+    await new Promise((resolve) => setTimeout(resolve, 4000));
+    enterConsultantMode();
+    navigate(ConsultantPath.DASHBOARD);
+    hideLoader();
+  };
+
+  const handleSwitchToAdmin = async () => {
+    handleSettingsClose();
+    showLoader('Switching to Admin Mode…');
+    await new Promise((resolve) => setTimeout(resolve, 4000));
+    exitConsultantMode();
+    navigate(AdminPath.DASHBOARD);
+    hideLoader();
+  };
+
   const handleLogoClick = () => {
     if (consultantMode) {
       navigate(ConsultantPath.DASHBOARD);
@@ -118,7 +133,7 @@ export const useSharedHeader = () => {
     consultantMode,
     userName,
     anchorEl,
-    notifAnchorEl,
+    notifOpen,
     notifications,
     // Handlers
     handleSettingsOpen,
@@ -127,8 +142,11 @@ export const useSharedHeader = () => {
     handleNotifClose,
     handleNotifClick,
     handleNotifItemClick,
+    refreshNotifications: fetchNotifications,
     handleLogout,
     handleProfile,
     handleLogoClick,
+    handleSwitchToConsultant,
+    handleSwitchToAdmin,
   };
 };

@@ -6,5 +6,14 @@ import GlobalStyles from '@mui/material/GlobalStyles';
  * component tree (e.g. alongside the loading guard).
  */
 export const useAdminKeyframes = () => {
-  return <GlobalStyles styles='' />;
+  return (
+    <GlobalStyles
+      styles={`
+        @keyframes livePulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.35; transform: scale(0.75); }
+        }
+      `}
+    />
+  );
 };

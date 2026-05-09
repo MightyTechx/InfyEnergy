@@ -147,9 +147,7 @@ export const usePeopleRequests = () => {
             cursor: 'pointer',
             '&:hover': { textDecoration: 'underline' },
           }}
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+          onClick={(e) => e.preventDefault()}
         >
           {String(row.name || '-')}
         </Typography>

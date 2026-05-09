@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box, Loader, DataTable } from '@infyenergy/component';
 import { Typography, Tabs, Divider, TextField, InputAdornment } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
@@ -9,6 +10,7 @@ import { useStyles } from './styles';
 import { usePeopleRequests } from './hooks/useAccessRequests';
 import TabPanel from './components/TabPanel';
 import PersonDetailDialog from './dialogs/PersonDetailDialog';
+import { UserDetailDialog } from '../UserDetail';
 import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
 
 const PeopleRequests = () => {
@@ -32,6 +34,14 @@ const PeopleRequests = () => {
     handleConfirmAction,
     setActionNotes,
   } = usePeopleRequests();
+
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailUserId, setDetailUserId] = useState<number | null>(null);
+
+  const openDetail = (id: number) => {
+    setDetailUserId(id);
+    setDetailOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -203,6 +213,7 @@ const PeopleRequests = () => {
                   rowKey='id'
                   searchable={false}
                   initialRowsPerPage={10}
+                  onRowClick={(row: any) => { if (row.id && !row.isDraft) openDetail(row.id as number); }}
                 />
               </Box>
             )}
@@ -217,6 +228,13 @@ const PeopleRequests = () => {
         onClose={handleCloseAction}
         onNotesChange={setActionNotes}
         onConfirm={handleConfirmAction}
+      />
+
+      <UserDetailDialog
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        userId={detailUserId}
+        onActionComplete={() => { setDetailOpen(false); }}
       />
     </>
   );

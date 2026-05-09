@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Chip, Switch, Link, Tooltip, Typography } from '@mui/material';
+import { Chip, Switch, Link, Tooltip, Typography, Button, Stack } from '@mui/material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import { useAuthActionMutation } from '@infyenergy/services';
 import { constants } from '@infyenergy/utils';
 import { useAuth, useNotification, useMediaQuery } from '@infyenergy/hooks';
@@ -15,6 +18,7 @@ import {
   DRAFT_DAYS,
 } from '../utils/accessManagement.utils';
 import { Column } from '@infyenergy/component';
+import { AccessRequestRow } from '../../PeopleRequests/types/accessRequests.types';
 
 const usePeopleManagement = () => {
   const [authAction] = useAuthActionMutation();
@@ -27,11 +31,13 @@ const usePeopleManagement = () => {
   const [admins, setAdmins] = useState<IAuthUser[]>([]);
   const [consultants, setConsultants] = useState<IAuthUser[]>([]);
   const [dbDraftUsers, setDbDraftUsers] = useState<IAuthUser[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<AccessRequestRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const [tableSearch, setTableSearch] = useState('');
   const [togglingIds, setTogglingIds] = useState<Set<number>>(new Set());
   const [selectedRow, setSelectedRow] = useState<UserRow | null>(null);
+  const [actionInProgress, setActionInProgress] = useState<number | null>(null);
 
   // ── Draft display (read from localStorage, shown as pinned row in table) ─────
   const [draftMeta, setDraftMeta] = useState<{ savedAt: string; expiresAt: string } | null>(() => {
@@ -47,17 +53,45 @@ const usePeopleManagement = () => {
   const fetchUsers = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [usersResult, draftsResult] = await Promise.allSettled([
+      const [usersResult, draftsResult, requestsResult] = await Promise.allSettled([
         authAction({ action: 'get-all-users' }).unwrap(),
         authAction({ action: 'get-management-drafts' }).unwrap(),
+        authAction({ action: 'get-role-requests' }).unwrap(),
       ]);
 
       const usersData = usersResult.status === 'fulfilled' ? usersResult.value : { data: [] };
       const draftsData = draftsResult.status === 'fulfilled' ? draftsResult.value : { data: [] };
+      const requestsData = requestsResult.status === 'fulfilled' ? requestsResult.value : { data: [] };
 
       const users: IAuthUser[] = usersData.data || [];
       const adminsOnly = users.filter((u) => u.role === 'admin');
       const consultantsOnly = users.filter((u) => u.role === 'consultant');
+
+      // Fetch pending requests
+      const pending: AccessRequestRow[] = (requestsData.data || [])
+        .filter(
+          (u: IAuthUser) =>
+            (u.requestedRole === 'admin' || u.requestedRole === 'consultant') &&
+            u.status === 'pending_approval',
+        )
+        .map((u: IAuthUser) => ({
+          id: u.id,
+          name: u.name || `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || '-',
+          email: u.email || '-',
+          businessUnit: u.businessUnit || '-',
+          requestedRole: u.requestedRole,
+          status: u.status,
+          expiresAt: '',
+          isDraft: false,
+          adminNotes: u.adminNotes,
+        }));
+      // Sort pending requests by createdAt (newest first)
+      const sortedPending = [...pending].sort((a, b) => {
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
+      setPendingRequests(sortedPending);
 
       const dbDrafts: IAuthUser[] = (draftsData.data || []).map((d: any) => {
         const f = d.formData?.form ?? {};
@@ -100,13 +134,42 @@ const usePeopleManagement = () => {
         } as unknown as IAuthUser;
       });
 
+      // Sort function: pending/draft first, active second, others last
+  const sortUsersByStatus = (users: IAuthUser[]): IAuthUser[] => {
+    return [...users].sort((a, b) => {
+      const aIsDraft = (a as any).status === 'draft' || (a as any).status === 'pending_approval' || (a as any).status === 'invited';
+      const bIsDraft = (b as any).status === 'draft' || (b as any).status === 'pending_approval' || (b as any).status === 'invited';
+
+      const aIsActive = (a as any).status === 'active' && (a as any).isActive === true;
+      const bIsActive = (b as any).status === 'active' && (b as any).isActive === true;
+
+      // Draft/Pending first
+      if (aIsDraft && !bIsDraft) return -1;
+      if (!aIsDraft && bIsDraft) return 1;
+
+      // Active second
+      if (aIsActive && !bIsActive) return -1;
+      if (!aIsActive && bIsActive) return 1;
+
+      // Both draft or both active - sort by createdAt descending
+      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bTime - aTime;
+    });
+  };
+
       const adminDrafts = dbDrafts.filter((d) => (d as any).role === 'admin');
       const consultantDrafts = dbDrafts.filter((d) => (d as any).role === 'consultant');
       const relevantDbDrafts = [...adminDrafts, ...consultantDrafts];
 
-      setAllUsers([...relevantDbDrafts, ...adminsOnly, ...consultantsOnly]);
-      setAdmins([...adminDrafts, ...adminsOnly]);
-      setConsultants([...consultantDrafts, ...consultantsOnly]);
+      // Sort all users: pending/draft first, active second, others last
+      const sortedAdminsOnly = sortUsersByStatus(adminsOnly);
+      const sortedConsultantsOnly = sortUsersByStatus(consultantsOnly);
+      const sortedAllUsers = sortUsersByStatus([...adminsOnly, ...consultantsOnly]);
+
+      setAllUsers([...relevantDbDrafts, ...sortedAllUsers]);
+      setAdmins([...adminDrafts, ...sortedAdminsOnly]);
+      setConsultants([...consultantDrafts, ...sortedConsultantsOnly]);
       setDbDraftUsers(relevantDbDrafts);
       setSelectedRow((prev) => {
         if (!prev) return null;
@@ -207,6 +270,27 @@ const usePeopleManagement = () => {
     }
   };
 
+  // ── Pending request actions ──────────────────────────────────────────────────
+  const handlePendingAction = async (row: AccessRequestRow, type: 'approve' | 'reject') => {
+    setActionInProgress(row.id);
+    try {
+      await authAction({
+        action: type === 'approve' ? 'approve-role-request' : 'reject-role-request',
+        userId: row.id,
+      }).unwrap();
+      notify.success(
+        type === 'approve'
+          ? `Access approved for ${row.name}`
+          : `Request from ${row.name} has been rejected`,
+      );
+      fetchUsers();
+    } catch {
+      notify.error(`Failed to ${type} request. Please try again.`);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
   // ── Columns ───────────────────────────────────────────────────────────────────
   const columns: Column<UserRow>[] = useMemo(
     () => [
@@ -221,13 +305,7 @@ const usePeopleManagement = () => {
             variant='body2'
             underline='hover'
             sx={{ fontWeight: 500, cursor: 'pointer', color: '#1976d2' }}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
-              handleRowClick(row);
-            }}
-            onKeyDown={(e: React.KeyboardEvent) => {
-              if (e.key === 'Enter') handleRowClick(row);
-            }}
+            onClick={(e: React.MouseEvent) => e.preventDefault()}
           >
             {String(row.name || '-')}
           </Link>
@@ -306,48 +384,6 @@ const usePeopleManagement = () => {
         format: (v) => fmtDate(v as string),
       },
       {
-        id: 'adminNotes' as keyof UserRow,
-        label: 'Review Notes',
-        minWidth: 180,
-        sortable: false,
-        format: (v): React.ReactNode => {
-          const note = String(v || '');
-          if (!note || note === 'null')
-            return (
-              <Typography
-                variant='body2'
-                sx={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.78rem' }}
-              >
-                —
-              </Typography>
-            );
-          return (
-            <Tooltip title={note} placement='top' arrow>
-              <Typography
-                variant='body2'
-                sx={{
-                  fontSize: '0.78rem',
-                  color: '#475569',
-                  maxWidth: 160,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  cursor: 'help',
-                }}
-              >
-                {note}
-              </Typography>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        id: 'source' as keyof UserRow,
-        label: 'Source',
-        minWidth: 140,
-        format: (v) => SOURCE_LABELS[String(v).toLowerCase()] || (v ? String(v) : '-'),
-      },
-      {
         id: 'createdAt' as keyof UserRow,
         label: 'Joined',
         minWidth: 140,
@@ -410,6 +446,7 @@ const usePeopleManagement = () => {
     admins,
     consultants,
     dbDraftUsers,
+    pendingRequests,
     isLoading,
     isMobile,
     tabValue,
@@ -421,6 +458,8 @@ const usePeopleManagement = () => {
     columns,
     getTableData,
     draftRow,
+    actionInProgress,
+    handlePendingAction,
   };
 };
 

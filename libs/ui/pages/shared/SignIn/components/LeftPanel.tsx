@@ -51,9 +51,9 @@ const LeftPanel = ({ classes, onNavigateSignUp }: LeftPanelProps) => {
       </Box>
 
       <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
-        Wind Service
+        Wind Energy
         <br />
-        Matrix Platform
+        Intelligence System
       </Typography>
       <Typography className={classes.heroSubtitle}>
         Centralized wind farm monitoring, SCADA integration, and predictive analytics for optimal

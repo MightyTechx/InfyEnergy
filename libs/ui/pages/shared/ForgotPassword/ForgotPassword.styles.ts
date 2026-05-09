@@ -68,6 +68,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     letterSpacing: 2,
     textShadow: '0 0 12px rgba(0,242,255,0.5)',
     cursor: 'default',
+    flexShrink: 0,
   },
 
   brand: {

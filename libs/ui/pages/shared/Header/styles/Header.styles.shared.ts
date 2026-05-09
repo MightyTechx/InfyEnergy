@@ -120,7 +120,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     paddingRight: theme.spacing(2.5),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: theme.spacing(1),
     minHeight: '64px',
     height: '64px',
 
@@ -283,6 +283,12 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     [theme.breakpoints.down('sm')]: {
       '& .MuiOutlinedInput-root': { height: '30px' },
     },
+  },
+
+  headerRightSpacer: {
+    flex: 1,
+
+    [theme.breakpoints.down('sm')]: { display: 'none' },
   },
 
   adminChip: {

@@ -11,10 +11,10 @@ import {
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link, useLocation } from 'react-router-dom';
-import { useStyles } from './SideNav.styles';
 import { useAdminMenuItems, useConsultantMenuItems } from './components/MenuItems';
 import { Tooltip } from '../../../components';
 import { useCollapse, useAuth } from '@infyenergy/hooks';
+import { useStyles } from './styles';
 
 // ── Group accent config ───────────────────────────────────────────────────────
 const ADMIN_GROUP_CONFIG: Record<
@@ -42,7 +42,7 @@ const ADMIN_GROUP_CONFIG: Record<
     glowColor: 'rgba(14,165,233,0.25)',
     dotColor: '#0ea5e9',
   },
-  'Mobility Services': {
+  'Wind Operations': {
     gradient: 'linear-gradient(90deg, rgba(139,92,246,0.22) 0%, rgba(139,92,246,0.05) 100%)',
     labelColor: '#c4b5fd',
     border: 'rgba(139,92,246,0.55)',
@@ -70,7 +70,7 @@ const ADMIN_GROUP_CONFIG: Record<
     glowColor: 'rgba(14,165,233,0.28)',
     dotColor: '#0ea5e9',
   },
-  Finance: {
+  'Energy Finance': {
     gradient: 'linear-gradient(90deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.04) 100%)',
     labelColor: '#fcd34d',
     border: 'rgba(245,158,11,0.55)',
@@ -149,10 +149,13 @@ const SideNav = () => {
           {menuGroups.map((group, groupIdx) => {
             const cfg = groupConfig[group.group] ?? ADMIN_GROUP_CONFIG['Overview'];
 
+            // Skip section header if group label is empty
+            const showSectionHeader = group.group !== '';
+
             return (
               <Box key={group.group} className={classes.navGroupBox}>
                 {/* Section header */}
-                {!collapsed ? (
+                {showSectionHeader && !collapsed ? (
                   <Box
                     className={classes.sectionHeaderExpanded}
                     sx={{
@@ -180,7 +183,7 @@ const SideNav = () => {
                       {group.group}
                     </Typography>
                   </Box>
-                ) : (
+                ) : showSectionHeader ? (
                   <Tooltip title={group.group} placement='right' arrow>
                     <Box
                       className={classes.sectionDividerCollapsed}
@@ -192,7 +195,7 @@ const SideNav = () => {
                       }}
                     />
                   </Tooltip>
-                )}
+                ) : null}
 
                 {/* Nav items */}
                 {group.items.map((item) => {

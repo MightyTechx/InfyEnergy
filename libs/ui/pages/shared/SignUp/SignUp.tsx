@@ -176,7 +176,7 @@ const SignUp = () => {
                   color='primary'
                   loading={isLoading}
                   disabled={isLoading || submitted}
-                  label='Submit Registration'
+                  label='Submit'
                 />
               )}
             </Box>

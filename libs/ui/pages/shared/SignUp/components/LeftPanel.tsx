@@ -51,12 +51,12 @@ const LeftPanel = ({ classes, onNavigateSignIn }: LeftPanelProps) => {
       </Box>
 
       <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
-        Wind Service
+        Wind Energy
         <br />
-        Matrix Platform
+        Intelligence System
       </Typography>
       <Typography className={classes.heroSubtitle}>
-        Join the {metadata.tenet} operations platform for centralized wind farm monitoring, SCADA
+        Join the {metadata.tenet} intelligence system for centralized wind farm monitoring, SCADA
         integration, and predictive analytics.
       </Typography>
 

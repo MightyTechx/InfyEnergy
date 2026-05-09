@@ -130,21 +130,24 @@ export class AuthController {
     const { action } = req.body as { action: AuthAction };
 
     try {
+      const db = await prisma;
       switch (action) {
         case 'signin':
-          return await this.signin(req, res);
+          return await this.signin(req, res, db);
         case 'signup':
-          return await this.signup(req, res);
+          return await this.signup(req, res, db);
+        case 'check-availability':
+          return await this.checkAvailability(req, res, db);
         case 'forgot-password':
-          return await this.forgotPassword(req, res);
+          return await this.forgotPassword(req, res, db);
         case 'verify-otp':
-          return await this.verifyOtp(req, res);
+          return await this.verifyOtp(req, res, db);
         case 'reset-password':
-          return await this.resetPassword(req, res);
+          return await this.resetPassword(req, res, db);
         case 'change-password':
         case 'get-my-profile':
         case 'update-my-profile':
-          return await this.handleAuthenticatedAction(req, res, action);
+          return await this.handleAuthenticatedAction(req, res, action, db);
         case 'get-role-requests':
         case 'get-pending-role-requests':
         case 'approve-role-request':
@@ -169,7 +172,7 @@ export class AuthController {
         case 'update-consultant-role':
         case 'delete-consultant-role':
         case 'get-login-logs':
-          return await this.handleAdminAction(req, res, action);
+          return await this.handleAdminAction(req, res, action, db);
         default:
           res.status(400).json({ message: `Unknown action: ${action}` });
       }
@@ -189,13 +192,12 @@ export class AuthController {
   };
 
   // ── Sign In ─────────────────────────────────────────────────────────────────
-  private signin = async (req: Request, res: Response) => {
+  private signin = async (req: Request, res: Response, db: PrismaClient) => {
     const validatedData = await SignInSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
 
-    const db = prisma as PrismaClient;
     const user = await db.user.findUnique({ where: { email: validatedData.email } });
 
     if (!user) throw new UnauthorizedException('Invalid email or password');
@@ -291,13 +293,11 @@ export class AuthController {
   };
 
   // ── Sign Up (source = signup, status = pending_approval) ───────────────────
-  private signup = async (req: Request, res: Response) => {
+  private signup = async (req: Request, res: Response, db: PrismaClient) => {
     const validatedData = await SignUpSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
-
-    const db = prisma as PrismaClient;
 
     const existingUser = await db.user.findUnique({ where: { email: validatedData.email } });
     if (existingUser) {
@@ -356,12 +356,27 @@ export class AuthController {
     });
   };
 
-  private forgotPassword = async (req: Request, res: Response) => {
+  private checkAvailability = async (req: Request, res: Response, db: PrismaClient) => {
+    const { email, phone } = req.body as { email?: string; phone?: string };
+    const result: { emailExists?: boolean; phoneExists?: boolean } = {};
+
+    if (email) {
+      const user = await db.user.findUnique({ where: { email } });
+      result.emailExists = !!user;
+    }
+    if (phone) {
+      const user = await db.user.findFirst({ where: { phone } });
+      result.phoneExists = !!user;
+    }
+
+    res.json({ data: result });
+  };
+
+  private forgotPassword = async (req: Request, res: Response, db: PrismaClient) => {
     const validatedData = await ForgotPasswordSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
-    const db = prisma as PrismaClient;
     const user = await db.user.findUnique({ where: { email: validatedData.email } });
 
     if (!user) {
@@ -396,12 +411,11 @@ export class AuthController {
     res.json({ message: 'If the email exists, an OTP has been sent.' });
   };
 
-  private verifyOtp = async (req: Request, res: Response) => {
+  private verifyOtp = async (req: Request, res: Response, db: PrismaClient) => {
     const validatedData = await VerifyOtpSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
-    const db = prisma as PrismaClient;
     const user = await db.user.findUnique({ where: { email: validatedData.email } });
 
     if (
@@ -425,7 +439,7 @@ export class AuthController {
     res.json({ message: 'OTP verified', data: { verified: true, resetToken } });
   };
 
-  private resetPassword = async (req: Request, res: Response) => {
+  private resetPassword = async (req: Request, res: Response, db: PrismaClient) => {
     const validatedData = await ResetPasswordSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
@@ -444,7 +458,6 @@ export class AuthController {
       return;
     }
 
-    const db = prisma as PrismaClient;
     const hashedPassword = await bcrypt.hash(validatedData.newPassword, 10);
     await db.user.update({
       where: { email: validatedData.email },
@@ -461,7 +474,12 @@ export class AuthController {
   };
 
   // ── Authenticated (non-admin) actions ────────────────────────────────────────
-  private handleAuthenticatedAction = async (req: Request, res: Response, action: string) => {
+  private handleAuthenticatedAction = async (
+    req: Request,
+    res: Response,
+    action: string,
+    db: PrismaClient,
+  ) => {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer '))
       throw new UnauthorizedException('Access token is required');
@@ -473,8 +491,6 @@ export class AuthController {
     } catch {
       throw new UnauthorizedException('Invalid or expired token');
     }
-
-    const db = prisma as PrismaClient;
 
     const userId = Number(decoded.id);
 
@@ -587,7 +603,12 @@ export class AuthController {
   };
 
   // ── Admin actions ─────────────────────────────────────────────────────────────
-  private handleAdminAction = async (req: Request, res: Response, action: string) => {
+  private handleAdminAction = async (
+    req: Request,
+    res: Response,
+    action: string,
+    db: PrismaClient,
+  ) => {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer '))
       throw new UnauthorizedException('Access token is required');
@@ -604,8 +625,6 @@ export class AuthController {
       res.status(403).json({ message: 'Admin access required' });
       return;
     }
-
-    const db = prisma as PrismaClient;
 
     // Track last activity (fire-and-forget — does not block the response)
     db.user

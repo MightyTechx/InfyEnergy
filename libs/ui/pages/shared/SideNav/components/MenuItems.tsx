@@ -1,6 +1,5 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { constants } from '@infyenergy/utils';
 
@@ -19,19 +18,10 @@ export const useAdminMenuItems = (): MenuGroup[] => {
   const { AdminPath } = constants;
   return [
     {
-      group: 'Overview',
-      items: [{ label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD }],
-    },
-    {
-      group: 'People',
+      group: '',
       items: [
-        { label: 'People Requests', icon: <AssignmentIndIcon />, path: AdminPath.ROLE_REQUESTS },
+        { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
         { label: 'People Management', icon: <VpnKeyIcon />, path: AdminPath.ACCESS_MANAGEMENT },
-      ],
-    },
-    {
-      group: 'Reports',
-      items: [
         { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
       ],
     },
@@ -39,16 +29,13 @@ export const useAdminMenuItems = (): MenuGroup[] => {
 };
 
 export const useConsultantMenuItems = (): MenuGroup[] => {
-  const { ConsultantPath } = constants;
+  const { ConsultantPath, AdminPath } = constants;
   return [
     {
-      group: 'Overview',
-      items: [{ label: 'Dashboard', icon: <DashboardIcon />, path: ConsultantPath.DASHBOARD }],
-    },
-    {
-      group: 'People',
+      group: '',
       items: [
-        { label: 'People Management', icon: <VpnKeyIcon />, path: ConsultantPath.PEOPLE_MANAGEMENT },
+        { label: 'Dashboard', icon: <DashboardIcon />, path: ConsultantPath.DASHBOARD },
+        { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
       ],
     },
   ];

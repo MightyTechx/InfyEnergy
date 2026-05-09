@@ -20,7 +20,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       boxSizing: 'border-box',
       top: '64px',
       height: 'calc(100vh - 64px)',
-      width: 290,
+      width: 250,
       padding: theme.spacing(1.5),
 
       backdropFilter: 'blur(20px)',
