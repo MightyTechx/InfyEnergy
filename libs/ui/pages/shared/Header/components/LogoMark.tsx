@@ -36,8 +36,7 @@ const LogoMark = ({ compact = false }: LogoMarkProps) => {
           textShadow: '0 0 10px rgba(0,242,255,0.5)',
         }}
       >
-        {!compact && 'INFY '}
-        ENERGY
+        {!compact && 'INFYGEN'}
       </Typography>
     </Box>
   );

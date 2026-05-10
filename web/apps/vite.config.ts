@@ -33,10 +33,12 @@ export default defineConfig(({ mode }) => ({
     'process.env.PARTNER_ID': JSON.stringify(partnerConfig.partnerId),
     'process.env.PARTNER_NAME': JSON.stringify(partnerConfig.partnerName),
     'process.env.API_URL': JSON.stringify(partnerConfig.apiUrl || 'http://localhost:3001'),
-    'APP_NAME': JSON.stringify('administration'),
-    'PARTNER': JSON.stringify(PARTNER),
+    APP_NAME: JSON.stringify('administration'),
+    PARTNER: JSON.stringify(PARTNER),
     // VITE_API_URL for the base API service
-    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || partnerConfig.apiUrl || 'http://localhost:3001'),
+    'import.meta.env.VITE_API_URL': JSON.stringify(
+      process.env.VITE_API_URL || partnerConfig.apiUrl || 'http://localhost:3001',
+    ),
 
     // --- REACT_APP_* vars (not injected by webpack either; all use their defaults) ---
     'process.env.REACT_APP_API_URL': 'undefined',

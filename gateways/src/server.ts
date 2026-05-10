@@ -55,6 +55,49 @@ async function checkDatabaseConnection() {
   }
 }
 
+// Nav feature flags that gate consultant sidebar items
+const NAV_FLAGS = [
+  {
+    key: 'nav_people_management',
+    name: 'People Management Nav',
+    description: 'Controls visibility of People Management in the consultant navigation',
+  },
+  {
+    key: 'nav_analytics',
+    name: 'Analytics Nav',
+    description: 'Controls visibility of Analytics in the consultant navigation',
+  },
+  {
+    key: 'nav_feature_flags',
+    name: 'Feature Flags Nav',
+    description: 'Controls visibility of Feature Flags in the consultant navigation',
+  },
+] as const;
+
+async function seedNavFlags() {
+  try {
+    const db = await prisma;
+    for (const flag of NAV_FLAGS) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (db as any).featureFlag.upsert({
+        where: { key: flag.key },
+        update: {},
+        create: {
+          name: flag.name,
+          key: flag.key,
+          description: flag.description,
+          environment: 'Production',
+          status: 'Disabled',
+          roles: JSON.stringify(['Admin']),
+        },
+      });
+    }
+    logger.info('Nav feature flags seeded');
+  } catch (error) {
+    logger.error('Failed to seed nav feature flags:', error);
+  }
+}
+
 /**
  * --------------------------------
  * Server Startup
@@ -65,10 +108,13 @@ async function startServer() {
     // Verify database connectivity
     await checkDatabaseConnection();
 
+    // Ensure nav-gating feature flags exist in DB
+    await seedNavFlags();
+
     // Start HTTP server
     const server = app.listen(PORT, HOST, () => {
       logger.info('='.repeat(60));
-      logger.info(`Infy Energy Backend API Server Started`);
+      logger.info(`InfyGen Backend API Server Started`);
       logger.info('='.repeat(60));
       logger.info(`Server running on: http://${HOST}:${PORT}`);
       logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);

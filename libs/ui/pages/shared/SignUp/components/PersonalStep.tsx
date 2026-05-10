@@ -278,7 +278,6 @@ const PersonalStep = ({
                   label='City / Zone of Operation'
                   placeholder='Start typing to search...'
                   required
-                  size='small'
                   error={touched.cityZone && Boolean(errors.cityZone)}
                   errorText={reqError(touched.cityZone, errors.cityZone)}
                   inputProps={{ ...autoInputProps, name: 'cityZone' }}
@@ -367,7 +366,6 @@ const PersonalStep = ({
                   {...params}
                   label='Work Location'
                   placeholder='Start typing to search...'
-                  size='small'
                   inputProps={{ ...autoInputProps, name: 'workLocation' }}
                   onBlur={onBlur}
                   InputProps={

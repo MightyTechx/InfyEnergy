@@ -94,6 +94,10 @@ const AppRoutes = () => {
             {/* Consultant routes */}
             <Route path={ConsultantPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={ConsultantPath.SETTINGS} element={<SettingsPage />} />
+            <Route
+              path={ConsultantPath.ACCESS_MANAGEMENT}
+              element={<AdminPeopleManagementPage />}
+            />
 
             <Route path={Path.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
