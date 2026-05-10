@@ -369,6 +369,20 @@ const FIELD_SX = {
 
 const FIELD_SX_WIDE = { ...FIELD_SX, flex: '2 1 220px' } as const;
 
+const DATE_FIELD_SX = {
+  flex: '1 1 180px',
+  minWidth: 0,
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '10px',
+    '& fieldset': { borderRadius: '10px' },
+    '&:hover fieldset': { borderColor: '#4f46e5' },
+    '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+  },
+  '& fieldset': { borderRadius: '10px' },
+  '& .MuiInputLabel-root': { fontSize: '0.95rem' },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+} as const;
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const Reports = () => {
@@ -493,7 +507,10 @@ const Reports = () => {
             label='From Date'
             value={fromDate}
             onChange={(v) => setFromDate(v)}
-            slotProps={{ textField: { size: 'small', sx: FIELD_SX } }}
+            slotProps={{
+              textField: { size: 'small', sx: DATE_FIELD_SX },
+              desktopPaper: { sx: { borderRadius: '10px', mt: 0.5 } },
+            }}
           />
 
           {/* To Date */}
@@ -502,7 +519,10 @@ const Reports = () => {
             value={toDate}
             minDate={fromDate ?? undefined}
             onChange={(v) => setToDate(v)}
-            slotProps={{ textField: { size: 'small', sx: FIELD_SX } }}
+            slotProps={{
+              textField: { size: 'small', sx: DATE_FIELD_SX },
+              desktopPaper: { sx: { borderRadius: '10px', mt: 0.5 } },
+            }}
           />
 
           {/* Document Type */}

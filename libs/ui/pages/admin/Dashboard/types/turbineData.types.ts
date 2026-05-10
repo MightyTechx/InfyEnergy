@@ -719,3 +719,8 @@ export const MOCK_TURBINE_DATA: TurbineData[] = [
     tempSwCabHub: 33,
   },
 ];
+
+// Helper function to get turbine by ID
+export const getTurbineById = (id: number): TurbineData | undefined => {
+  return MOCK_TURBINE_DATA.find((t) => t.id === id);
+};

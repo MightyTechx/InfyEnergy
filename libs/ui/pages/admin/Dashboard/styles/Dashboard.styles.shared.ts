@@ -388,4 +388,96 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     fontWeight: 500,
     color: '#64748b',
   },
+
+  // ─── Toolbar / View Toggle ───────────────────────────────────────────────────
+  tableToolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(1.5, 2),
+    background: '#fff',
+    borderRadius: 14,
+    border: '1px solid #e8eaf0',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    flexWrap: 'wrap' as const,
+    [theme.breakpoints.down('sm')]: {
+      gap: theme.spacing(1),
+      padding: theme.spacing(1.25, 1.5),
+    },
+  },
+
+  viewToggleGroup: {
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexShrink: 0,
+    [theme.breakpoints.down('sm')]: { width: '100%' },
+  },
+
+  chartDatePicker: {
+    width: 165,
+    flexShrink: 0,
+    '& .MuiOutlinedInput-root': {
+      height: '36px',
+      fontSize: '0.82rem',
+      borderRadius: '8px',
+      '& fieldset': { borderColor: 'rgba(13,148,136,0.3)' },
+      '&:hover fieldset': { borderColor: '#0d9488' },
+      '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
+    },
+    '& .MuiInputBase-input': { padding: '4px 8px', fontSize: '0.82rem' },
+  },
+
+  toolbarSearch: {
+    marginLeft: 'auto',
+    width: 220,
+    flexShrink: 0,
+    '& .MuiOutlinedInput-root': {
+      height: '36px',
+      fontSize: '0.85rem',
+      background: 'rgba(255,255,255,0.92)',
+      borderRadius: 40,
+      transition: 'all 0.22s ease',
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: '1px solid rgba(79,70,229,0.18)',
+        borderRadius: 40,
+      },
+      '&:hover .MuiOutlinedInput-notchedOutline': { border: '1px solid rgba(79,70,229,0.4)' },
+      '&.Mui-focused': {
+        boxShadow: '0 0 0 3px rgba(79,70,229,0.1)',
+        '& .MuiOutlinedInput-notchedOutline': { border: '1px solid #4f46e5' },
+      },
+    },
+    '& .MuiInputBase-input': {
+      padding: '4px 4px 4px 12px',
+      '&::placeholder': { color: '#94a3b8', opacity: 1 },
+    },
+    '& .MuiInputAdornment-root .MuiSvgIcon-root': {
+      fontSize: '1.1rem',
+      color: 'rgba(79,70,229,0.5)',
+    },
+    [theme.breakpoints.down('sm')]: { width: '100%', marginLeft: 0 },
+  },
+
+  // ─── Chart Card ──────────────────────────────────────────────────────────────
+  chartCard: {
+    borderRadius: 14,
+    border: '1px solid #e8eaf0',
+    background: '#fff',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(79,70,229,0.05)',
+    overflow: 'hidden',
+  },
+
+  chartCardHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2, 2.5),
+    borderBottom: '1px solid #f1f5f9',
+    background: 'linear-gradient(135deg, rgba(13,148,136,0.05) 0%, rgba(8,145,178,0.03) 100%)',
+  },
+
+  chartCardBody: {
+    padding: theme.spacing(1.5, 2, 2),
+  },
 });

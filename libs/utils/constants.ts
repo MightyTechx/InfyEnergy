@@ -5,6 +5,7 @@ const CONSULTANT_BASE = '/app/consultant';
 const AdminPath = {
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
+  TURBINE_DETAIL: `${ADMIN_BASE}/dashboard/turbine/:id`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
   REPORTS: `${ADMIN_BASE}/reports`,
@@ -12,6 +13,7 @@ const AdminPath = {
   TECHNICAL_DOCUMENTS: `${ADMIN_BASE}/technical-documents`,
   SETTINGS: `${ADMIN_BASE}/settings`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
+  FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
 };
 
 const UserPath = {
@@ -24,6 +26,7 @@ const ConsultantPath = {
   PEOPLE_ACCESS: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_MANAGEMENT: `${CONSULTANT_BASE}/people-management`,
   SETTINGS: `${CONSULTANT_BASE}/settings`,
+  FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
 };
 
 const AuthPath = {

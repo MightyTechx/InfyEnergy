@@ -569,6 +569,20 @@ model AdminConfiguration {
   updatedAt DateTime @updatedAt
 }
 
+model FeatureFlag {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  environment String   @default("Development")
+  status      String   @default("Disabled")
+  roles       String   @default("[\"Admin\"]")
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 // USER API Models
 
 model UserDashboard {

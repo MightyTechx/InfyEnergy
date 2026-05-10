@@ -13,12 +13,14 @@ import { AppRoleContext } from '@infyenergy/theme';
 const {
   // Admin pages
   AdminDashboardPage,
+  AdminTurbineDetailPage,
   AdminPeopleManagementPage,
   AdminUserDetailPage,
   AdminProfilePage,
   AdminReportsPage,
   AdminInventoryPage,
   AdminTechnicalDocumentsPage,
+  AdminFeatureFlagsPage,
   SettingsPage,
 
   // Auth pages
@@ -76,12 +78,14 @@ const AppRoutes = () => {
 
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
+            <Route path={AdminPath.TURBINE_DETAIL} element={<AdminTurbineDetailPage />} />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />
             <Route path={AdminPath.REPORTS} element={<AdminReportsPage />} />
             <Route path={AdminPath.INVENTORY} element={<AdminInventoryPage />} />
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
+            <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
 
             {/* User routes */}

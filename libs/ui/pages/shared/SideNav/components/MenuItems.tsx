@@ -4,6 +4,7 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DescriptionIcon from '@mui/icons-material/Description';
+import TuneIcon from '@mui/icons-material/Tune';
 import { constants } from '@infyenergy/utils';
 
 export interface MenuItem {
@@ -26,9 +27,14 @@ export const useAdminMenuItems = (): MenuGroup[] => {
         { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
         { label: 'People Management', icon: <VpnKeyIcon />, path: AdminPath.ACCESS_MANAGEMENT },
         { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
-        { label: 'Inventory', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
-        { label: 'Technical Documents', icon: <DescriptionIcon />, path: AdminPath.TECHNICAL_DOCUMENTS },
+        { label: 'Inventory Management', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
+        {
+          label: 'Technical Documents',
+          icon: <DescriptionIcon />,
+          path: AdminPath.TECHNICAL_DOCUMENTS,
+        },
         { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
+        { label: 'Feature Flags', icon: <TuneIcon />, path: AdminPath.FEATURE_FLAGS },
       ],
     },
   ];
@@ -42,6 +48,7 @@ export const useConsultantMenuItems = (): MenuGroup[] => {
       items: [
         { label: 'Dashboard', icon: <DashboardIcon />, path: ConsultantPath.DASHBOARD },
         { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
+        { label: 'Feature Flags', icon: <TuneIcon />, path: ConsultantPath.FEATURE_FLAGS },
       ],
     },
   ];
