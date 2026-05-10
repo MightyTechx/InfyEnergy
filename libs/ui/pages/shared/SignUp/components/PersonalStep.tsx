@@ -48,7 +48,7 @@ export const CITY_OPTIONS = [
   'Other',
 ];
 
-const GENDER_OPTIONS = [
+export const GENDER_OPTIONS = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' },
   { value: 'other', label: 'Non-binary / Other' },

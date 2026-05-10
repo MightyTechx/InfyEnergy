@@ -9,6 +9,7 @@ import {
   TableSortLabel,
   Checkbox,
 } from '@mui/material';
+import Loader from '../Loader/Loader';
 import { useStyles } from './styles';
 
 export interface DSTableColumn {
@@ -63,7 +64,7 @@ const Table: React.FC<DSTableProps> = ({
   emptyMessage = 'No data available',
   ...rest
 }) => {
-  const { cx, classes } = useStyles();
+  const { classes } = useStyles();
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -85,16 +86,12 @@ const Table: React.FC<DSTableProps> = ({
   };
 
   if (loading) {
-    return (
-      <TableContainer component={Paper} className={cx(classes.root, className)}>
-        <div className={classes.loading}>Loading...</div>
-      </TableContainer>
-    );
+    return <Loader />;
   }
 
   if (rows.length === 0) {
     return (
-      <TableContainer component={Paper} className={cx(classes.root, className)}>
+      <TableContainer component={Paper} className={classes.root}>
         <div className={classes.empty}>{emptyMessage}</div>
       </TableContainer>
     );
@@ -103,7 +100,7 @@ const Table: React.FC<DSTableProps> = ({
   return (
     <TableContainer
       component={Paper}
-      className={cx(classes.root, className)}
+      className={classes.root}
       variant={variant}
       elevation={elevation}
       sx={{ maxHeight: maxHeight || 440 }}

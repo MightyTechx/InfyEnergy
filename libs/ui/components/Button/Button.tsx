@@ -1,4 +1,4 @@
-import { Button as MUIButton, CircularProgress } from '@mui/material';
+import { Button as MUIButton } from '@mui/material';
 import { useStyles } from './styles';
 
 export interface DSButtonProps {
@@ -59,10 +59,11 @@ const Button: React.FC<DSButtonProps> = ({
       {...rest}
     >
       {loading ? (
-        <>
-          <CircularProgress size={20} color='inherit' style={{ marginRight: 8 }} />
-          {label || children}
-        </>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span className={classes.loadingDot} />
+          <span className={classes.loadingDot} style={{ animationDelay: '0.15s' }} />
+          <span className={classes.loadingDot} style={{ animationDelay: '0.3s' }} />
+        </span>
       ) : (
         label || children
       )}

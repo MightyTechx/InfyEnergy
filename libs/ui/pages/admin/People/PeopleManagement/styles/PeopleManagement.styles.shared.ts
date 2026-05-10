@@ -604,4 +604,110 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       display: 'none',
     },
   },
+
+  // ─── Dialog Styles (CreateUserDialog) ──────────────────────────────────────
+  dialog: {
+    '& .MuiDialog-paper': {
+      borderRadius: 16,
+      overflow: 'hidden',
+    },
+  },
+
+  modalHero: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #4f46e5 70%, #0ea5e9 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(167,139,250,0.3) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBox: {
+    width: 46,
+    height: 46,
+    borderRadius: '12px',
+    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(79,70,229,0.45)',
+    flexShrink: 0,
+  },
+
+  modalTitleBox: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  modalTitle: {
+    fontWeight: 700,
+    fontSize: '1.1rem',
+    color: '#fff',
+    letterSpacing: '-0.02em',
+  },
+
+  modalSubtitle: {
+    fontSize: '0.78rem',
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 2,
+  },
+
+  avatarPreview: {
+    width: 42,
+    height: 42,
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    background: 'rgba(255,255,255,0.15)',
+    border: '2px solid rgba(255,255,255,0.3)',
+    flexShrink: 0,
+  },
+
+  modalCloseBtn: {
+    color: 'rgba(255,255,255,0.7) !important',
+    '&:hover': { color: '#fff !important', background: 'rgba(255,255,255,0.1) !important' },
+  },
+
+  // ─── Section Card ──────────────────────────────────────────────────────────
+  sectionCard: {
+    borderRadius: 12,
+    border: '1px solid',
+    borderColor: 'divider',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+  },
+
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1.5, 2.5),
+    background: 'linear-gradient(135deg, rgba(79,70,229,0.05), rgba(124,58,237,0.03))',
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+  },
+
+  sectionIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: '8px',
+    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    '& svg': { color: '#fff' },
+  },
 });

@@ -27,6 +27,7 @@ model User {
   employeeId      String?
   businessUnit    String?
   managerName     String?
+  city            String?
   dateOfBirth     String?
   profilePicture  String?
   name            String

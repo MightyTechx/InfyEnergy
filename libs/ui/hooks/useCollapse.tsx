@@ -12,11 +12,11 @@ export function CollapseProvider({ children }: { children: ReactNode }) {
   const { isXS, isSM } = useDevice();
   const isMobileDevice = isXS || isSM;
 
-  // Read persisted state; default to collapsed (true) on first visit
+  // Always default to collapsed on mount — never restore an expanded state on refresh
   const [collapsed, setCollapsed] = useState(() => {
     if (isMobileDevice) return true;
-    const stored = localStorage.getItem('sideNavCollapsed');
-    return stored === null ? true : stored === 'true';
+    // Always start collapsed on initial page load; toggle will persist to localStorage
+    return true;
   });
 
   // If device becomes mobile, force collapse

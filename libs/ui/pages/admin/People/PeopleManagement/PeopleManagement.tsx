@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { Box, Loader, DataTable } from '@infyenergy/component';
-import { Typography, Grid, Tabs, Tab, Divider, TextField, InputAdornment, Chip, Button, Stack } from '@mui/material';
+import {
+  Typography,
+  Grid,
+  Tabs,
+  Tab,
+  Divider,
+  TextField,
+  InputAdornment,
+  Chip,
+  Button,
+  Stack,
+} from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -8,6 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TabPanel from './components/TabPanel';
 import usePeopleManagement from './hooks/useAccessManagement';
 import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
@@ -15,6 +27,7 @@ import { useStyles } from './styles';
 import { AccessRequestRow } from '../PeopleRequests/types/accessRequests.types';
 import { IAuthUser } from '@infyenergy/interfaces';
 import { UserDetailDialog } from '../UserDetail';
+import { CreateUserDialog } from './components/CreateUserDialog';
 // UserRow / constants imports removed — openDetail uses plain number ids
 
 const PeopleManagement = () => {
@@ -34,7 +47,6 @@ const PeopleManagement = () => {
     tableSearch,
     setTableSearch,
     selectedRow,
-    handleRowSelect,
     columns,
     getTableData,
     draftRow,
@@ -44,6 +56,7 @@ const PeopleManagement = () => {
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailUserId, setDetailUserId] = useState<number | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const openDetail = (id: number) => {
     setDetailUserId(id);
@@ -55,7 +68,7 @@ const PeopleManagement = () => {
       <>
         {keyframes}
         <Box className={classes.container}>
-          <Loader fullScreen />
+          <Loader />
         </Box>
       </>
     );
@@ -114,6 +127,129 @@ const PeopleManagement = () => {
             <Typography variant='h5' className={classes.title}>
               People Management
             </Typography>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Box
+                onClick={() => setCreateOpen(true)}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2.5,
+                  py: 1.25,
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
+                  boxShadow:
+                    '0 4px 20px rgba(99,102,241,0.45), 0 0 40px rgba(99,102,241,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '100%',
+                    height: '100%',
+                    background:
+                      'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                    transition: 'left 0.5s ease',
+                  },
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow:
+                      '0 8px 30px rgba(99,102,241,0.55), 0 0 60px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
+                    '&::before': {
+                      left: '100%',
+                    },
+                  },
+                  '&:active': {
+                    transform: 'translateY(0)',
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                  }}
+                >
+                  <PersonAddIcon sx={{ fontSize: 18, color: '#fff' }} />
+                </Box>
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      color: '#fff',
+                      lineHeight: 1.2,
+                      textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    Create User
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: '0.65rem',
+                      color: 'rgba(255,255,255,0.75)',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Add new member
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#34d399',
+                    ml: 0.5,
+                    boxShadow: '0 0 8px #34d399',
+                    animation: 'pulse 2s ease-in-out infinite',
+                    '@keyframes pulse': {
+                      '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                      '50%': { opacity: 0.6, transform: 'scale(0.8)' },
+                    },
+                  }}
+                />
+              </Box>
+              {draftCount > 0 && (
+                <Chip
+                  label={`${draftCount} Draft`}
+                  size='small'
+                  sx={{
+                    background: 'rgba(245,158,11,0.15)',
+                    border: '1px solid rgba(245,158,11,0.4)',
+                    color: '#f59e0b',
+                    fontWeight: 600,
+                    fontSize: '0.7rem',
+                    height: 24,
+                  }}
+                />
+              )}
+              {pendingCount > 0 && (
+                <Chip
+                  label={`${pendingCount} Pending`}
+                  size='small'
+                  sx={{
+                    background: 'rgba(239,68,68,0.15)',
+                    border: '1px solid rgba(239,68,68,0.4)',
+                    color: '#ef4444',
+                    fontWeight: 600,
+                    fontSize: '0.7rem',
+                    height: 24,
+                  }}
+                />
+              )}
+            </Box>
           </Box>
           <Typography variant='body2' className={classes.description}>
             View and manage all users and their access across different roles in the system.
@@ -199,7 +335,9 @@ const PeopleManagement = () => {
             <Tab
               icon={<PendingActionsIcon />}
               iconPosition='start'
-              label={isMobile ? undefined : `Pending${pendingCount > 0 ? ` (${pendingCount})` : ''}`}
+              label={
+                isMobile ? undefined : `Pending${pendingCount > 0 ? ` (${pendingCount})` : ''}`
+              }
             />
           </Tabs>
           <TextField
@@ -222,46 +360,50 @@ const PeopleManagement = () => {
         {/* ── Tab panels with DataTable ── */}
         {[allUsers, admins, consultants, pendingRequests].map((list, idx) => {
           const showLocalDraft = (idx === 0 || idx === 3) && draftRow;
-          const tableData = idx < 3 ? getTableData(list as IAuthUser[], showLocalDraft ? 2 : 1) : [];
-          const filteredData = idx < 3
-            ? tableSearch
-              ? tableData.filter((row) =>
-                  Object.values(row).some(
-                    (val) =>
-                      val !== null &&
-                      val !== undefined &&
-                      String(val).toLowerCase().includes(tableSearch.toLowerCase()),
-                  ),
-                )
-              : tableData
-            : [];
+          const tableData =
+            idx < 3 ? getTableData(list as IAuthUser[], showLocalDraft ? 2 : 1) : [];
+          const filteredData =
+            idx < 3
+              ? tableSearch
+                ? tableData.filter((row) =>
+                    Object.values(row).some(
+                      (val) =>
+                        val !== null &&
+                        val !== undefined &&
+                        String(val).toLowerCase().includes(tableSearch.toLowerCase()),
+                    ),
+                  )
+                : tableData
+              : [];
 
           // Pending tab specific filtering
-          const pendingFiltered = idx === 3
-            ? tableSearch
-              ? (list as AccessRequestRow[]).filter((row) =>
-                  Object.values(row).some(
+          const pendingFiltered =
+            idx === 3
+              ? tableSearch
+                ? (list as AccessRequestRow[]).filter((row) =>
+                    Object.values(row).some(
+                      (val) =>
+                        val !== null &&
+                        val !== undefined &&
+                        String(val).toLowerCase().includes(tableSearch.toLowerCase()),
+                    ),
+                  )
+                : list
+              : [];
+
+          const pinnedData =
+            idx < 3 && showLocalDraft
+              ? tableSearch
+                ? Object.values(draftRow).some(
                     (val) =>
                       val !== null &&
                       val !== undefined &&
                       String(val).toLowerCase().includes(tableSearch.toLowerCase()),
-                  ),
-                )
-              : list
-            : [];
-
-          const pinnedData = idx < 3 && showLocalDraft
-            ? tableSearch
-              ? Object.values(draftRow).some(
-                  (val) =>
-                    val !== null &&
-                    val !== undefined &&
-                    String(val).toLowerCase().includes(tableSearch.toLowerCase()),
-                )
-                ? [{ ...draftRow, sno: 1 }]
-                : []
-              : [{ ...draftRow, sno: 1 }]
-            : [];
+                  )
+                  ? [{ ...draftRow, sno: 1 }]
+                  : []
+                : [{ ...draftRow, sno: 1 }]
+              : [];
 
           return (
             <TabPanel key={idx} value={tabValue} index={idx}>
@@ -286,15 +428,33 @@ const PeopleManagement = () => {
                           format: (v, row: AccessRequestRow) => (
                             <Typography
                               variant='body2'
-                              sx={{ color: '#1976d2', cursor: 'pointer', fontWeight: 500, '&:hover': { textDecoration: 'underline' } }}
-                              onClick={(e) => { e.stopPropagation(); openDetail(row.id as number); }}
+                              sx={{
+                                color: '#1976d2',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                '&:hover': { textDecoration: 'underline' },
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openDetail(row.id as number);
+                              }}
                             >
                               {String(v || '-')}
                             </Typography>
                           ),
                         },
-                        { id: 'email', label: 'Email', minWidth: 200, format: (v) => String(v || '-') },
-                        { id: 'businessUnit', label: 'Department', minWidth: 150, format: (v) => String(v || '-') },
+                        {
+                          id: 'email',
+                          label: 'Email',
+                          minWidth: 200,
+                          format: (v) => String(v || '-'),
+                        },
+                        {
+                          id: 'businessUnit',
+                          label: 'Department',
+                          minWidth: 150,
+                          format: (v) => String(v || '-'),
+                        },
                         {
                           id: 'requestedRole',
                           label: 'Role',
@@ -358,7 +518,10 @@ const PeopleManagement = () => {
                           },
                         },
                       ]}
-                      data={(pendingFiltered as AccessRequestRow[]).map((row, i) => ({ ...row, sno: i + 1 }))}
+                      data={(pendingFiltered as AccessRequestRow[]).map((row, i) => ({
+                        ...row,
+                        sno: i + 1,
+                      }))}
                       rowKey='id'
                       searchable={false}
                       initialRowsPerPage={10}
@@ -389,7 +552,15 @@ const PeopleManagement = () => {
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
         userId={detailUserId}
-        onActionComplete={() => { setDetailOpen(false); }}
+        onActionComplete={() => {
+          setDetailOpen(false);
+        }}
+      />
+
+      <CreateUserDialog
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={() => {}}
       />
     </>
   );

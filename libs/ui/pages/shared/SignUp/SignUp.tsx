@@ -175,7 +175,7 @@ const SignUp = () => {
                   variant='contained'
                   color='primary'
                   loading={isLoading}
-                  disabled={isLoading || submitted}
+                  disabled={isLoading || submitted || !formik.values.agreeToTerms}
                   label='Submit'
                 />
               )}

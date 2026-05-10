@@ -77,6 +77,26 @@ type AuthAction =
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// Helper to fetch reviewer details
+async function getReviewerDetails(db: PrismaClient, reviewedById: number | null) {
+  if (!reviewedById) return { reviewedByName: null, reviewedByEmail: null, reviewedByPhone: null };
+  const reviewer = await db.user.findUnique({
+    where: { id: reviewedById },
+    select: { name: true, email: true, phone: true },
+  });
+  return {
+    reviewedByName: reviewer?.name || null,
+    reviewedByEmail: reviewer?.email || null,
+    reviewedByPhone: reviewer?.phone || null,
+  };
+}
+
+// Helper to add reviewer details to a sanitized user
+async function addReviewerToUser(db: PrismaClient, user: Record<string, unknown>) {
+  const reviewerInfo = await getReviewerDetails(db, user.reviewedBy as number | null);
+  return { ...user, ...reviewerInfo };
+}
+
 function sanitizeUser(user: Record<string, unknown>) {
   const { password, otp, otpExpiresAt, otpIsUsed, invitationToken, ...safe } = user;
   return {
@@ -321,6 +341,7 @@ export class AuthController {
         employeeId: validatedData.employeeId || null,
         businessUnit: validatedData.businessUnit || null,
         managerName: validatedData.managerName || null,
+        city: validatedData.city || null,
         name: fullName,
         role: 'user',
         requestedRole: validatedData.role,
@@ -635,11 +656,12 @@ export class AuthController {
       // ── List users ──────────────────────────────────────────────────────────
       case 'get-all-users': {
         const users = await db.user.findMany({ orderBy: { createdAt: 'desc' } });
+        const usersWithReviewer = await Promise.all(
+          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+        );
         res.json({
           message: 'Users retrieved successfully',
-          data: users.map((u: Record<string, unknown>) =>
-            sanitizeUser(u as unknown as Record<string, unknown>),
-          ),
+          data: usersWithReviewer,
         });
         break;
       }
@@ -655,9 +677,10 @@ export class AuthController {
           res.status(404).json({ message: 'User not found' });
           return;
         }
+        const userWithReviewer = await addReviewerToUser(db, user as unknown as Record<string, unknown>);
         res.json({
           message: 'User retrieved',
-          data: sanitizeUser(user as unknown as Record<string, unknown>),
+          data: userWithReviewer,
         });
         break;
       }
@@ -668,11 +691,12 @@ export class AuthController {
           where: { requestedRole: { not: null } },
           orderBy: { createdAt: 'desc' },
         });
+        const usersWithReviewer = await Promise.all(
+          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+        );
         res.json({
           message: 'Role requests retrieved',
-          data: users.map((u: Record<string, unknown>) =>
-            sanitizeUser(u as unknown as Record<string, unknown>),
-          ),
+          data: usersWithReviewer,
         });
         break;
       }
@@ -682,11 +706,12 @@ export class AuthController {
           where: { status: STATUS.PENDING_APPROVAL },
           orderBy: { createdAt: 'desc' },
         });
+        const usersWithReviewer = await Promise.all(
+          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+        );
         res.json({
           message: 'Pending requests retrieved',
-          data: users.map((u: Record<string, unknown>) =>
-            sanitizeUser(u as unknown as Record<string, unknown>),
-          ),
+          data: usersWithReviewer,
         });
         break;
       }
@@ -766,7 +791,12 @@ export class AuthController {
 
         res.json({
           message: 'Access approved. Invitation email sent to user.',
-          data: sanitizeUser(updated as unknown as Record<string, unknown>),
+          data: {
+            ...sanitizeUser(updated as unknown as Record<string, unknown>),
+            reviewedByName: decoded.name,
+            reviewedByEmail: decoded.email,
+            reviewedByPhone: null,
+          },
         });
         break;
       }
@@ -809,7 +839,12 @@ export class AuthController {
 
         res.json({
           message: 'Access request rejected',
-          data: sanitizeUser(updated as unknown as Record<string, unknown>),
+          data: {
+            ...sanitizeUser(updated as unknown as Record<string, unknown>),
+            reviewedByName: decoded.name,
+            reviewedByEmail: decoded.email,
+            reviewedByPhone: null,
+          },
         });
         break;
       }
@@ -838,15 +873,13 @@ export class AuthController {
           language,
           slaWorkingCalendar,
           slaExceptionGroup,
+          dateOfBirth,
+          gender,
+          city,
         } = body;
 
         if (!firstName || !lastName || !email) {
           res.status(400).json({ message: 'firstName, lastName, and email are required' });
-          return;
-        }
-
-        if (!/@infyenergy\.com$/i.test(email)) {
-          res.status(400).json({ message: 'Email must be a @infyenergy.com address' });
           return;
         }
 
@@ -889,6 +922,9 @@ export class AuthController {
             firstActivationDate: now,
             accessFromDate: accessFromDate ? new Date(accessFromDate) : null,
             accessToDate: accessToDate ? new Date(accessToDate) : null,
+            dateOfBirth: dateOfBirth || null,
+            gender: gender || null,
+            city: city || null,
           } as any,
         });
 

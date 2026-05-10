@@ -23,4 +23,15 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   iconEnd: {
     marginLeft: theme.spacing(1),
   },
+  loadingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+    animation: 'loadingPulse 1.2s ease-in-out infinite',
+    '@keyframes loadingPulse': {
+      '0%, 80%, 100%': { transform: 'scale(0.6)', opacity: 0.4 },
+      '40%': { transform: 'scale(1)', opacity: 1 },
+    },
+  },
 });

@@ -1,19 +1,9 @@
-import { Backdrop, CircularProgress, Box, LinearProgress, Typography } from '@mui/material';
+import { Backdrop, CircularProgress, Box, Typography } from '@mui/material';
 import { useAuth, useLoader } from '@infyenergy/hooks';
-import { useStyles } from './styles';
 
 export interface DSLoaderProps {
-  size?: number | string;
-  thickness?: number;
-  color?: 'primary' | 'secondary' | 'inherit' | 'error' | 'info' | 'success' | 'warning';
   text?: string;
-  fullScreen?: boolean;
   className?: string;
-  variant?: 'circular' | 'linear';
-  value?: number;
-  sx?: any;
-  overlay?: boolean;
-  overlayColor?: string;
   globalOverlay?: boolean;
 }
 
@@ -91,22 +81,7 @@ const FullScreenLoader: React.FC<{ message?: string }> = ({ message }) => {
   );
 };
 
-const Loader: React.FC<DSLoaderProps> = ({
-  size = 40,
-  thickness = 4,
-  color = 'primary',
-  text,
-  fullScreen = false,
-  className,
-  variant = 'circular',
-  value,
-  sx,
-  overlay = false,
-  overlayColor = 'rgba(255, 255, 255, 0.8)',
-  globalOverlay = false,
-  ...rest
-}) => {
-  const { cx, classes } = useStyles();
+const Loader: React.FC<DSLoaderProps> = ({ text, className, globalOverlay = false, ...rest }) => {
   const { loaderVisible, loaderMessage } = useLoader();
 
   if (globalOverlay) {
@@ -114,40 +89,7 @@ const Loader: React.FC<DSLoaderProps> = ({
     return <FullScreenLoader message={loaderMessage} />;
   }
 
-  if (fullScreen) {
-    return <FullScreenLoader message={text} />;
-  }
-
-  const loader =
-    variant === 'circular' ? (
-      <CircularProgress size={size} thickness={thickness} color={color} {...rest} />
-    ) : (
-      <LinearProgress
-        variant={value !== undefined ? 'determinate' : 'indeterminate'}
-        value={value}
-        color={color}
-        sx={{ width: '100%', ...sx }}
-        {...rest}
-      />
-    );
-
-  if (overlay) {
-    return (
-      <Box className={cx(classes.overlay, className)} style={{ backgroundColor: overlayColor }}>
-        <Box className={classes.overlayContent}>
-          {loader}
-          {text && <Box className={classes.text}>{text}</Box>}
-        </Box>
-      </Box>
-    );
-  }
-
-  return (
-    <Box className={cx(classes.root, className)} sx={sx}>
-      {loader}
-      {text && <Box className={classes.text}>{text}</Box>}
-    </Box>
-  );
+  return <FullScreenLoader message={text} />;
 };
 
 export default Loader;

@@ -1,5 +1,4 @@
 import { Avatar, Box, Typography } from '@mui/material';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
@@ -35,12 +34,24 @@ const Dashboard = () => {
             </Box>
           </Box>
 
+          {/* Mobile center — shown only on small screens */}
+          <Box className={classes.heroCenterMobile}>
+            <Typography className={classes.heroCenterMobileTitle}>OPERATIONS HUB</Typography>
+            <Box className={classes.heroCenterMobileBadge}>
+              <Box className={classes.heroCenterMobileDot} />
+              <Typography className={classes.heroCenterMobileLive}>LIVE</Typography>
+            </Box>
+          </Box>
+
           {/* Center — platform identity */}
           <Box className={classes.heroCenter}>
-            <ElectricBoltIcon className={classes.heroCenterIcon} />
             <Typography className={classes.heroCenterTitle}>OPERATIONS HUB</Typography>
-            <Typography className={classes.heroCenterSub}>
-              WTG Turbine · Sub Station · Transmission Lines
+            <Box className={classes.heroCenterBadge}>
+              <Box className={classes.heroCenterDot} />
+              <Typography className={classes.heroCenterLive}>Live Tracking Activity</Typography>
+            </Box>
+            <Typography className={classes.heroCenterFacilities}>
+              WTG Turbines · Sub Stations · Transmission Lines
             </Typography>
           </Box>
 

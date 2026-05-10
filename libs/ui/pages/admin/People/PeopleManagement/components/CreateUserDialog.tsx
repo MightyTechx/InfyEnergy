@@ -1,0 +1,524 @@
+import React, { useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  Slide,
+  Avatar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+} from '@mui/material';
+import type { TransitionProps } from '@mui/material/transitions';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import dayjs from 'dayjs';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessIcon from '@mui/icons-material/Business';
+import LockIcon from '@mui/icons-material/Lock';
+import CloseIcon from '@mui/icons-material/Close';
+import { useStyles } from '../styles';
+import { useNotification } from '@infyenergy/hooks';
+import { useAuthActionMutation } from '@infyenergy/services';
+
+export const SlideUp = React.forwardRef(
+  (props: TransitionProps & { children: React.ReactElement }, ref: React.Ref<unknown>) => {
+    return <Slide direction='up' ref={ref} {...props} />;
+  },
+);
+
+const CITY_OPTIONS = [
+  'Ahmedabad',
+  'Bengaluru',
+  'Bhopal',
+  'Chennai',
+  'Coimbatore',
+  'Delhi',
+  'Hyderabad',
+  'Indore',
+  'Jaipur',
+  'Kolkata',
+  'Lucknow',
+  'Mumbai',
+  'Nagpur',
+  'Patna',
+  'Pune',
+  'Surat',
+  'Thane',
+  'Vadodara',
+  'Visakhapatnam',
+  'Other',
+];
+
+const GENDER_OPTIONS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Non-binary / Other' },
+  { value: 'prefer_not', label: 'Prefer not to say' },
+];
+
+const DEPARTMENTS = [
+  'IT Administration',
+  'Maintenance',
+  'Human Resources',
+  'Operations',
+  'Service',
+  'External Consulting',
+  'Other',
+];
+
+const ROLES = [
+  { value: 'user', label: 'User' },
+  { value: 'consultant', label: 'Consultant' },
+  { value: 'admin', label: 'Admin' },
+];
+
+const validationSchema = Yup.object({
+  firstName: Yup.string().required('First name is required'),
+  lastName: Yup.string().required('Last name is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
+  phone: Yup.string()
+    .required('Phone is required')
+    .matches(/^\+?[\d\s-]{10,}$/, 'Invalid phone format'),
+  password: Yup.string().required('Password is required').min(8, 'Min 8 characters required'),
+  confirmPassword: Yup.string()
+    .required('Confirm password is required')
+    .oneOf([Yup.ref('password')], 'Passwords do not match'),
+  dateOfBirth: Yup.string(),
+  gender: Yup.string(),
+  city: Yup.string(),
+  employeeId: Yup.string(),
+  department: Yup.string(),
+  workLocation: Yup.string(),
+  businessUnit: Yup.string(),
+  managerName: Yup.string(),
+  role: Yup.string().required('Role is required'),
+});
+
+interface CreateUserDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onCreated?: () => void;
+}
+
+export const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ open, onClose, onCreated }) => {
+  const { classes } = useStyles();
+  const notify = useNotification();
+  const [authAction, { isLoading }] = useAuthActionMutation();
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      dateOfBirth: '',
+      gender: '',
+      city: '',
+      employeeId: '',
+      department: '',
+      workLocation: '',
+      businessUnit: '',
+      managerName: '',
+      role: 'user',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        await authAction({
+          action: 'create-user',
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phone: values.phone || null,
+          department: values.department || null,
+          workLocation: values.workLocation || null,
+          employeeId: values.employeeId || null,
+          businessUnit: values.businessUnit || null,
+          managerName: values.managerName || null,
+          role: values.role,
+          password: values.password,
+          dateOfBirth: values.dateOfBirth || null,
+          gender: values.gender || null,
+          city: values.city || null,
+        }).unwrap();
+
+        notify.success('User created successfully');
+        formik.resetForm();
+        onCreated?.();
+        onClose();
+      } catch (err: unknown) {
+        const error = err as { data?: { message?: string }; message?: string };
+        notify.error(error?.data?.message || error?.message || 'Failed to create user');
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!open) {
+      formik.resetForm();
+    }
+  }, [open]);
+
+  const handleDateChange = (value: dayjs.Dayjs | null) => {
+    formik.setFieldValue('dateOfBirth', value ? value.format('YYYY-MM-DD') : '');
+  };
+
+  const initials =
+    `${formik.values.firstName[0] || ''}${formik.values.lastName[0] || ''}`.toUpperCase();
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      TransitionComponent={SlideUp}
+      fullWidth
+      maxWidth='md'
+      className={classes.dialog}
+    >
+      {/* Hero Header */}
+      <Box className={classes.modalHero}>
+        <Box className={classes.modalIconBox}>
+          <PersonAddIcon sx={{ fontSize: 26, color: '#fff' }} />
+        </Box>
+        <Box className={classes.modalTitleBox}>
+          <Typography className={classes.modalTitle}>Create New User</Typography>
+          <Typography className={classes.modalSubtitle}>Add a new user to the system</Typography>
+        </Box>
+        <Avatar className={classes.avatarPreview}>{initials || '?'}</Avatar>
+        <IconButton onClick={onClose} className={classes.modalCloseBtn} disabled={isLoading}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      <form onSubmit={formik.handleSubmit}>
+        <DialogContent sx={{ p: 3, bgcolor: 'background.default' }}>
+          {/* Personal Information */}
+          <Box className={classes.sectionCard}>
+            <Box className={classes.sectionHeader}>
+              <Box className={classes.sectionIcon}>
+                <PersonIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Typography fontWeight={600} fontSize='0.95rem'>
+                Personal Information
+              </Typography>
+            </Box>
+            <Box sx={{ p: 2.5 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='First Name'
+                    name='firstName'
+                    value={formik.values.firstName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                    helperText={
+                      formik.touched.firstName && formik.errors.firstName
+                        ? String(formik.errors.firstName)
+                        : ''
+                    }
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Last Name'
+                    name='lastName'
+                    value={formik.values.lastName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                    helperText={
+                      formik.touched.lastName && formik.errors.lastName
+                        ? String(formik.errors.lastName)
+                        : ''
+                    }
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Email'
+                    name='email'
+                    type='email'
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={
+                      formik.touched.email && formik.errors.email ? String(formik.errors.email) : ''
+                    }
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Phone'
+                    name='phone'
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.phone && Boolean(formik.errors.phone)}
+                    helperText={
+                      formik.touched.phone && formik.errors.phone ? String(formik.errors.phone) : ''
+                    }
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label='Date of Birth'
+                      value={formik.values.dateOfBirth ? dayjs(formik.values.dateOfBirth) : null}
+                      onChange={handleDateChange}
+                      maxDate={dayjs().subtract(18, 'year')}
+                      slotProps={{ textField: { fullWidth: true, size: 'small' } }}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth size='small'>
+                    <InputLabel>Gender</InputLabel>
+                    <Select
+                      name='gender'
+                      value={formik.values.gender}
+                      label='Gender'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      {GENDER_OPTIONS.map((opt) => (
+                        <MenuItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth size='small'>
+                    <InputLabel>City / Zone of Operation</InputLabel>
+                    <Select
+                      name='city'
+                      value={formik.values.city}
+                      label='City / Zone of Operation'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      {CITY_OPTIONS.map((c) => (
+                        <MenuItem key={c} value={c}>
+                          {c}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Employee ID'
+                    name='employeeId'
+                    value={formik.values.employeeId}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+
+          {/* Work Information */}
+          <Box className={classes.sectionCard} sx={{ mt: 2 }}>
+            <Box className={classes.sectionHeader}>
+              <Box className={classes.sectionIcon}>
+                <BusinessIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Typography fontWeight={600} fontSize='0.95rem'>
+                Work Information
+              </Typography>
+            </Box>
+            <Box sx={{ p: 2.5 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth size='small'>
+                    <InputLabel>Department</InputLabel>
+                    <Select
+                      name='department'
+                      value={formik.values.department}
+                      label='Department'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <MenuItem value=''>— None —</MenuItem>
+                      {DEPARTMENTS.map((d) => (
+                        <MenuItem key={d} value={d}>
+                          {d}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Work Location'
+                    name='workLocation'
+                    value={formik.values.workLocation}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Business Unit'
+                    name='businessUnit'
+                    value={formik.values.businessUnit}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Manager Name'
+                    name='managerName'
+                    value={formik.values.managerName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth size='small' required>
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                      name='role'
+                      value={formik.values.role}
+                      label='Role'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={formik.touched.role && Boolean(formik.errors.role)}
+                    >
+                      {ROLES.map((opt) => (
+                        <MenuItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+
+          {/* Account Security */}
+          <Box className={classes.sectionCard} sx={{ mt: 2 }}>
+            <Box className={classes.sectionHeader}>
+              <Box className={classes.sectionIcon}>
+                <LockIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Typography fontWeight={600} fontSize='0.95rem'>
+                Account Security
+              </Typography>
+            </Box>
+            <Box sx={{ p: 2.5 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Password'
+                    name='password'
+                    type='password'
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                        ? String(formik.errors.password)
+                        : 'Min 8 characters'
+                    }
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    label='Confirm Password'
+                    name='confirmPassword'
+                    type='password'
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                    helperText={
+                      formik.touched.confirmPassword && formik.errors.confirmPassword
+                        ? String(formik.errors.confirmPassword)
+                        : ''
+                    }
+                    required
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </DialogContent>
+
+        <DialogActions
+          sx={{
+            px: 3,
+            py: 2,
+            borderTop: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Button variant='outlined' color='secondary' onClick={onClose} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            variant='contained'
+            loading={isLoading}
+            disabled={isLoading}
+            sx={{
+              background: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
+              '&:hover': { filter: 'brightness(1.1)' },
+            }}
+          >
+            Create User
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+};
+
+export default CreateUserDialog;

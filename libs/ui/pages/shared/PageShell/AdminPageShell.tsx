@@ -119,7 +119,7 @@ const AdminPageShell = ({
   const keyframes = useAdminKeyframes();
 
   if (isLoading) {
-    return <Loader fullScreen />;
+    return <Loader />;
   }
 
   // ── Hero (cards) mode ──────────────────────────────────────────────────────

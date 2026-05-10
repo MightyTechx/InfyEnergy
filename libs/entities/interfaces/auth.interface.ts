@@ -51,6 +51,9 @@ export interface IAuthUser {
   requestedRole: string | null;
   status: string | null;
   reviewedBy: number | null;
+  reviewedByName: string | null;
+  reviewedByEmail: string | null;
+  reviewedByPhone: string | null;
   reviewedAt: string | null;
   adminNotes: string | null;
   isActive: boolean;

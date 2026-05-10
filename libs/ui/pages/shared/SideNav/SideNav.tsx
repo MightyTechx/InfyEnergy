@@ -138,9 +138,11 @@ const SideNav = () => {
     >
       {/* Collapse toggle */}
       <Box className={collapsed ? classes.toggleButtonCenter : classes.toggleButtonRight}>
-        <IconButton onClick={toggleCollapse}>
-          {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton>
+        <Tooltip title={collapsed ? 'Expand' : 'Collapse'} placement='right'>
+          <IconButton onClick={toggleCollapse}>
+            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {/* Scrollable nav area */}

@@ -48,7 +48,7 @@ const PeopleRequests = () => {
       <>
         {keyframes}
         <Box className={classes.container}>
-          <Loader fullScreen />
+          <Loader />
         </Box>
       </>
     );

@@ -13,7 +13,6 @@ import {
   Switch,
   TextField,
   Slide,
-  CircularProgress,
   MenuItem,
   InputAdornment,
   Tooltip,
@@ -44,8 +43,9 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import CheckIcon from '@mui/icons-material/Check';
 import { useAuthActionMutation } from '@infyenergy/services';
 import { useNotification } from '@infyenergy/hooks';
-import { useStyles } from './styles';
 import { IAuthUser } from '@infyenergy/interfaces';
+import { Loader } from '@infyenergy/component';
+import { useStyles } from './styles';
 
 export const SlideUp = React.forwardRef(
   (props: TransitionProps & { children: React.ReactElement }, ref: React.Ref<unknown>) => {
@@ -545,9 +545,7 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       {/* ── Content ── */}
       <DialogContent sx={{ p: 3, bgcolor: 'background.default' }}>
         {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-            <CircularProgress />
-          </Box>
+          <Loader />
         ) : isEditing && editValues ? (
           /* ── Edit form ── */
           <Box>
@@ -830,11 +828,6 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
               glow='rgba(25,118,210,0.3)'
               icon={<PersonOutlineIcon />}
               fields={[
-                {
-                  label: 'User ID',
-                  value: (user as any)?.customUserId || (user ? String(user.id) : ''),
-                  highlight: true,
-                },
                 { label: 'Full Name', value: user?.name || '' },
                 { label: 'First Name', value: user?.firstName || '' },
                 { label: 'Last Name', value: user?.lastName || '' },
@@ -842,6 +835,7 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
                 { label: 'Email', value: user?.email || '' },
                 { label: 'Employee ID', value: user?.employeeId || '' },
                 { label: 'Date of Birth', value: fmtDate(user?.dateOfBirth) },
+                { label: 'City / Zone', value: user?.city || '' },
               ]}
             />
             <ReviewCard
@@ -871,25 +865,45 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
                 { label: 'Reason for Access', value: user?.reasonForAccess || '' },
               ]}
             />
-            <ReviewCard
-              title='Access & Status'
-              color='#2e7d32'
-              gradient='linear-gradient(135deg,#1b5e20,#2e7d32)'
-              glow='rgba(46,125,50,0.3)'
-              icon={<BadgeIcon />}
-              fields={[
-                {
-                  label: 'Status',
-                  value:
-                    user?.status?.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) || '',
-                  highlight: true,
-                },
-                { label: 'Access Start Date', value: fmtDate(user?.accessFromDate) },
-                { label: 'Access End Date', value: fmtDate(user?.accessToDate) },
-                { label: 'Profile Updated', value: user?.consultantProfileUpdated ? 'Yes' : 'No' },
-                { label: 'Password Reset Required', value: user?.mustResetPassword ? 'Yes' : 'No' },
-              ]}
-            />
+            {user?.reviewedByName && (
+              <ReviewCard
+                title='Review & Access'
+                color='#0d47a1'
+                gradient='linear-gradient(135deg,#0d47a1,#1565c0)'
+                glow='rgba(13,71,161,0.3)'
+                icon={<CheckCircleOutlineIcon />}
+                fields={[
+                  { label: 'Reviewed By', value: user.reviewedByName, highlight: true },
+                  ...(user.reviewedByEmail
+                    ? [{ label: 'Reviewer Email', value: user.reviewedByEmail } as ReviewField]
+                    : []),
+                  ...(user.reviewedByPhone
+                    ? [{ label: 'Reviewer Phone', value: user.reviewedByPhone } as ReviewField]
+                    : []),
+                  ...(user?.adminNotes
+                    ? [
+                        {
+                          label: 'Admin Notes',
+                          value: user.adminNotes,
+                          highlight: true,
+                        } as ReviewField,
+                      ]
+                    : []),
+                  ...(user?.status
+                    ? [
+                        {
+                          label: 'Status',
+                          value:
+                            user?.status
+                              ?.replace(/_/g, ' ')
+                              .replace(/\b\w/g, (c) => c.toUpperCase()) || '',
+                          highlight: true,
+                        },
+                      ]
+                    : []),
+                ]}
+              />
+            )}
             <ReviewCard
               title='Activity'
               color='#e65100'
@@ -900,82 +914,10 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
                 { label: 'Joined', value: fmtDate(user?.createdAt) },
                 { label: 'Last Activity', value: fmtDateTime(user?.lastActivityAt) },
                 { label: 'Last Updated', value: fmtDateTime(user?.updatedAt) },
-                { label: 'Reviewed By', value: user?.reviewedBy ? String(user.reviewedBy) : '' },
                 { label: 'Reviewed At', value: fmtDateTime(user?.reviewedAt) },
+                { label: 'Password Reset Required', value: user?.mustResetPassword ? 'Yes' : 'No' },
               ]}
             />
-            {user?.adminNotes && (
-              <ReviewCard
-                title='Admin Notes'
-                color='#f59e0b'
-                gradient='linear-gradient(135deg,#d97706,#f59e0b)'
-                glow='rgba(245,158,11,0.3)'
-                icon={<EmailIcon />}
-                fields={[{ label: 'Notes', value: user.adminNotes, highlight: true }]}
-              />
-            )}
-
-            {/* Access toggle */}
-            {!isPending && user && (
-              <Box
-                className={classes.reviewCardRoot}
-                sx={{ borderColor: 'rgba(46,125,50,0.28)', mb: 2 }}
-              >
-                <Box
-                  className={classes.reviewCardHeader}
-                  sx={{
-                    background:
-                      'linear-gradient(135deg, rgba(46,125,50,0.18) 0%, rgba(46,125,50,0.08) 100%)',
-                    borderColor: 'rgba(46,125,50,0.18)',
-                  }}
-                >
-                  <Box
-                    className={classes.reviewCardIconBox}
-                    sx={{
-                      background: 'linear-gradient(135deg,#1b5e20,#2e7d32)',
-                      boxShadow: '0 3px 8px rgba(46,125,50,0.3)',
-                    }}
-                  >
-                    <Box sx={{ color: '#fff', display: 'flex', '& svg': { fontSize: '0.95rem' } }}>
-                      <BadgeIcon />
-                    </Box>
-                  </Box>
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: '0.86rem',
-                      color: '#2e7d32',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    Access Control
-                  </Typography>
-                </Box>
-                <Box className={classes.reviewCardGrid}>
-                  <Box
-                    className={classes.reviewCardCell}
-                    sx={{ borderBottom: 'none', borderRight: 'none' }}
-                  >
-                    <Typography className={classes.reviewFieldLabel}>
-                      Enable / Disable Access
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                      <Switch
-                        checked={isActive}
-                        onChange={(e) => handleToggleAccess(e.target.checked)}
-                        color='success'
-                      />
-                      <Chip
-                        label={isActive ? 'Active' : 'Inactive'}
-                        size='small'
-                        color={isActive ? 'success' : 'default'}
-                        sx={{ fontWeight: 600 }}
-                      />
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            )}
 
             {isPending && (
               <Box sx={{ mt: 2 }}>
@@ -1017,7 +959,7 @@ export const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
               <Button
                 variant='contained'
                 size='small'
-                startIcon={isSaving ? <CircularProgress size={14} color='inherit' /> : <SaveIcon />}
+                startIcon={isSaving ? null : <SaveIcon />}
                 disabled={isSaving}
                 onClick={handleSave}
                 sx={{

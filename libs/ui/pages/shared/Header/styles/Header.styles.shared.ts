@@ -288,7 +288,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   headerRightSpacer: {
     flex: 1,
 
-    [theme.breakpoints.down('sm')]: { display: 'none' },
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+      flex: 1,
+    },
   },
 
   adminChip: {
@@ -448,6 +451,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '&:hover': {
       background: 'rgba(255,255,255,0.15)',
       transform: 'scale(1.08)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 'auto',
     },
   },
 
