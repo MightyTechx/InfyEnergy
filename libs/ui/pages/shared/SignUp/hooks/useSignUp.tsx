@@ -8,7 +8,17 @@ import { useAuthActionMutation } from '@infyenergy/services';
 export const STEPS = [
   {
     label: 'Personal',
-    fields: ['firstName', 'lastName', 'email', 'phone', 'dateOfBirth', 'gender', 'city'],
+    fields: [
+      'firstName',
+      'lastName',
+      'email',
+      'phone',
+      'dateOfBirth',
+      'gender',
+      'cityZone',
+      'zipcode',
+      'workLocation',
+    ],
   },
   {
     label: 'Work Details',
@@ -85,7 +95,9 @@ const useSignUp = () => {
       phone: '',
       dateOfBirth: '',
       gender: '',
-      city: '',
+      cityZone: '',
+      zipcode: '',
+      workLocation: '',
       employeeId: '',
       department: '',
       managerEmail: '',

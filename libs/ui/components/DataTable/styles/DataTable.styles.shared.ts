@@ -39,11 +39,17 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     minWidth: 'inherit',
     backgroundColor: '#1e429f',
     color: '#ffffff',
+    padding: '10px 6px',
+    fontWeight: 600,
+    fontSize: '0.72rem',
+    borderBottom: '2px solid rgba(255,255,255,0.1)',
     '& .MuiTableSortLabel-root': {
       color: '#ffffff',
+      fontSize: '0.72rem',
+      fontWeight: 600,
     },
     '& .MuiTableSortLabel-root:hover': {
-      color: '#ffffff',
+      color: '#e0e7ff',
     },
     '& .MuiTableSortLabel-root.Mui-active': {
       color: '#ffffff',

@@ -136,6 +136,19 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     zIndex: 1,
   },
 
+  // Action bar between header and stat cards
+  actionBar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(1.5),
+    marginBottom: theme.spacing(2),
+    padding: `${theme.spacing(1.5)} ${theme.spacing(0)}`,
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'space-between',
+    },
+  },
+
   // Stat pills inside the header banner
   headerStatRow: {
     display: 'flex',
@@ -610,6 +623,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '& .MuiDialog-paper': {
       borderRadius: 16,
       overflow: 'hidden',
+      maxHeight: '90vh',
+      display: 'flex',
+      flexDirection: 'column',
     },
   },
 
@@ -621,6 +637,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #4f46e5 70%, #0ea5e9 100%)',
     borderBottom: '1px solid rgba(255,255,255,0.1)',
     position: 'relative',
+    flexShrink: 0,
     '&::before': {
       content: '""',
       position: 'absolute',

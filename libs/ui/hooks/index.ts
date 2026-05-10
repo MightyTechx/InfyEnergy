@@ -1,3 +1,5 @@
+export { useLocationSearch } from './useLocationSearch';
+export type { LocationResult } from './useLocationSearch';
 export { CollapseProvider, useCollapse } from './useCollapse';
 export * from './useAuth';
 export * from './useAppSelector';

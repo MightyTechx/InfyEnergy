@@ -23,7 +23,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useAuthActionMutation } from '@infyenergy/services';
 import { useNotification } from '@infyenergy/hooks';
-import { Loader } from '@infyenergy/component';
 import { NotificationItem } from '../hooks/useSharedHeader';
 
 const SlideDown = React.forwardRef(

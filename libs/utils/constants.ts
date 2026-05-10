@@ -7,6 +7,9 @@ const AdminPath = {
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
+  REPORTS: `${ADMIN_BASE}/reports`,
+  INVENTORY: `${ADMIN_BASE}/inventory`,
+  TECHNICAL_DOCUMENTS: `${ADMIN_BASE}/technical-documents`,
   SETTINGS: `${ADMIN_BASE}/settings`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
 };

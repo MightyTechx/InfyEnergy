@@ -78,7 +78,9 @@ const SignUp = () => {
                   phone: formik.values.phone,
                   dateOfBirth: formik.values.dateOfBirth,
                   gender: formik.values.gender,
-                  city: formik.values.city,
+                  workLocation: formik.values.workLocation,
+                  cityZone: formik.values.cityZone,
+                  zipcode: formik.values.zipcode,
                 }}
                 touched={touched}
                 errors={errors}
@@ -91,6 +93,7 @@ const SignUp = () => {
                 phoneExists={phoneExists}
                 onEmailChange={checkEmail}
                 onPhoneChange={checkPhone}
+                onLocationChange={(field, value) => formik.setFieldValue(field, value)}
               />
             )}
 

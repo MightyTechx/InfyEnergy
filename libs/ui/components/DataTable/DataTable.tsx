@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
+  Box,
   Table as MuiTable,
   TableBody,
   TableCell,
@@ -160,7 +161,7 @@ export function DataTable<T extends object>({
   }, [sortedData, page, rowsPerPage]);
 
   return (
-    <Paper elevation={elevation}>
+    <Paper elevation={elevation} sx={{ borderRadius: 2, overflow: 'hidden' }}>
       {(title || selectable || searchable) && (
         <Toolbar className={cx(selected.size > 0 ? classes.toolbarSelected : classes.toolbar)}>
           {selected.size > 0 ? (
@@ -231,7 +232,7 @@ export function DataTable<T extends object>({
               {columns.map((column) => (
                 <TableCell
                   key={String(column.id)}
-                  align={column.align ?? 'left'}
+                  align='center'
                   className={classes.tableCell}
                   style={column.minWidth ? { minWidth: column.minWidth } : undefined}
                 >
@@ -244,7 +245,9 @@ export function DataTable<T extends object>({
                       {column.label}
                     </TableSortLabel>
                   ) : (
-                    column.label
+                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                      {column.label}
+                    </Box>
                   )}
                 </TableCell>
               ))}
@@ -292,7 +295,7 @@ export function DataTable<T extends object>({
                   {columns.map((column) => {
                     const value = row[column.id as keyof T];
                     return (
-                      <TableCell key={String(column.id)} align={column.align ?? 'left'}>
+                      <TableCell key={String(column.id)} align='center' sx={{ py: 1, px: 0.75 }}>
                         {column.format ? column.format(value, row) : String(value ?? '')}
                       </TableCell>
                     );

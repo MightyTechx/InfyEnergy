@@ -1,6 +1,9 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { constants } from '@infyenergy/utils';
 
 export interface MenuItem {
@@ -22,6 +25,9 @@ export const useAdminMenuItems = (): MenuGroup[] => {
       items: [
         { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
         { label: 'People Management', icon: <VpnKeyIcon />, path: AdminPath.ACCESS_MANAGEMENT },
+        { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
+        { label: 'Inventory', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
+        { label: 'Technical Documents', icon: <DescriptionIcon />, path: AdminPath.TECHNICAL_DOCUMENTS },
         { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
       ],
     },

@@ -6,6 +6,9 @@ export const LazyMenuItems = {
   AdminPeopleManagementPage: lazy(() => import('@infyenergy/pages/admin/People/PeopleManagement')),
   AdminUserDetailPage: lazy(() => import('@infyenergy/pages/admin/People/UserDetail')),
   AdminProfilePage: lazy(() => import('@infyenergy/pages/shared/Profile')),
+  AdminReportsPage: lazy(() => import('@infyenergy/pages/admin/Reports')),
+  AdminInventoryPage: lazy(() => import('@infyenergy/pages/admin/Inventory')),
+  AdminTechnicalDocumentsPage: lazy(() => import('@infyenergy/pages/admin/TechnicalDocuments')),
   SettingsPage: lazy(() => import('@infyenergy/pages/shared/Settings')),
 
   // Auth pages (shared/public)

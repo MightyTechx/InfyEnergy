@@ -44,6 +44,7 @@ const SOURCE = {
 type AuthAction =
   | 'signin'
   | 'signup'
+  | 'check-availability'
   | 'forgot-password'
   | 'verify-otp'
   | 'reset-password'
@@ -341,7 +342,8 @@ export class AuthController {
         employeeId: validatedData.employeeId || null,
         businessUnit: validatedData.businessUnit || null,
         managerName: validatedData.managerName || null,
-        city: validatedData.city || null,
+        cityZone: validatedData.cityZone || null,
+        zipcode: validatedData.zipcode || null,
         name: fullName,
         role: 'user',
         requestedRole: validatedData.role,
@@ -657,7 +659,9 @@ export class AuthController {
       case 'get-all-users': {
         const users = await db.user.findMany({ orderBy: { createdAt: 'desc' } });
         const usersWithReviewer = await Promise.all(
-          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+          users.map((u: Record<string, unknown>) =>
+            addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>)),
+          ),
         );
         res.json({
           message: 'Users retrieved successfully',
@@ -677,7 +681,10 @@ export class AuthController {
           res.status(404).json({ message: 'User not found' });
           return;
         }
-        const userWithReviewer = await addReviewerToUser(db, user as unknown as Record<string, unknown>);
+        const userWithReviewer = await addReviewerToUser(
+          db,
+          user as unknown as Record<string, unknown>,
+        );
         res.json({
           message: 'User retrieved',
           data: userWithReviewer,
@@ -692,7 +699,9 @@ export class AuthController {
           orderBy: { createdAt: 'desc' },
         });
         const usersWithReviewer = await Promise.all(
-          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+          users.map((u: Record<string, unknown>) =>
+            addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>)),
+          ),
         );
         res.json({
           message: 'Role requests retrieved',
@@ -707,7 +716,9 @@ export class AuthController {
           orderBy: { createdAt: 'desc' },
         });
         const usersWithReviewer = await Promise.all(
-          users.map((u: Record<string, unknown>) => addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>))),
+          users.map((u: Record<string, unknown>) =>
+            addReviewerToUser(db, sanitizeUser(u as unknown as Record<string, unknown>)),
+          ),
         );
         res.json({
           message: 'Pending requests retrieved',
@@ -875,7 +886,8 @@ export class AuthController {
           slaExceptionGroup,
           dateOfBirth,
           gender,
-          city,
+          cityZone,
+          zipcode,
         } = body;
 
         if (!firstName || !lastName || !email) {
@@ -908,6 +920,8 @@ export class AuthController {
             businessUnit: businessUnit || null,
             employeeId: employeeId || null,
             managerName: managerName || null,
+            cityZone: cityZone || null,
+            zipcode: zipcode || null,
             reasonForAccess: reasonForAccess || null,
             timezone: timezone || null,
             dateFormat: dateFormat || null,
@@ -924,7 +938,6 @@ export class AuthController {
             accessToDate: accessToDate ? new Date(accessToDate) : null,
             dateOfBirth: dateOfBirth || null,
             gender: gender || null,
-            city: city || null,
           } as any,
         });
 

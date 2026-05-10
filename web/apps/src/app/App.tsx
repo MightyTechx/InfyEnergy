@@ -16,6 +16,9 @@ const {
   AdminPeopleManagementPage,
   AdminUserDetailPage,
   AdminProfilePage,
+  AdminReportsPage,
+  AdminInventoryPage,
+  AdminTechnicalDocumentsPage,
   SettingsPage,
 
   // Auth pages
@@ -76,6 +79,9 @@ const AppRoutes = () => {
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />
+            <Route path={AdminPath.REPORTS} element={<AdminReportsPage />} />
+            <Route path={AdminPath.INVENTORY} element={<AdminInventoryPage />} />
+            <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
 
             {/* User routes */}

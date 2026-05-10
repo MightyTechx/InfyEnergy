@@ -1,23 +1,26 @@
+import { useState } from 'react';
 import {
   AppBar,
   Badge,
   Chip,
   IconButton,
   Toolbar,
-  Tooltip,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { Box } from '@infyenergy/component';
+import { Tooltip } from '../../../components';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
 import LogoMark from './components/LogoMark';
 import NotificationsMenu from './components/NotificationsMenu';
 import UserMenu from './components/UserMenu';
+import ChatDialog from '../../../components/ChatDialog/ChatDialog';
 
 // ── Color tokens ─────────────────────────────────────────────────────────────
 const ADMIN_COLORS = {
@@ -41,6 +44,8 @@ const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const [chatOpen, setChatOpen] = useState(false);
+
   const {
     isAdmin,
     consultantMode,
@@ -63,6 +68,14 @@ const Header = () => {
 
   const colors = consultantMode ? CONSULTANT_COLORS : ADMIN_COLORS;
 
+  const handleChatOpen = () => {
+    setChatOpen(true);
+  };
+
+  const handleChatClose = () => {
+    setChatOpen(false);
+  };
+
   return (
     <>
       <NotificationsMenu
@@ -73,6 +86,7 @@ const Header = () => {
         notifications={notifications}
         onRefresh={refreshNotifications}
       />
+      <ChatDialog open={chatOpen} onClose={handleChatClose} />
       <AppBar
         position='fixed'
         className={classes.headerAppbar}
@@ -106,8 +120,12 @@ const Header = () => {
             }}
           />
 
-          <Tooltip title='Notifications' placement='bottom'>
-            <IconButton onClick={() => handleNotifOpen()} size='small' className={classes.iconBtnBase}>
+          <Tooltip title='Notifications' placement='bottom' arrow>
+            <IconButton
+              onClick={() => handleNotifOpen()}
+              size='small'
+              className={classes.iconBtnBase}
+            >
               <Badge badgeContent={notifications.length} color='error' max={99}>
                 <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
               </Badge>
@@ -116,8 +134,15 @@ const Header = () => {
 
           <Box className={classes.headerRightSpacer} />
 
+          {/* AI Chat */}
+          <Tooltip title='AI Assistant' placement='bottom' arrow>
+            <IconButton size='small' className={classes.iconBtnBase} onClick={handleChatOpen}>
+              <SmartToyIcon className={classes.icon} />
+            </IconButton>
+          </Tooltip>
+
           {/* Settings */}
-          <Tooltip title='Settings' placement='bottom'>
+          <Tooltip title='Settings' placement='bottom' arrow>
             <IconButton size='small' className={classes.iconBtnBase} onClick={handleSettingsOpen}>
               <SettingsIcon className={classes.icon} />
             </IconButton>

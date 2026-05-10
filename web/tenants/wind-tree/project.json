@@ -1,6 +1,6 @@
 {
   "name": "wind-tree",
-  "root": "web/tenants/wind-tree",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "web/tenants/wind-tree/src",
   "projectType": "application",
   "tags": ["app", "partner:wind-tree"],

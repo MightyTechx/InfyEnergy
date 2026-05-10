@@ -27,8 +27,10 @@ model User {
   employeeId      String?
   businessUnit    String?
   managerName     String?
-  city            String?
+  cityZone        String?
+  zipcode         String?
   dateOfBirth     String?
+  gender          String?
   profilePicture  String?
   name            String
   role            String    @default("user")

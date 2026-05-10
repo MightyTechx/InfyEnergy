@@ -127,133 +127,75 @@ const PeopleManagement = () => {
             <Typography variant='h5' className={classes.title}>
               People Management
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-              <Box
-                onClick={() => setCreateOpen(true)}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 2.5,
-                  py: 1.25,
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
-                  boxShadow:
-                    '0 4px 20px rgba(99,102,241,0.45), 0 0 40px rgba(99,102,241,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: '-100%',
-                    width: '100%',
-                    height: '100%',
-                    background:
-                      'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                    transition: 'left 0.5s ease',
-                  },
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow:
-                      '0 8px 30px rgba(99,102,241,0.55), 0 0 60px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
-                    '&::before': {
-                      left: '100%',
-                    },
-                  },
-                  '&:active': {
-                    transform: 'translateY(0)',
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: '10px',
-                    background: 'rgba(255,255,255,0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                  }}
-                >
-                  <PersonAddIcon sx={{ fontSize: 18, color: '#fff' }} />
-                </Box>
-                <Box>
-                  <Typography
-                    sx={{
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      color: '#fff',
-                      lineHeight: 1.2,
-                      textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                    }}
-                  >
-                    Create User
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: '0.65rem',
-                      color: 'rgba(255,255,255,0.75)',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    Add new member
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: '#34d399',
-                    ml: 0.5,
-                    boxShadow: '0 0 8px #34d399',
-                    animation: 'pulse 2s ease-in-out infinite',
-                    '@keyframes pulse': {
-                      '0%, 100%': { opacity: 1, transform: 'scale(1)' },
-                      '50%': { opacity: 0.6, transform: 'scale(0.8)' },
-                    },
-                  }}
-                />
-              </Box>
-              {draftCount > 0 && (
-                <Chip
-                  label={`${draftCount} Draft`}
-                  size='small'
-                  sx={{
-                    background: 'rgba(245,158,11,0.15)',
-                    border: '1px solid rgba(245,158,11,0.4)',
-                    color: '#f59e0b',
-                    fontWeight: 600,
-                    fontSize: '0.7rem',
-                    height: 24,
-                  }}
-                />
-              )}
-              {pendingCount > 0 && (
-                <Chip
-                  label={`${pendingCount} Pending`}
-                  size='small'
-                  sx={{
-                    background: 'rgba(239,68,68,0.15)',
-                    border: '1px solid rgba(239,68,68,0.4)',
-                    color: '#ef4444',
-                    fontWeight: 600,
-                    fontSize: '0.7rem',
-                    height: 24,
-                  }}
-                />
-              )}
-            </Box>
           </Box>
           <Typography variant='body2' className={classes.description}>
             View and manage all users and their access across different roles in the system.
           </Typography>
+        </Box>
+
+        {/* ── Action Bar (Create User + Pending Badge) ── */}
+        <Box className={classes.actionBar}>
+          {/* Pending Requests Badge */}
+          <Chip
+            label={`${pendingCount} Pending`}
+            size='small'
+            sx={{
+              background: pendingCount > 0 ? 'rgba(239,68,68,0.15)' : 'rgba(100,116,139,0.12)',
+              border:
+                pendingCount > 0
+                  ? '1px solid rgba(239,68,68,0.4)'
+                  : '1px solid rgba(100,116,139,0.3)',
+              color: pendingCount > 0 ? '#ef4444' : '#94a3b8',
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              height: 28,
+              cursor: 'pointer',
+              '&:hover': {
+                background: pendingCount > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(100,116,139,0.18)',
+              },
+              // mobile: stretch to fill left half
+              '@media (max-width:600px)': {
+                width: '48%',
+                maxWidth: 'none',
+                justifyContent: 'flex-start',
+                '& .MuiChip-label': { flex: 1 },
+              },
+            }}
+            onClick={() => setTabValue(3)}
+            icon={<PendingActionsIcon sx={{ fontSize: '16px !important' }} />}
+          />
+          {/* Create User Button */}
+          <Box
+            onClick={() => setCreateOpen(true)}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 0.75,
+              px: 2,
+              py: 0.875,
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
+              boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              whiteSpace: 'nowrap',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 24px rgba(99,102,241,0.5)',
+              },
+              '&:active': { transform: 'translateY(0)' },
+              // mobile: stretch to fill right half
+              '@media (max-width:600px)': {
+                width: '48%',
+              },
+            }}
+          >
+            <PersonAddIcon sx={{ fontSize: 18, color: '#fff' }} />
+            <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#fff' }}>
+              Create User
+            </Typography>
+          </Box>
         </Box>
 
         {/* ── Stat Cards ── */}

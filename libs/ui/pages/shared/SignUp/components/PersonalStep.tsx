@@ -8,14 +8,19 @@ import {
   MenuItem,
   FormHelperText,
   SelectChangeEvent,
+  Autocomplete,
+  CircularProgress,
+  InputAdornment,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import PersonIcon from '@mui/icons-material/Person';
+import SearchIcon from '@mui/icons-material/Search';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useFieldError } from '@infyenergy/hooks';
+import { useLocationSearch } from '../../../../hooks/useLocationSearch';
 import TextField from '../../../../components/TextField/TextField';
 
 const DuplicateError = ({ message }: { message: string }) => (
@@ -24,29 +29,6 @@ const DuplicateError = ({ message }: { message: string }) => (
     <Typography sx={{ fontSize: '0.75rem' }}>{message}</Typography>
   </Box>
 );
-
-export const CITY_OPTIONS = [
-  'Ahmedabad',
-  'Bengaluru',
-  'Bhopal',
-  'Chennai',
-  'Coimbatore',
-  'Delhi',
-  'Hyderabad',
-  'Indore',
-  'Jaipur',
-  'Kolkata',
-  'Lucknow',
-  'Mumbai',
-  'Nagpur',
-  'Patna',
-  'Pune',
-  'Surat',
-  'Thane',
-  'Vadodara',
-  'Visakhapatnam',
-  'Other',
-];
 
 export const GENDER_OPTIONS = [
   { value: 'male', label: 'Male' },
@@ -63,7 +45,9 @@ interface PersonalStepProps {
     phone: string;
     dateOfBirth: string;
     gender: string;
-    city: string;
+    workLocation: string;
+    cityZone: string;
+    zipcode: string;
   };
   touched: Partial<Record<string, boolean>>;
   errors: Partial<Record<string, string>>;
@@ -76,6 +60,7 @@ interface PersonalStepProps {
   phoneExists?: boolean;
   onEmailChange?: (email: string) => void;
   onPhoneChange?: (phone: string) => void;
+  onLocationChange?: (field: string, value: string) => void;
 }
 
 const PersonalStep = ({
@@ -91,8 +76,11 @@ const PersonalStep = ({
   phoneExists,
   onEmailChange,
   onPhoneChange,
+  onLocationChange,
 }: PersonalStepProps) => {
   const reqError = useFieldError();
+  const city = useLocationSearch(2);
+  const work = useLocationSearch(2);
 
   return (
     <Box className={classes.sectionCard}>
@@ -242,29 +230,168 @@ const PersonalStep = ({
             </FormControl>
           </Grid>
 
-          {/* City */}
+          {/* City / Zone + Zipcode row */}
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FormControl fullWidth required error={touched.city && Boolean(errors.city)}>
-              <InputLabel id='city-label' required>
-                City / Zone of Operation
-              </InputLabel>
-              <Select
-                labelId='city-label'
-                id='city'
-                name='city'
-                value={values.city}
-                label='City / Zone of Operation'
-                onChange={onSelectChange('city')}
-                onBlur={onBlur}
-              >
-                {CITY_OPTIONS.map((c) => (
-                  <MenuItem key={c} value={c}>
-                    {c}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.city && errors.city && <FormHelperText>{errors.city}</FormHelperText>}
-            </FormControl>
+            <Autocomplete
+              freeSolo
+              options={city.results}
+              getOptionLabel={(opt) => (typeof opt === 'string' ? opt : opt.display_name)}
+              filterOptions={(x) => x}
+              loading={city.isLoading}
+              inputValue={values.cityZone}
+              onInputChange={(_, newValue) => {
+                city.setQuery(newValue);
+                onLocationChange?.('cityZone', newValue);
+              }}
+              onChange={(_, option) => {
+                if (option && typeof option !== 'string') {
+                  city.setQuery('');
+                  onLocationChange?.('cityZone', option.display_name);
+                  if (option.address?.postcode) {
+                    onLocationChange?.('zipcode', option.address.postcode);
+                  }
+                }
+              }}
+              renderOption={(props, option) => {
+                const [primary, ...rest] = option.display_name.split(',');
+                return (
+                  <li {...props} key={option.place_id}>
+                    <SearchIcon
+                      sx={{ fontSize: 15, mr: 1, flexShrink: 0, color: 'text.secondary' }}
+                    />
+                    <Box sx={{ overflow: 'hidden' }}>
+                      <Typography variant='body2' noWrap>
+                        {primary}
+                      </Typography>
+                      {rest.length > 0 && (
+                        <Typography variant='caption' color='text.secondary' noWrap>
+                          {rest.join(',').trim()}
+                        </Typography>
+                      )}
+                    </Box>
+                  </li>
+                );
+              }}
+              renderInput={({ InputProps, inputProps: autoInputProps, ...params }) => (
+                <TextField
+                  {...params}
+                  label='City / Zone of Operation'
+                  placeholder='Start typing to search...'
+                  required
+                  size='small'
+                  error={touched.cityZone && Boolean(errors.cityZone)}
+                  errorText={reqError(touched.cityZone, errors.cityZone)}
+                  inputProps={{ ...autoInputProps, name: 'cityZone' }}
+                  onBlur={onBlur}
+                  InputProps={
+                    {
+                      ...InputProps,
+                      endAdornment: (
+                        <>
+                          {city.isLoading ? (
+                            <InputAdornment position='end'>
+                              <CircularProgress size={14} />
+                            </InputAdornment>
+                          ) : (
+                            <InputAdornment position='end'>
+                              <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                            </InputAdornment>
+                          )}
+                          {InputProps.endAdornment}
+                        </>
+                      ),
+                    } as Record<string, unknown>
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              id='zipcode'
+              name='zipcode'
+              label='Zipcode / Postal Code'
+              type='text'
+              placeholder='e.g. 560001'
+              value={values.zipcode}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={touched.zipcode && Boolean(errors.zipcode)}
+              errorText={touched.zipcode ? errors.zipcode : undefined}
+              inputProps={{ inputMode: 'numeric', maxLength: 10 }}
+              fullWidth
+            />
+          </Grid>
+
+          {/* Work Location */}
+          <Grid size={{ xs: 12 }}>
+            <Autocomplete
+              freeSolo
+              options={work.results}
+              getOptionLabel={(opt) => (typeof opt === 'string' ? opt : opt.display_name)}
+              filterOptions={(x) => x}
+              loading={work.isLoading}
+              inputValue={values.workLocation}
+              onInputChange={(_, newValue) => {
+                work.setQuery(newValue);
+                onLocationChange?.('workLocation', newValue);
+              }}
+              onChange={(_, option) => {
+                if (option && typeof option !== 'string') {
+                  work.setQuery('');
+                  onLocationChange?.('workLocation', option.display_name);
+                }
+              }}
+              renderOption={(props, option) => {
+                const [primary, ...rest] = option.display_name.split(',');
+                return (
+                  <li {...props} key={option.place_id}>
+                    <SearchIcon
+                      sx={{ fontSize: 15, mr: 1, flexShrink: 0, color: 'text.secondary' }}
+                    />
+                    <Box sx={{ overflow: 'hidden' }}>
+                      <Typography variant='body2' noWrap>
+                        {primary}
+                      </Typography>
+                      {rest.length > 0 && (
+                        <Typography variant='caption' color='text.secondary' noWrap>
+                          {rest.join(',').trim()}
+                        </Typography>
+                      )}
+                    </Box>
+                  </li>
+                );
+              }}
+              renderInput={({ InputProps, inputProps: autoInputProps, ...params }) => (
+                <TextField
+                  {...params}
+                  label='Work Location'
+                  placeholder='Start typing to search...'
+                  size='small'
+                  inputProps={{ ...autoInputProps, name: 'workLocation' }}
+                  onBlur={onBlur}
+                  InputProps={
+                    {
+                      ...InputProps,
+                      endAdornment: (
+                        <>
+                          {work.isLoading ? (
+                            <InputAdornment position='end'>
+                              <CircularProgress size={14} />
+                            </InputAdornment>
+                          ) : (
+                            <InputAdornment position='end'>
+                              <SearchIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                            </InputAdornment>
+                          )}
+                          {InputProps.endAdornment}
+                        </>
+                      ),
+                    } as Record<string, unknown>
+                  }
+                />
+              )}
+            />
           </Grid>
         </Grid>
       </Box>

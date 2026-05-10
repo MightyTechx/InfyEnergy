@@ -272,4 +272,120 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     color: '#64748b',
     whiteSpace: 'nowrap' as const,
   },
+
+  // Stats Row
+  statsRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, 1fr)',
+    gap: theme.spacing(1.5),
+    marginBottom: theme.spacing(3),
+    [theme.breakpoints.down('xl')]: {
+      gridTemplateColumns: 'repeat(4, 1fr)',
+    },
+    [theme.breakpoints.down('lg')]: {
+      gridTemplateColumns: 'repeat(3, 1fr)',
+    },
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'repeat(3, 1fr)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: theme.spacing(1),
+    },
+  },
+
+  statCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.25),
+    padding: theme.spacing(1.25, 1.5),
+    borderRadius: 10,
+    border: '1px solid #e8eaf0',
+    background: '#ffffff',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+      transform: 'translateY(-2px)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1, 1.25),
+      gap: theme.spacing(1),
+      borderRadius: 8,
+    },
+  },
+
+  statCardIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 8,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+
+  statCardValue: {
+    fontSize: '1.15rem',
+    fontWeight: 700,
+    color: '#1e293b',
+    lineHeight: 1.2,
+    fontVariantNumeric: 'tabular-nums' as const,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem',
+    },
+  },
+
+  statCardLabel: {
+    fontSize: '0.65rem',
+    fontWeight: 500,
+    color: '#64748b',
+    lineHeight: 1.2,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.6rem',
+    },
+  },
+
+  // Table
+  tablePaper: {
+    borderRadius: 14,
+    border: '1px solid #e8eaf0',
+    overflow: 'hidden',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(99,102,241,0.06)',
+  },
+
+  tableHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1.5),
+    p: theme.spacing(2, 2.5),
+    borderBottom: '1px solid #e8eaf0',
+    background: 'linear-gradient(135deg, rgba(79,70,229,0.03) 0%, rgba(124,58,237,0.03) 100%)',
+  },
+
+  tableTitleRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+  },
+
+  tableTitle: {
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    color: '#1e293b',
+  },
+
+  tableStatsRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+  },
+
+  tableStatText: {
+    fontSize: '0.72rem',
+    fontWeight: 500,
+    color: '#64748b',
+  },
 });
