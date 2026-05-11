@@ -419,7 +419,7 @@ const Inventory = () => {
             </Grid>
 
             {/* Photo Upload */}
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid size={{ xs: 12 }}>
               <Box className={classes.photoUpload}>
                 <Box className={classes.photoUploadIcon}>
                   <CloudUploadIcon sx={{ fontSize: 24, color: '#0d9488' }} />

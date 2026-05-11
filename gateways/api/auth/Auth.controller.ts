@@ -12,7 +12,6 @@ import {
 } from '@infygen/interfaces';
 import { BadRequestException, HttpException, UnauthorizedException } from '@infygen/middleware';
 import { prisma } from '@infygen/database';
-import { PrismaClient } from '@prisma/client';
 import { sendEmail, generateOtp } from '@infygen/config';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'serivceops-jwt-secret-key';

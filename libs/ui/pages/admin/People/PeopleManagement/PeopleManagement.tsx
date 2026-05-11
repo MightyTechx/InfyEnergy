@@ -125,7 +125,7 @@ const PeopleManagement = () => {
         <Box className={classes.pageHeader}>
           <Box className={classes.headerOrb3} />
           <Box className={classes.pageHeaderRow}>
-            <Typography variant='h5' className={classes.title}>
+            <Typography variant='h1' className={classes.title}>
               People Management
             </Typography>
           </Box>
@@ -172,18 +172,18 @@ const PeopleManagement = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 0.75,
-              px: 2,
-              py: 0.875,
-              borderRadius: '10px',
+              gap: 0.5,
+              px: 1.5,
+              py: 0.625,
+              borderRadius: '8px',
               background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
-              boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
+              boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
               cursor: 'pointer',
-              transition: 'all 0.3s ease',
+              transition: 'all 0.25s ease',
               whiteSpace: 'nowrap',
               '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 6px 24px rgba(99,102,241,0.5)',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 16px rgba(99,102,241,0.45)',
               },
               '&:active': { transform: 'translateY(0)' },
               // mobile: stretch to fill right half
@@ -192,8 +192,8 @@ const PeopleManagement = () => {
               },
             }}
           >
-            <PersonAddIcon sx={{ fontSize: 18, color: '#fff' }} />
-            <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#fff' }}>
+            <PersonAddIcon sx={{ fontSize: 16, color: '#fff' }} />
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: '#fff' }}>
               Create User
             </Typography>
           </Box>

@@ -11,6 +11,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
+      "@infygen/prisma": ["../gateways/src/generated/prisma/client"],
       "@infygen/theme": ["./theme/index.ts"],
       "@infygen/interfaces": ["./entities/index.ts"],
       "@infygen/hooks": ["./ui/hooks/index.ts"],
@@ -26,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     "../libs/vite-env.d.ts",
-    "../typings/vite-env.d.ts"
+    "../typings/vite-env.d.ts",
+    "../gateways/src/generated/prisma/**/*.ts"
   ],
   "exclude": [
     "node_modules",

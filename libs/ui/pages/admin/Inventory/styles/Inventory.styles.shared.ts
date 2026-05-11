@@ -470,6 +470,12 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     borderColor: 'divider',
     background: '#fafafa',
     gap: theme.spacing(1.5),
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      padding: theme.spacing(2),
+      gap: theme.spacing(1),
+    },
   },
 
   cancelButton: {
@@ -480,9 +486,13 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     color: 'text.secondary',
     border: '1px solid',
     borderColor: 'divider',
+    minWidth: 'auto',
     '&:hover': {
       background: 'rgba(0,0,0,0.04)',
       borderColor: 'text.disabled',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 
@@ -495,6 +505,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     background: 'linear-gradient(135deg, #0d9488, #0891b2) !important',
     boxShadow: '0 4px 14px rgba(13,148,136,0.35) !important',
     color: '#fff !important',
+    minWidth: 'auto',
     '&:hover': {
       transform: 'translateY(-1px)',
       boxShadow: '0 6px 20px rgba(13,148,136,0.45) !important',
@@ -502,6 +513,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '&:disabled': {
       background: 'rgba(0,0,0,0.12) !important',
       boxShadow: 'none !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 });

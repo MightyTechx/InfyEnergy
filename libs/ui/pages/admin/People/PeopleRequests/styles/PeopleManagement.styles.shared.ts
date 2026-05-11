@@ -268,7 +268,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   statLabel: {
-    fontSize: '0.62rem',
+    fontSize: '15px',
     fontWeight: 700,
     color: 'rgba(0,0,0,0.38)',
     letterSpacing: '0.07em',

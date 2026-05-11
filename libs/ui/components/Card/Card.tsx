@@ -13,6 +13,8 @@ export interface DSCardProps {
   raised?: boolean;
   variant?: 'elevation' | 'outlined';
   elevation?: number;
+  /** Card variant: 'default' | 'status-card' | 'filter-card' | 'kpi-card' */
+  cardVariant?: 'default' | 'status-card' | 'filter-card' | 'kpi-card';
 }
 
 const Card: React.FC<DSCardProps> = ({
@@ -27,13 +29,14 @@ const Card: React.FC<DSCardProps> = ({
   raised = false,
   variant = 'elevation',
   elevation = 1,
+  cardVariant = 'default',
   ...rest
 }) => {
   const { cx, classes } = useStyles();
 
   return (
     <MUICard
-      className={cx(classes.root, className)}
+      className={cx(classes.root, classes[cardVariant], className)}
       sx={sx}
       onClick={onClick}
       raised={raised}

@@ -100,45 +100,43 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   // ─── Filter Bar ─────────────────────────────────────────────────────────────
   filterBar: {
     display: 'flex',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap' as const,
-    gap: theme.spacing(1.5),
+    flexWrap: 'wrap',
+    gap: theme.spacing(2),
+    alignItems: 'center',
     padding: theme.spacing(2, 2.5),
     background: 'rgba(255,255,255,0.96)',
     backdropFilter: 'blur(16px)',
-    borderRadius: 14,
+    borderRadius: 12,
     border: '1px solid rgba(79,70,229,0.1)',
     boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
     marginTop: theme.spacing(2.5),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(1.5),
-      gap: theme.spacing(1),
+      gap: theme.spacing(1.5),
       '& > *': {
         width: '100%',
-        flexBasis: '100%',
       },
     },
   },
 
   downloadBtn: {
-    alignSelf: 'flex-end',
-    flexShrink: 0,
-    minWidth: 140,
-    height: 40,
-    borderRadius: '10px !important',
+    height: '38px',
+    minWidth: 130,
+    borderRadius: '8px !important',
     fontWeight: '700 !important',
-    fontSize: '0.85rem !important',
+    fontSize: '0.82rem !important',
     whiteSpace: 'nowrap' as const,
     textTransform: 'none' as const,
+    padding: '0 16px !important',
     background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important',
-    boxShadow: '0 4px 14px rgba(79,70,229,0.4) !important',
-    transition: 'all 0.22s ease !important',
+    boxShadow: '0 2px 8px rgba(79,70,229,0.35) !important',
+    transition: 'all 0.2s ease !important',
     '&:hover': {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 20px rgba(79,70,229,0.5) !important',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 12px rgba(79,70,229,0.45) !important',
     },
     '&.Mui-disabled': {
-      background: 'rgba(0,0,0,0.1) !important',
+      background: 'rgba(0,0,0,0.08) !important',
       boxShadow: 'none !important',
       color: 'rgba(0,0,0,0.3) !important',
     },
@@ -235,50 +233,84 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Filter Controls ──────────────────────────────────────────────────────────
   filterAutocomplete: {
-    flex: '2 1 220px',
-    minWidth: 0,
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '8px',
-      '& fieldset': { borderRadius: '8px' },
-      '&:hover fieldset': { borderColor: '#4f46e5' },
-      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
-    },
-    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
-    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
-    '@media (max-width:600px)': {
-      width: '100%',
-      flexBasis: '100%',
-    },
+    width: 240,
+    flexShrink: 0,
   },
 
   filterFormControl: {
-    flex: '1 1 180px',
-    minWidth: 0,
+    width: 160,
     '& .MuiOutlinedInput-root': {
-      borderRadius: '8px',
-      '& fieldset': { borderRadius: '8px' },
-      '&:hover fieldset': { borderColor: '#4f46e5' },
-      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+      height: '38px',
+      fontSize: '0.82rem',
+      borderRadius: 8,
+      background: '#ffffff',
+      transition: 'all 0.2s ease',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(79,70,229,0.08)',
+      '& fieldset': {
+        borderColor: 'rgba(79,70,229,0.15)',
+        borderWidth: '1px',
+        transition: 'all 0.2s ease',
+      },
+      '&:hover fieldset': {
+        borderColor: 'rgba(79,70,229,0.35)',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#4f46e5',
+        borderWidth: '2px',
+      },
+      '&.Mui-focused': {
+        boxShadow: '0 0 0 4px rgba(79,70,229,0.1)',
+        background: '#ffffff',
+      },
     },
-    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
-    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+    '& .MuiInputLabel-root': {
+      fontSize: '0.8rem',
+      fontWeight: 500,
+      color: '#64748b',
+      '&.Mui-focused': {
+        color: '#4f46e5',
+        fontWeight: 600,
+      },
+    },
+    '& .MuiSelect-select': {
+      py: '8px',
+    },
   },
 
   datePickerField: {
-    flex: '1 1 180px',
-    minWidth: 0,
+    width: 160,
     '& .MuiOutlinedInput-root': {
-      borderRadius: '10px',
-      '& fieldset': { borderRadius: '10px' },
-      '&:hover fieldset': { borderColor: '#4f46e5' },
-      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+      height: '38px',
+      fontSize: '0.82rem',
+      borderRadius: 8,
+      background: '#ffffff',
+      transition: 'all 0.2s ease',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(79,70,229,0.08)',
+      '& fieldset': {
+        borderColor: 'rgba(79,70,229,0.15)',
+        borderWidth: '1px',
+        transition: 'all 0.2s ease',
+      },
+      '&:hover fieldset': {
+        borderColor: 'rgba(79,70,229,0.35)',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#4f46e5',
+        borderWidth: '2px',
+      },
+      '&.Mui-focused': {
+        boxShadow: '0 0 0 4px rgba(79,70,229,0.1)',
+        background: '#ffffff',
+      },
     },
-    '& fieldset': { borderRadius: '10px' },
-    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
-    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
-    '@media (max-width:600px)': {
-      width: '100%',
-      flexBasis: '100%',
+    '& .MuiInputLabel-root': {
+      fontSize: '0.8rem',
+      fontWeight: 500,
+      color: '#64748b',
+      '&.Mui-focused': {
+        color: '#4f46e5',
+        fontWeight: 600,
+      },
     },
   },
 

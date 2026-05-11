@@ -461,25 +461,42 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Chart Card ──────────────────────────────────────────────────────────────
   chartCard: {
-    borderRadius: 14,
-    border: '1px solid #e8eaf0',
-    background: '#fff',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(79,70,229,0.05)',
+    borderRadius: 18,
+    border: '1px solid rgba(249,115,22,0.15)',
+    background: '#ffffff',
+    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 30px -5px rgba(249,115,22,0.12)',
     overflow: 'hidden',
+    position: 'relative' as const,
+    '&::before': {
+      content: '""',
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 3,
+      background: 'linear-gradient(90deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%)',
+    },
   },
 
   chartCardHeader: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing(2, 2.5),
-    borderBottom: '1px solid #f1f5f9',
-    background: 'linear-gradient(135deg, rgba(13,148,136,0.05) 0%, rgba(8,145,178,0.03) 100%)',
-    [theme.breakpoints.down('sm')]: { flexDirection: 'column' },
+    padding: theme.spacing(2.5, 3),
+    borderBottom: '1px solid rgba(249,115,22,0.08)',
+    background:
+      'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,250,245,1) 50%, rgba(255,245,240,1) 100%)',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      gap: 1.5,
+      p: theme.spacing(2, 2.5),
+    },
   },
 
   chartCardBody: {
-    padding: theme.spacing(1.5, 2, 2),
+    padding: theme.spacing(2.5, 3, 3),
+    background: 'linear-gradient(180deg, #ffffff 0%, rgba(255,250,245,0.5) 100%)',
+    borderTop: '1px solid rgba(249,115,22,0.05)',
   },
 
   // ─── Analytics Filter Panel ──────────────────────────────────────────────────
@@ -487,14 +504,25 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap' as const,
-    gap: 2,
-    background: '#ffffff',
-    borderRadius: 14,
-    p: '14px 20px',
-    mb: 2,
-    border: '1px solid #e8eaf0',
-    borderLeft: '4px solid #6366f1',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    gap: theme.spacing(2),
+    background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,252,248,1) 100%)',
+    borderRadius: 16,
+    p: theme.spacing(2, 2.5),
+    mb: 2.5,
+    border: '1px solid rgba(249,115,22,0.12)',
+    borderLeft: '4px solid #f97316',
+    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.03), 0 8px 20px -4px rgba(249,115,22,0.08)',
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+    '&::after': {
+      content: '""',
+      position: 'absolute' as const,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 1,
+      background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.15), transparent)',
+    },
   },
 
   filterLabel: {
@@ -504,72 +532,211 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     mr: 1,
   },
 
+  filterLabelBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1.5,
+    pr: 1.5,
+    borderRight: '1px solid rgba(249,115,22,0.12)',
+  },
+
   filterLabelIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: '9px',
-    background: 'linear-gradient(135deg,#f97316,#ec4899)',
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #ec4899 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 3px 10px rgba(249,115,22,0.35)',
+    boxShadow: '0 4px 14px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
   },
 
   filterLabelText: {
-    fontSize: '0.8rem',
+    fontSize: '0.85rem',
     fontWeight: 700,
-    color: '#4338ca',
+    color: '#c2410c',
     letterSpacing: '0.03em',
+    textTransform: 'uppercase' as const,
   },
 
   filterDivider: {
-    borderColor: 'rgba(99,102,241,0.15)',
+    borderColor: 'rgba(249,115,22,0.15)',
     mx: 0.5,
+    my: 0,
+    height: 32,
   },
 
   filterChip: {
-    background: 'rgba(99,102,241,0.1)',
-    color: '#4338ca',
+    background: 'linear-gradient(135deg, rgba(249,115,22,0.12), rgba(236,72,153,0.08))',
+    color: '#c2410c',
     fontWeight: 600,
     fontSize: '0.72rem',
-    border: '1px solid rgba(99,102,241,0.25)',
+    border: '1px solid rgba(249,115,22,0.2)',
     height: 26,
+    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
   },
 
   filterFieldsContainer: {
     display: 'flex',
     flexWrap: 'wrap' as const,
-    gap: 2,
+    gap: theme.spacing(2),
     flex: 1,
+    alignItems: 'center',
   },
 
   filterAutocomplete: {
-    width: 220,
+    width: 240,
   },
 
   filterRangeChip: {
     ml: 'auto',
   },
 
+  // ─── Form Controls in Filter Panel ───────────────────────────────────────────
+  formControl: {
+    width: 160,
+    '& .MuiOutlinedInput-root': {
+      height: '38px',
+      fontSize: '0.82rem',
+      borderRadius: 10,
+      background: '#ffffff',
+      transition: 'all 0.2s ease',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(249,115,22,0.08)',
+      '& fieldset': {
+        borderColor: 'rgba(249,115,22,0.15)',
+        borderWidth: '1px',
+        transition: 'all 0.2s ease',
+      },
+      '&:hover fieldset': {
+        borderColor: 'rgba(249,115,22,0.35)',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#f97316',
+        borderWidth: '2px',
+      },
+      '&.Mui-focused': {
+        boxShadow: '0 0 0 4px rgba(249,115,22,0.1)',
+        background: '#ffffff',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '0.8rem',
+      fontWeight: 500,
+      color: '#64748b',
+      '&.Mui-focused': {
+        color: '#c2410c',
+        fontWeight: 600,
+      },
+    },
+    '& .MuiSelect-select': {
+      py: '8px',
+    },
+  },
+
+  menuItemBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+  },
+
+  menuItemText: {
+    fontSize: '0.82rem',
+    fontWeight: 500,
+    color: '#475569',
+  },
+
+  // ─── Autocomplete Dropdown ───────────────────────────────────────────────────
+  autocompleteOption: {
+    py: '8px !important',
+    px: '12px !important',
+    display: 'flex !important',
+    alignItems: 'center !important',
+    gap: '8px !important',
+    borderRadius: 6,
+    mx: '4px !important',
+    '&:hover': {
+      background:
+        'linear-gradient(135deg, rgba(249,115,22,0.08), rgba(236,72,153,0.04)) !important',
+    },
+    '&.Mui-selected': {
+      background:
+        'linear-gradient(135deg, rgba(249,115,22,0.12), rgba(236,72,153,0.06)) !important',
+      '&:hover': {
+        background:
+          'linear-gradient(135deg, rgba(249,115,22,0.16), rgba(236,72,153,0.08)) !important',
+      },
+    },
+  },
+
+  autocompleteSelectAllText: {
+    fontSize: '0.82rem',
+    fontWeight: 700,
+    color: '#f97316',
+    letterSpacing: '0.02em',
+  },
+
+  autocompleteOptionText: {
+    fontSize: '0.82rem',
+    fontWeight: 500,
+    color: '#475569',
+  },
+
+  autocompleteTags: {
+    background: 'linear-gradient(135deg, rgba(249,115,22,0.15), rgba(236,72,153,0.1))',
+    border: '1px solid rgba(249,115,22,0.25)',
+    color: '#c2410c',
+    fontWeight: 600,
+    fontSize: '0.72rem',
+    height: 24,
+    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+    '& .MuiChip-label': {
+      px: 1.25,
+    },
+    '& .MuiChip-deleteIcon': {
+      color: '#c2410c',
+      '&:hover': {
+        color: '#ea580c',
+      },
+    },
+  },
+
   // ─── KPI Card ────────────────────────────────────────────────────────────────
   kpiCardsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 1.5,
-    mb: 2.5,
+    gap: theme.spacing(2),
+    mb: 3,
     [theme.breakpoints.up('sm')]: {
       gridTemplateColumns: 'repeat(4, 1fr)',
     },
   },
 
   kpiCard: {
-    borderRadius: '10px',
-    border: '1px solid #e8eaf0',
-    p: 1.75,
-    transition: 'all 0.2s ease',
+    borderRadius: 14,
+    border: '1px solid rgba(249,115,22,0.12)',
+    p: 2,
+    background: 'linear-gradient(145deg, #ffffff 0%, rgba(255,252,248,1) 100%)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+    '&::before': {
+      content: '""',
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 2,
+      background: 'linear-gradient(90deg, rgba(249,115,22,0.3), rgba(236,72,153,0.2))',
+      opacity: 0,
+      transition: 'opacity 0.3s ease',
+    },
     '&:hover': {
-      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 25px -5px rgba(249,115,22,0.18), 0 4px 10px -2px rgba(0,0,0,0.04)',
+      transform: 'translateY(-4px)',
+      borderColor: 'rgba(249,115,22,0.25)',
+      '&::before': {
+        opacity: 1,
+      },
     },
   },
 
@@ -577,39 +744,42 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    mb: 0.75,
+    mb: 1.25,
   },
 
   kpiCardLabel: {
-    fontSize: '0.6rem',
+    fontSize: '0.65rem',
     fontWeight: 700,
     color: '#94a3b8',
     textTransform: 'uppercase' as const,
-    letterSpacing: '0.08em',
+    letterSpacing: '0.1em',
   },
 
   kpiCardIconBox: {
-    width: 28,
-    height: 28,
-    borderRadius: '8px',
+    width: 32,
+    height: 32,
+    borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    background: 'linear-gradient(135deg, rgba(249,115,22,0.08), rgba(236,72,153,0.06))',
+    border: '1px solid rgba(249,115,22,0.12)',
   },
 
   kpiCardValue: {
-    fontSize: '1.1rem',
+    fontSize: '1.2rem',
     fontWeight: 800,
-    lineHeight: 1,
-    mb: 0.35,
+    lineHeight: 1.1,
+    mb: 0.5,
     fontVariantNumeric: 'tabular-nums' as const,
+    letterSpacing: '-0.02em',
     [theme.breakpoints.up('md')]: {
-      fontSize: '1.3rem',
+      fontSize: '1.4rem',
     },
   },
 
   kpiCardSub: {
-    fontSize: '0.65rem',
+    fontSize: '0.68rem',
     color: '#94a3b8',
     fontWeight: 500,
   },
@@ -618,73 +788,81 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   chartHeaderLeft: {
     display: 'flex',
     alignItems: 'center',
-    gap: 1.5,
+    gap: theme.spacing(2),
   },
 
   chartHeaderIconBox: {
-    width: 38,
-    height: 38,
-    borderRadius: '10px',
-    background: 'linear-gradient(135deg,#f97316,#ec4899)',
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #ec4899 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(249,115,22,0.35)',
+    boxShadow: '0 4px 14px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
     flexShrink: 0,
   },
 
   chartHeaderTitle: {
-    fontSize: '0.95rem',
+    fontSize: '1rem',
     fontWeight: 700,
     color: '#1e293b',
     letterSpacing: '-0.01em',
   },
 
   chartHeaderSubtitle: {
-    fontSize: '0.72rem',
-    color: '#94a3b8',
-    mt: 0.2,
+    fontSize: '0.75rem',
+    color: '#64748b',
+    mt: 0.3,
+    fontWeight: 500,
   },
 
   chartHeaderRight: {
     display: 'flex',
     alignItems: 'center',
-    gap: 1,
+    gap: theme.spacing(1.5),
   },
 
   chartTypeChip: {
-    background: 'rgba(99,102,241,0.08)',
-    border: '1px solid rgba(99,102,241,0.2)',
-    color: '#4f46e5',
+    background: 'linear-gradient(135deg, rgba(249,115,22,0.12), rgba(236,72,153,0.08))',
+    border: '1px solid rgba(249,115,22,0.22)',
+    color: '#c2410c',
     fontWeight: 600,
-    fontSize: '0.72rem',
-    height: 26,
+    fontSize: '0.75rem',
+    height: 28,
+    px: 1,
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    '& .MuiChip-icon': {
+      color: '#f97316',
+      ml: 0.5,
+    },
   },
 
   liveIndicator: {
     display: 'flex',
     alignItems: 'center',
     gap: 0.75,
-    background: 'rgba(16,185,129,0.08)',
-    borderRadius: '8px',
+    background: 'linear-gradient(135deg, rgba(249,115,22,0.08), rgba(236,72,153,0.05))',
+    borderRadius: 8,
     px: 1.5,
     py: 0.625,
-    border: '1px solid rgba(16,185,129,0.2)',
+    border: '1px solid rgba(249,115,22,0.18)',
   },
 
   liveDot: {
-    width: 7,
-    height: 7,
+    width: 8,
+    height: 8,
     borderRadius: '50%',
-    background: '#10b981',
+    background: 'linear-gradient(135deg, #10b981, #059669)',
+    boxShadow: '0 0 8px rgba(16,185,129,0.5)',
     animation: 'livePulse 2s ease-in-out infinite',
   },
 
   liveText: {
     fontSize: '0.68rem',
-    color: '#10b981',
-    fontWeight: 600,
-    letterSpacing: '0.06em',
+    color: '#059669',
+    fontWeight: 700,
+    letterSpacing: '0.08em',
   },
 
   // ─── Autocomplete Options ────────────────────────────────────────────────────
@@ -736,5 +914,45 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     borderColor: '#e2e8f0',
     background: '#f8fafc',
     '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
+  },
+
+  // ─── Table Cell Styles ───────────────────────────────────────────────────────
+  cellNumeric: {
+    fontSize: '0.63rem',
+    fontWeight: 500,
+    color: '#334155',
+    textAlign: 'center',
+  },
+
+  cellNumericBold: {
+    fontSize: '0.63rem',
+    fontWeight: 700,
+    color: '#1e293b',
+    textAlign: 'center',
+  },
+
+  cellOpMode: {
+    fontSize: '0.63rem',
+    fontWeight: 600,
+    color: '#475569',
+    textAlign: 'center',
+  },
+
+  cellTurbineNo: {
+    fontSize: '0.63rem',
+    fontWeight: 600,
+    color: '#1e40af',
+    cursor: 'pointer',
+    '&:hover': {
+      color: '#4f46e5',
+      textDecoration: 'underline',
+    },
+  },
+
+  filterBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: { display: 'none' },
   },
 });

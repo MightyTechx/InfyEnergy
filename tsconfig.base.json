@@ -21,6 +21,7 @@
     "typeRoots": ["./node_modules/@types", "./typings"],
     "types": ["vite/client"],
     "paths": {
+      "@infygen/prisma": ["./gateways/src/generated/prisma/client"],
       "@infygen/component": ["./libs/ui/components/index.ts"],
       "@infygen/component/*": ["./libs/ui/components/*"],
       "@infygen/theme": ["./libs/theme/index.ts"],

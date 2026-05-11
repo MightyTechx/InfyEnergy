@@ -107,13 +107,9 @@ const Reports = () => {
             options={REPORT_TYPES}
             value={reportType}
             onChange={(_, v) => setReportType(v)}
+            size='small'
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Report Type'
-                size='small'
-                placeholder='Search report…'
-              />
+              <TextField {...params} label='Report Type' placeholder='Search report…' />
             )}
           />
 
