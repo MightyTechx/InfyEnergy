@@ -1,4 +1,4 @@
-import { IAuthActionRequest } from '@infyenergy/interfaces';
+import { IAuthActionRequest } from '@infygen/interfaces';
 import { baseApi } from './baseServices';
 
 export const authApi = baseApi.injectEndpoints({

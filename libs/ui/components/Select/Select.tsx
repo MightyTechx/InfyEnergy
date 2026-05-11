@@ -14,8 +14,9 @@ export interface DSSelectOption {
 }
 
 export interface DSSelectProps {
-  options: DSSelectOption[];
+  options?: DSSelectOption[];
   label?: string;
+  labelId?: string;
   variant?: 'outlined' | 'filled' | 'standard';
   helperText?: React.ReactNode;
   errorText?: React.ReactNode;
@@ -31,11 +32,19 @@ export interface DSSelectProps {
   multiple?: boolean;
   placeholder?: string;
   size?: 'small' | 'medium';
+  children?: React.ReactNode;
+  id?: string;
+  name?: string;
+  sx?: Record<string, unknown>;
+  renderValue?: (value: unknown) => React.ReactNode;
+  input?: React.ReactElement;
+  MenuProps?: Record<string, unknown>;
 }
 
 const Select: React.FC<DSSelectProps> = ({
   options,
   label,
+  labelId,
   variant = 'outlined',
   helperText,
   errorText,
@@ -51,6 +60,13 @@ const Select: React.FC<DSSelectProps> = ({
   multiple,
   placeholder,
   size = 'medium',
+  children,
+  id,
+  name,
+  sx,
+  renderValue,
+  input,
+  MenuProps,
   ...rest
 }) => {
   const { cx, classes } = useStyles();
@@ -62,10 +78,12 @@ const Select: React.FC<DSSelectProps> = ({
       error={error || Boolean(errorText)}
       required={required}
       className={cx(classes.root, className)}
+      sx={sx as any}
     >
-      {label && <InputLabel>{label}</InputLabel>}
+      {label && <InputLabel id={labelId}>{label}</InputLabel>}
       <MUISelect
         label={label}
+        labelId={labelId}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -75,18 +93,25 @@ const Select: React.FC<DSSelectProps> = ({
         multiple={multiple}
         displayEmpty={Boolean(placeholder)}
         size={size}
+        id={id}
+        name={name}
+        renderValue={renderValue}
+        input={input}
+        MenuProps={MenuProps as any}
         {...rest}
       >
-        {placeholder && (
+        {children}
+        {!children && placeholder && (
           <MenuItem value='' disabled>
             {placeholder}
           </MenuItem>
         )}
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value} disabled={option.disabled}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {!children &&
+          options?.map((option) => (
+            <MenuItem key={option.value} value={option.value} disabled={option.disabled}>
+              {option.label}
+            </MenuItem>
+          ))}
       </MUISelect>
       {(helperText || errorText) && <FormHelperText>{errorText || helperText}</FormHelperText>}
     </FormControl>

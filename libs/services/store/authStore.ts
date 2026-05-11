@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IAuthUser } from '@infyenergy/interfaces';
+import { IAuthUser } from '@infygen/interfaces';
 
 export interface AuthState {
   user: IAuthUser | null;
@@ -10,15 +10,15 @@ export interface AuthState {
 
 const loadInitialState = (): AuthState => {
   try {
-    const token = localStorage.getItem('infyenergy_token');
-    const userStr = localStorage.getItem('infyenergy_user');
+    const token = localStorage.getItem('infygen_token');
+    const userStr = localStorage.getItem('infygen_user');
     if (token && userStr) {
       const user = JSON.parse(userStr) as IAuthUser;
       return {
         user,
         token,
         isAuthenticated: true,
-        isConsultantMode: localStorage.getItem('infyenergy_consultant_mode') === 'true',
+        isConsultantMode: localStorage.getItem('infygen_consultant_mode') === 'true',
       };
     }
   } catch {
@@ -37,31 +37,31 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
-      localStorage.setItem('infyenergy_token', action.payload.token);
-      localStorage.setItem('infyenergy_user', JSON.stringify(action.payload.user));
+      localStorage.setItem('infygen_token', action.payload.token);
+      localStorage.setItem('infygen_user', JSON.stringify(action.payload.user));
     },
     updateUser(state, action: PayloadAction<Partial<IAuthUser>>) {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
-        localStorage.setItem('infyenergy_user', JSON.stringify(state.user));
+        localStorage.setItem('infygen_user', JSON.stringify(state.user));
       }
     },
     enterConsultantMode(state) {
       state.isConsultantMode = true;
-      localStorage.setItem('infyenergy_consultant_mode', 'true');
+      localStorage.setItem('infygen_consultant_mode', 'true');
     },
     exitConsultantMode(state) {
       state.isConsultantMode = false;
-      localStorage.removeItem('infyenergy_consultant_mode');
+      localStorage.removeItem('infygen_consultant_mode');
     },
     logout(state) {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
       state.isConsultantMode = false;
-      localStorage.removeItem('infyenergy_token');
-      localStorage.removeItem('infyenergy_user');
-      localStorage.removeItem('infyenergy_consultant_mode');
+      localStorage.removeItem('infygen_token');
+      localStorage.removeItem('infygen_user');
+      localStorage.removeItem('infygen_consultant_mode');
     },
   },
 });

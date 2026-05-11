@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { getBaseStyles } from './Button.styles.shared';
-import { createAppStyles } from '@infyenergy/theme';
+import { createAppStyles } from '@infygen/theme';
 
 export const useStyles = createAppStyles((theme: Theme) => getBaseStyles(theme), {
   admin: {

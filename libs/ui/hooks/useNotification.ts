@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useAppDispatch } from './useAppDispatch';
-import { showNotification, hideNotification } from '@infyenergy/services';
+import { showNotification, hideNotification } from '@infygen/services';
 
 export const useNotification = () => {
   const dispatch = useAppDispatch();

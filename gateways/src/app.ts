@@ -8,16 +8,14 @@ import path from 'path';
 import fs from 'fs';
 
 // Centralized error handling middleware
-import { errorHandler, notFoundHandler } from '@infyenergy/middleware';
+import { errorHandler, notFoundHandler } from '@infygen/middleware';
 
 // Import route modules
 import authRoutes from '../api/auth/Auth.routes';
 import adminRoutes from '../api/admin/routes';
-import userRoutes from '../api/user/routes';
-import consultantRoutes from '../api/consultant/routes';
 
 // Constants for route paths
-import { ADMIN_PATHS, USER_PATHS, CONSULTANT_PATHS } from '@infyenergy/constants';
+import { ADMIN_PATHS } from '@infygen/constants';
 
 const app = express();
 
@@ -54,12 +52,6 @@ app.use('/api/auth', authRoutes);
 
 // Admin API routes
 app.use(`/api/${ADMIN_PATHS.ADMIN}`, adminRoutes);
-
-// User API routes
-app.use(`/api/${USER_PATHS.USER}`, userRoutes);
-
-// Consultant API routes
-app.use(`/api/${CONSULTANT_PATHS.CONSULTANT}`, consultantRoutes);
 
 /**
  * -------------------------

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@infyenergy/services';
+import { AppDispatch } from '@infygen/services';
 
 /**
  * Typed version of useDispatch hook for the app's store

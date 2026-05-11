@@ -1,12 +1,9 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Chip, Switch, Link, Tooltip, Typography, Button, Stack } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import { useAuthActionMutation } from '@infyenergy/services';
-import { constants } from '@infyenergy/utils';
-import { useAuth, useNotification, useMediaQuery } from '@infyenergy/hooks';
-import { IAuthUser, UserRole } from '@infyenergy/interfaces';
+import { Chip, Switch, Link } from '@mui/material';
+import { useAuthActionMutation } from '@infygen/services';
+import { constants } from '@infygen/utils';
+import { useAuth, useNotification, useMediaQuery } from '@infygen/hooks';
+import { IAuthUser, UserRole } from '@infygen/interfaces';
 import { UserRow, InitialCreateValues } from '../types/peopleManagement.types';
 import {
   loadNewUserDraft,
@@ -14,10 +11,8 @@ import {
   fmtDate,
   fmtDateUser,
   fmtDateTimeUser,
-  SOURCE_LABELS,
-  DRAFT_DAYS,
 } from '../utils/accessManagement.utils';
-import { Column } from '@infyenergy/component';
+import { Column } from '@infygen/component';
 import { AccessRequestRow } from '../../PeopleRequests/types/accessRequests.types';
 
 const usePeopleManagement = () => {
@@ -61,7 +56,8 @@ const usePeopleManagement = () => {
 
       const usersData = usersResult.status === 'fulfilled' ? usersResult.value : { data: [] };
       const draftsData = draftsResult.status === 'fulfilled' ? draftsResult.value : { data: [] };
-      const requestsData = requestsResult.status === 'fulfilled' ? requestsResult.value : { data: [] };
+      const requestsData =
+        requestsResult.status === 'fulfilled' ? requestsResult.value : { data: [] };
 
       const users: IAuthUser[] = usersData.data || [];
       const adminsOnly = users.filter((u) => u.role === 'admin');
@@ -135,28 +131,34 @@ const usePeopleManagement = () => {
       });
 
       // Sort function: pending/draft first, active second, others last
-  const sortUsersByStatus = (users: IAuthUser[]): IAuthUser[] => {
-    return [...users].sort((a, b) => {
-      const aIsDraft = (a as any).status === 'draft' || (a as any).status === 'pending_approval' || (a as any).status === 'invited';
-      const bIsDraft = (b as any).status === 'draft' || (b as any).status === 'pending_approval' || (b as any).status === 'invited';
+      const sortUsersByStatus = (users: IAuthUser[]): IAuthUser[] => {
+        return [...users].sort((a, b) => {
+          const aIsDraft =
+            (a as any).status === 'draft' ||
+            (a as any).status === 'pending_approval' ||
+            (a as any).status === 'invited';
+          const bIsDraft =
+            (b as any).status === 'draft' ||
+            (b as any).status === 'pending_approval' ||
+            (b as any).status === 'invited';
 
-      const aIsActive = (a as any).status === 'active' && (a as any).isActive === true;
-      const bIsActive = (b as any).status === 'active' && (b as any).isActive === true;
+          const aIsActive = (a as any).status === 'active' && (a as any).isActive === true;
+          const bIsActive = (b as any).status === 'active' && (b as any).isActive === true;
 
-      // Draft/Pending first
-      if (aIsDraft && !bIsDraft) return -1;
-      if (!aIsDraft && bIsDraft) return 1;
+          // Draft/Pending first
+          if (aIsDraft && !bIsDraft) return -1;
+          if (!aIsDraft && bIsDraft) return 1;
 
-      // Active second
-      if (aIsActive && !bIsActive) return -1;
-      if (!aIsActive && bIsActive) return 1;
+          // Active second
+          if (aIsActive && !bIsActive) return -1;
+          if (!aIsActive && bIsActive) return 1;
 
-      // Both draft or both active - sort by createdAt descending
-      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return bTime - aTime;
-    });
-  };
+          // Both draft or both active - sort by createdAt descending
+          const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return bTime - aTime;
+        });
+      };
 
       const adminDrafts = dbDrafts.filter((d) => (d as any).role === 'admin');
       const consultantDrafts = dbDrafts.filter((d) => (d as any).role === 'consultant');

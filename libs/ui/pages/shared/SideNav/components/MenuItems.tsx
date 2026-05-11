@@ -5,8 +5,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
-import { constants } from '@infyenergy/utils';
-import { useGetFeatureFlagsQuery } from '@infyenergy/services';
+import { constants } from '@infygen/utils';
+import { useGetFeatureFlagsQuery } from '@infygen/services';
 
 export interface MenuItem {
   label: string;

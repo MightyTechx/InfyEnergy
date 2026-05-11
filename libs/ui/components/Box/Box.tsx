@@ -8,6 +8,7 @@ export interface DSBoxProps extends React.ComponentProps<typeof MUIBox> {
   onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
   style?: React.CSSProperties;
+  component?: React.ElementType;
 }
 
 const Box: React.FC<DSBoxProps> = ({ children, className, ...props }) => {

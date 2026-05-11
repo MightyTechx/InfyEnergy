@@ -5,8 +5,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAppSelector, useAppDispatch } from '@infyenergy/hooks';
-import { hideNotification, NotificationSeverity } from '@infyenergy/services';
+import { useAppSelector, useAppDispatch } from '@infygen/hooks';
+import { hideNotification, NotificationSeverity } from '@infygen/services';
 import { useStyles } from './styles';
 
 const severityConfig: Record<

@@ -18,7 +18,7 @@ const parseRoles = (roles: string) => {
 const parseFlag = (flag: any) => ({ ...flag, roles: parseRoles(flag.roles) });
 
 export class FeatureFlagsController {
-  // prisma is exported as Promise<PrismaClient> from @infyenergy/database
+  // prisma is exported as Promise<PrismaClient> from @infygen/database
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private prismaPromise: any) {}
 
@@ -86,10 +86,19 @@ export class FeatureFlagsController {
       return;
     }
 
+    const isEnabling = existing.status !== 'Enabled';
+    let roles = parseRoles(existing.roles);
+
+    // Auto-add Consultant role for nav-related flags when enabling
+    if (isEnabling && existing.key.startsWith('nav_') && !roles.includes('Consultant')) {
+      roles = [...roles, 'Consultant'];
+    }
+
     const flag = await db.featureFlag.update({
       where: { id },
       data: {
-        status: existing.status === 'Enabled' ? 'Disabled' : 'Enabled',
+        status: isEnabling ? 'Enabled' : 'Disabled',
+        roles: JSON.stringify(roles),
         updatedBy: req.body.updatedBy ?? null,
       },
     });

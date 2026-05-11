@@ -113,6 +113,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(1.5),
       gap: theme.spacing(1),
+      '& > *': {
+        width: '100%',
+        flexBasis: '100%',
+      },
     },
   },
 
@@ -138,6 +142,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       boxShadow: 'none !important',
       color: 'rgba(0,0,0,0.3) !important',
     },
+    [theme.breakpoints.down('sm')]: { width: '100%' },
   },
 
   tableSection: {
@@ -185,7 +190,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   searchField: {
-    width: '240px',
+    width: 240,
     flexShrink: 0,
     '& .MuiOutlinedInput-root': {
       height: '36px',
@@ -219,11 +224,71 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      flexBasis: '100%',
     },
   },
 
   tableWrapper: {
     overflowX: 'auto' as const,
     background: '#fff',
+  },
+
+  // ─── Filter Controls ──────────────────────────────────────────────────────────
+  filterAutocomplete: {
+    flex: '2 1 220px',
+    minWidth: 0,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      '& fieldset': { borderRadius: '8px' },
+      '&:hover fieldset': { borderColor: '#4f46e5' },
+      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+    '@media (max-width:600px)': {
+      width: '100%',
+      flexBasis: '100%',
+    },
+  },
+
+  filterFormControl: {
+    flex: '1 1 180px',
+    minWidth: 0,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      '& fieldset': { borderRadius: '8px' },
+      '&:hover fieldset': { borderColor: '#4f46e5' },
+      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+  },
+
+  datePickerField: {
+    flex: '1 1 180px',
+    minWidth: 0,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '10px',
+      '& fieldset': { borderRadius: '10px' },
+      '&:hover fieldset': { borderColor: '#4f46e5' },
+      '&.Mui-focused fieldset': { borderColor: '#4f46e5', borderWidth: '2px' },
+    },
+    '& fieldset': { borderRadius: '10px' },
+    '& .MuiInputLabel-root': { fontSize: '0.95rem' },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+    '@media (max-width:600px)': {
+      width: '100%',
+      flexBasis: '100%',
+    },
+  },
+
+  datePickerPaper: {
+    borderRadius: '10px',
+    mt: 0.5,
+  },
+
+  filterCheckbox: {
+    color: '#4f46e5',
+    '&.Mui-checked': { color: '#4f46e5' },
   },
 });

@@ -3,10 +3,10 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import CssBaseline from '@mui/material/CssBaseline';
-import { CollapseProvider } from '@infyenergy/hooks';
-import { Loader, NotificationModal } from '@infyenergy/component';
-import { DynamicThemeProvider } from '@infyenergy/theme';
-import { store } from '@infyenergy/state';
+import { Loader, NotificationModal } from '@infygen/component';
+import { DynamicThemeProvider } from '@infygen/theme';
+import { store } from '@infygen/state';
+import { CollapseProvider } from '@infygen/hooks';
 import App from './app';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

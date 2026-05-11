@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { DataTable, Column } from '@infyenergy/component';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -45,7 +44,8 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
 import { TurbineData, MOCK_TURBINE_DATA, STATUS_CONFIG } from './types/turbineData.types';
-import { constants } from '@infyenergy/utils';
+import { constants } from '@infygen/utils';
+import { Column, DataTable } from '@infygen/component';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -177,35 +177,6 @@ const fmtYAxis = (val: number) => {
   if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}G`;
   if (val >= 1_000) return `${(val / 1_000).toFixed(0)}k`;
   return `${Math.round(val)}`;
-};
-
-const TOGGLE_BTN_BASE = {
-  fontSize: '0.8rem',
-  fontWeight: 600,
-  textTransform: 'none' as const,
-  borderRadius: '8px',
-  padding: '6px 18px',
-  minWidth: 148,
-  transition: 'all 0.18s ease',
-  boxShadow: 'none',
-};
-
-const FIELD_W = 220;
-
-const FIELD_SX = {
-  width: FIELD_W,
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '10px',
-    height: '40px',
-    fontSize: '0.85rem',
-    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#6366f1' },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#6366f1',
-      borderWidth: '2px',
-    },
-  },
-  '& fieldset': { borderRadius: '10px' },
-  '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -387,7 +358,7 @@ const Dashboard = () => {
       fontFamily: 'inherit',
       animations: { enabled: true, speed: 800 },
     },
-    stroke: { curve: 'smooth', width: Array(selectedTurbines.length).fill(2.5) },
+    stroke: { curve: 'smooth', width: 2.5 },
     fill: {
       type: 'gradient',
       gradient: {
@@ -457,15 +428,7 @@ const Dashboard = () => {
             e.stopPropagation();
             navigate(AdminPath.TURBINE_DETAIL.replace(':id', String((row as TurbineData).id)));
           }}
-          sx={{
-            fontWeight: 700,
-            color: '#4f46e5',
-            fontSize: '0.75rem',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-            textDecorationStyle: 'dotted',
-            '&:hover': { color: '#7c3aed' },
-          }}
+          className={classes.cellTurbineNo}
         >
           {String(v)}
         </Typography>
@@ -503,11 +466,7 @@ const Dashboard = () => {
       minWidth: 85,
       align: 'center',
       format: (v) => (
-        <Typography
-          sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}
-        >
-          {fmtVal(v as number)}
-        </Typography>
+        <Typography className={classes.cellNumericBold}>{fmtVal(v as number)}</Typography>
       ),
     },
     {
@@ -515,11 +474,7 @@ const Dashboard = () => {
       label: 'WS (m/s)',
       minWidth: 85,
       align: 'center',
-      format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {fmtVal(v as number)}
-        </Typography>
-      ),
+      format: (v) => <Typography className={classes.cellNumeric}>{fmtVal(v as number)}</Typography>,
     },
     {
       id: 'windDirection',
@@ -527,9 +482,7 @@ const Dashboard = () => {
       minWidth: 80,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°</Typography>
       ),
     },
     {
@@ -538,9 +491,7 @@ const Dashboard = () => {
       minWidth: 75,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(1)}°
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
       ),
     },
     {
@@ -549,9 +500,7 @@ const Dashboard = () => {
       minWidth: 75,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(1)}°
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
       ),
     },
     {
@@ -560,9 +509,7 @@ const Dashboard = () => {
       minWidth: 65,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(1)}
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}</Typography>
       ),
     },
     {
@@ -571,9 +518,7 @@ const Dashboard = () => {
       minWidth: 65,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
       ),
     },
     {
@@ -582,9 +527,7 @@ const Dashboard = () => {
       minWidth: 90,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
       ),
     },
     {
@@ -593,11 +536,7 @@ const Dashboard = () => {
       minWidth: 100,
       align: 'center',
       format: (v) => (
-        <Typography
-          sx={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}
-        >
-          {(v as number).toFixed(0)}
-        </Typography>
+        <Typography className={classes.cellNumericBold}>{(v as number).toFixed(0)}</Typography>
       ),
     },
     {
@@ -606,9 +545,7 @@ const Dashboard = () => {
       minWidth: 90,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°C
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
       ),
     },
     {
@@ -617,9 +554,7 @@ const Dashboard = () => {
       minWidth: 90,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°C
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
       ),
     },
     {
@@ -628,9 +563,7 @@ const Dashboard = () => {
       minWidth: 95,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°C
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
       ),
     },
     {
@@ -639,9 +572,7 @@ const Dashboard = () => {
       minWidth: 85,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°C
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
       ),
     },
     {
@@ -650,9 +581,7 @@ const Dashboard = () => {
       minWidth: 90,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontSize: '0.75rem' }}>
-          {(v as number).toFixed(0)}°C
-        </Typography>
+        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
       ),
     },
     {
@@ -660,9 +589,7 @@ const Dashboard = () => {
       label: 'OP Mode',
       minWidth: 110,
       align: 'center',
-      format: (v) => (
-        <Typography sx={{ fontSize: '0.7rem', color: '#475569' }}>{String(v)}</Typography>
-      ),
+      format: (v) => <Typography className={classes.cellOpMode}>{String(v)}</Typography>,
     },
   ];
 
@@ -803,25 +730,7 @@ const Dashboard = () => {
               variant={view === 'table' ? 'contained' : 'outlined'}
               startIcon={<TableChartIcon sx={{ fontSize: 18 }} />}
               onClick={() => setView('table')}
-              sx={
-                view === 'table'
-                  ? {
-                      ...TOGGLE_BTN_BASE,
-                      background: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg,#4338ca,#6d28d9)',
-                        boxShadow: '0 4px 12px rgba(79,70,229,0.35)',
-                        transform: 'translateY(-1px)',
-                      },
-                    }
-                  : {
-                      ...TOGGLE_BTN_BASE,
-                      color: '#64748b',
-                      borderColor: '#e2e8f0',
-                      background: '#f8fafc',
-                      '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
-                    }
-              }
+              className={view === 'table' ? classes.toggleBtnActive : classes.toggleBtnInactive}
             >
               Fleet Overview
             </Button>
@@ -836,25 +745,8 @@ const Dashboard = () => {
                 )
               }
               onClick={() => setView('chart')}
-              sx={
-                view === 'chart'
-                  ? {
-                      ...TOGGLE_BTN_BASE,
-                      background: 'linear-gradient(135deg,#f97316 0%,#ec4899 55%,#8b5cf6 100%)',
-                      boxShadow: '0 4px 18px rgba(249,115,22,0.4)',
-                      '&:hover': {
-                        boxShadow: '0 6px 24px rgba(249,115,22,0.55)',
-                        transform: 'translateY(-1px)',
-                        background: 'linear-gradient(135deg,#ea580c 0%,#db2777 55%,#7c3aed 100%)',
-                      },
-                    }
-                  : {
-                      ...TOGGLE_BTN_BASE,
-                      color: '#64748b',
-                      borderColor: '#e2e8f0',
-                      background: '#f8fafc',
-                      '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
-                    }
+              className={
+                view === 'chart' ? classes.toggleBtnActiveChart : classes.toggleBtnInactive
               }
             >
               Power Analytics
@@ -881,57 +773,19 @@ const Dashboard = () => {
 
         {/* ── Analytics Filter Panel ── */}
         {view === 'chart' && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 2,
-              background: '#ffffff',
-              borderRadius: '14px',
-              p: '14px 20px',
-              mb: 2,
-              border: '1px solid #e8eaf0',
-              borderLeft: '4px solid #6366f1',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-            }}
-          >
+          <Box className={classes.filterPanel}>
             {/* Label */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '9px',
-                  background: 'linear-gradient(135deg,#f97316,#ec4899)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 3px 10px rgba(249,115,22,0.35)',
-                }}
-              >
+            <Box className={classes.filterLabelBox}>
+              <Box className={classes.filterLabelIcon}>
                 <BarChartIcon sx={{ fontSize: 17, color: '#fff' }} />
               </Box>
-              <Typography
-                sx={{
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  color: '#4338ca',
-                  letterSpacing: '0.03em',
-                }}
-              >
-                Filters
-              </Typography>
+              <Typography className={classes.filterLabelText}>Filters</Typography>
             </Box>
 
-            <Divider
-              orientation='vertical'
-              flexItem
-              sx={{ borderColor: 'rgba(99,102,241,0.15)', mx: 0.5 }}
-            />
+            <Divider orientation='vertical' flexItem className={classes.filterDivider} />
 
             {/* Chart Type */}
-            <FormControl size='small' sx={FIELD_SX}>
+            <FormControl size='small' className={classes.formControl}>
               <InputLabel>Chart Type</InputLabel>
               <Select
                 value={chartType}
@@ -939,15 +793,15 @@ const Dashboard = () => {
                 onChange={(e) => setChartType(e.target.value as ChartType)}
               >
                 <MenuItem value='bar'>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box className={classes.menuItemBox}>
                     <BarChartIcon sx={{ fontSize: 17, color: '#6366f1' }} />
-                    <Typography sx={{ fontSize: '0.85rem' }}>Bar Chart</Typography>
+                    <Typography className={classes.menuItemText}>Bar Chart</Typography>
                   </Box>
                 </MenuItem>
                 <MenuItem value='line'>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box className={classes.menuItemBox}>
                     <ShowChartIcon sx={{ fontSize: 17, color: '#06b6d4' }} />
-                    <Typography sx={{ fontSize: '0.85rem' }}>Line Chart</Typography>
+                    <Typography className={classes.menuItemText}>Line Chart</Typography>
                   </Box>
                 </MenuItem>
               </Select>
@@ -976,7 +830,7 @@ const Dashboard = () => {
                   const allSelected = selectedTurbines.length === ALL_TURBINES.length;
                   const indeterminate = selectedTurbines.length > 0 && !allSelected;
                   return (
-                    <li {...props} key={SELECT_ALL}>
+                    <li {...props} key={SELECT_ALL} className={classes.autocompleteOption}>
                       <Checkbox
                         icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 16 }} />}
                         checkedIcon={<CheckBoxIcon sx={{ fontSize: 16 }} />}
@@ -984,14 +838,9 @@ const Dashboard = () => {
                         checked={allSelected}
                         indeterminate={indeterminate}
                         size='small'
-                        sx={{
-                          mr: 0.5,
-                          color: '#6366f1',
-                          '&.Mui-checked': { color: '#6366f1' },
-                          '&.MuiCheckbox-indeterminate': { color: '#6366f1' },
-                        }}
+                        className={classes.autocompleteCheckbox}
                       />
-                      <Typography sx={{ fontSize: '0.84rem', fontWeight: 700, color: '#4338ca' }}>
+                      <Typography className={classes.autocompleteSelectAllText}>
                         Select All
                       </Typography>
                     </li>
@@ -999,30 +848,22 @@ const Dashboard = () => {
                 }
                 const colorIdx = ALL_TURBINES.indexOf(option);
                 return (
-                  <li {...props} key={option}>
+                  <li {...props} key={option} className={classes.autocompleteOption}>
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 16 }} />}
                       checkedIcon={<CheckBoxIcon sx={{ fontSize: 16 }} />}
                       checked={selected}
                       size='small'
-                      sx={{
-                        mr: 0.5,
-                        color: TURBINE_COLORS[colorIdx],
-                        '&.Mui-checked': { color: TURBINE_COLORS[colorIdx] },
-                      }}
+                      className={classes.autocompleteCheckbox}
                     />
                     <Box
+                      className={classes.autocompleteColorDot}
                       sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: '50%',
                         background: TURBINE_COLORS[colorIdx],
-                        mr: 1,
-                        flexShrink: 0,
                         boxShadow: `0 0 6px ${TURBINE_COLORS[colorIdx]}88`,
                       }}
                     />
-                    <Typography sx={{ fontSize: '0.84rem', fontWeight: 600 }}>{option}</Typography>
+                    <Typography className={classes.autocompleteOptionText}>{option}</Typography>
                   </li>
                 );
               }}
@@ -1034,14 +875,7 @@ const Dashboard = () => {
                       : `${value.length} selected`
                   }
                   size='small'
-                  sx={{
-                    background: 'rgba(99,102,241,0.12)',
-                    color: '#4338ca',
-                    fontWeight: 700,
-                    fontSize: '0.75rem',
-                    height: 22,
-                    borderRadius: '6px',
-                  }}
+                  className={classes.autocompleteTags}
                 />
               )}
               renderInput={(params) => (
@@ -1049,10 +883,10 @@ const Dashboard = () => {
                   {...params}
                   label='Turbines'
                   placeholder={selectedTurbines.length ? '' : 'Select…'}
-                  sx={FIELD_SX}
+                  className={classes.formControl}
                 />
               )}
-              sx={{ width: FIELD_W }}
+              className={classes.filterAutocomplete}
               ListboxProps={{ sx: { maxHeight: 280 } }}
             />
 
@@ -1066,7 +900,7 @@ const Dashboard = () => {
               minDate={MIN_DATE}
               maxDate={toDate}
               slotProps={{
-                textField: { size: 'small', sx: FIELD_SX },
+                textField: { size: 'small', className: classes.formControl },
               }}
             />
 
@@ -1080,23 +914,16 @@ const Dashboard = () => {
               minDate={fromDate}
               maxDate={MAX_DATE}
               slotProps={{
-                textField: { size: 'small', sx: FIELD_SX },
+                textField: { size: 'small', className: classes.formControl },
               }}
             />
 
             {/* Range info chip */}
-            <Box sx={{ ml: 'auto' }}>
+            <Box className={classes.filterRangeChip}>
               <Chip
                 label={`${chartData.totalDays}d · ${chartData.aggregate}`}
                 size='small'
-                sx={{
-                  background: 'rgba(99,102,241,0.1)',
-                  color: '#4338ca',
-                  fontWeight: 600,
-                  fontSize: '0.72rem',
-                  border: '1px solid rgba(99,102,241,0.25)',
-                  height: 26,
-                }}
+                className={classes.filterChip}
               />
             </Box>
           </Box>
@@ -1120,20 +947,8 @@ const Dashboard = () => {
           <Box className={classes.chartCard}>
             {/* Card Header */}
             <Box className={classes.chartCardHeader}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box
-                  sx={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: '10px',
-                    background: 'linear-gradient(135deg,#f97316,#ec4899)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(249,115,22,0.35)',
-                    flexShrink: 0,
-                  }}
-                >
+              <Box className={classes.chartHeaderLeft}>
+                <Box className={classes.chartHeaderIconBox}>
                   {chartType === 'bar' ? (
                     <BarChartIcon sx={{ color: '#fff', fontSize: 20 }} />
                   ) : (
@@ -1141,74 +956,30 @@ const Dashboard = () => {
                   )}
                 </Box>
                 <Box>
-                  <Typography
-                    sx={{
-                      fontSize: '0.95rem',
-                      fontWeight: 700,
-                      color: '#1e293b',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    Power Analytics
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.72rem', color: '#94a3b8', mt: 0.2 }}>
+                  <Typography className={classes.chartHeaderTitle}>Power Analytics</Typography>
+                  <Typography className={classes.chartHeaderSubtitle}>
                     {chartType === 'bar' ? 'Stacked Energy Generation' : 'Generation Trend'} ·{' '}
                     {chartData.aggregate.charAt(0).toUpperCase() + chartData.aggregate.slice(1)} ·{' '}
                     {fromDate.format('DD MMM')} – {toDate.format('DD MMM YYYY')}
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box className={classes.chartHeaderRight}>
                 <Chip
                   icon={
                     chartType === 'bar' ? (
-                      <BarChartIcon style={{ fontSize: 13, color: '#6366f1' }} />
+                      <BarChartIcon sx={{ fontSize: 13, color: '#6366f1' }} />
                     ) : (
-                      <ShowChartIcon style={{ fontSize: 13, color: '#06b6d4' }} />
+                      <ShowChartIcon sx={{ fontSize: 13, color: '#06b6d4' }} />
                     )
                   }
                   label={chartType === 'bar' ? 'Bar Chart' : 'Line Chart'}
                   size='small'
-                  sx={{
-                    background: 'rgba(99,102,241,0.08)',
-                    border: '1px solid rgba(99,102,241,0.2)',
-                    color: '#4f46e5',
-                    fontWeight: 600,
-                    fontSize: '0.72rem',
-                    height: 26,
-                  }}
+                  className={classes.chartTypeChip}
                 />
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.75,
-                    background: 'rgba(16,185,129,0.08)',
-                    borderRadius: '8px',
-                    px: 1.5,
-                    py: 0.625,
-                    border: '1px solid rgba(16,185,129,0.2)',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: '50%',
-                      background: '#10b981',
-                      animation: 'livePulse 2s ease-in-out infinite',
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      fontSize: '0.68rem',
-                      color: '#10b981',
-                      fontWeight: 600,
-                      letterSpacing: '0.06em',
-                    }}
-                  >
-                    LIVE
-                  </Typography>
+                <Box className={classes.liveIndicator}>
+                  <Box className={classes.liveDot} />
+                  <Typography className={classes.liveText}>LIVE</Typography>
                 </Box>
               </Box>
             </Box>
@@ -1216,78 +987,22 @@ const Dashboard = () => {
             {/* Card Body */}
             <Box className={classes.chartCardBody}>
               {/* KPI cards */}
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: 'repeat(2,1fr)', sm: 'repeat(4,1fr)' },
-                  gap: 1.5,
-                  mb: 2.5,
-                }}
-              >
+              <Box className={classes.kpiCardsGrid}>
                 {kpiCards.map(({ label, value, sub, color, Icon }) => (
-                  <Paper
-                    key={label}
-                    elevation={0}
-                    sx={{
-                      borderRadius: '10px',
-                      border: '1px solid #e8eaf0',
-                      p: 1.75,
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                        transform: 'translateY(-2px)',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-start',
-                        mb: 0.75,
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          fontSize: '0.6rem',
-                          fontWeight: 700,
-                          color: '#94a3b8',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.08em',
-                        }}
-                      >
-                        {label}
-                      </Typography>
+                  <Paper key={label} className={classes.kpiCard} elevation={0}>
+                    <Box className={classes.kpiCardHeader}>
+                      <Typography className={classes.kpiCardLabel}>{label}</Typography>
                       <Box
-                        sx={{
-                          width: 28,
-                          height: 28,
-                          borderRadius: '8px',
-                          background: `${color}14`,
-                          border: `1px solid ${color}28`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
+                        className={classes.kpiCardIconBox}
+                        sx={{ background: `${color}14`, border: `1px solid ${color}28` }}
                       >
                         <Icon sx={{ fontSize: 14, color }} />
                       </Box>
                     </Box>
-                    <Typography
-                      sx={{
-                        fontSize: { xs: '1.1rem', md: '1.3rem' },
-                        fontWeight: 800,
-                        color,
-                        lineHeight: 1,
-                        mb: 0.35,
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
+                    <Typography className={classes.kpiCardValue} sx={{ color }}>
                       {value}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 500 }}>
-                      {sub}
-                    </Typography>
+                    <Typography className={classes.kpiCardSub}>{sub}</Typography>
                   </Paper>
                 ))}
               </Box>

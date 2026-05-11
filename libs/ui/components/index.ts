@@ -56,3 +56,21 @@ export * from './ListItem';
 export * from './ListItemText';
 export * from './Icons';
 export * from './UserAvatar';
+export { default as Avatar } from '@mui/material/Avatar';
+export { default as FormHelperText } from '@mui/material/FormHelperText';
+export { Autocomplete } from '@mui/material';
+export {
+  CircularProgress,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  useTheme,
+  Stack,
+  Toolbar,
+  AppBar,
+  Badge,
+  Slide,
+  Dialog,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';

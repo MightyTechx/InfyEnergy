@@ -22,7 +22,7 @@ const getApiBaseUrl = (): string => {
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: getApiBaseUrl(),
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem('infyenergy_token');
+    const token = localStorage.getItem('infygen_token');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -38,10 +38,10 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   const result = await rawBaseQuery(args, api, extraOptions);
 
   if (result.error?.status === 401) {
-    const token = localStorage.getItem('infyenergy_token');
+    const token = localStorage.getItem('infygen_token');
     if (token) {
-      localStorage.removeItem('infyenergy_token');
-      localStorage.removeItem('infyenergy_user');
+      localStorage.removeItem('infygen_token');
+      localStorage.removeItem('infygen_user');
       window.location.href = '/signin';
     }
   }

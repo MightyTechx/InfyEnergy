@@ -1,31 +1,30 @@
 import nodemailer from 'nodemailer';
-import type { Transporter } from 'nodemailer';
 
-let transporter: Transporter | null = null;
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587', 10),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER || 'your-email@gmail.com',
+    pass: process.env.SMTP_PASS || 'your-app-password',
+  },
+});
 
-function getTransporter(): Transporter {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
+export const sendEmail = async (options: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<void> => {
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || 'noreply@infygen.tech',
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
     });
+  } catch (error) {
+    console.error('Failed to send email:', error);
   }
-  return transporter;
-}
-
-export const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
-  const smtp = getTransporter();
-  await smtp.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to,
-    subject,
-    html,
-  });
 };
 
 export const generateOtp = (): string => {

@@ -7,9 +7,9 @@ export * from './components';
 export * from './hooks';
 
 // State management - re-export from services
-export { store } from '@infyenergy/services';
-export type { RootState, AppDispatch } from '@infyenergy/services';
-export * from '@infyenergy/services';
+export { store } from '@infygen/services';
+export type { RootState, AppDispatch } from '@infygen/services';
+export * from '@infygen/services';
 
 // Test utilities
 export * from './test-utils';

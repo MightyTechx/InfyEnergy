@@ -1,17 +1,7 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Box, Typography, Grid, Select, MenuItem, TextField } from '@infygen/component';
+import { FormControl, InputLabel, FormHelperText, SelectChangeEvent } from '@mui/material';
 import WorkIcon from '@mui/icons-material/Work';
-import { useFieldError } from '@infyenergy/hooks';
-import TextField from '../../../../components/TextField/TextField';
+import { useFieldError } from '@infygen/hooks';
 
 const DEPARTMENT_OPTIONS = [
   'IT Administration',
@@ -157,7 +147,7 @@ const WorkDetailsStep = ({
               name='reasonForAccess'
               label='Reason for Access'
               type='text'
-              placeholder='Briefly describe why you need access to infyenergy...'
+              placeholder='Briefly describe why you need access to infygen...'
               value={values.reasonForAccess}
               onChange={onChange}
               onBlur={onBlur}

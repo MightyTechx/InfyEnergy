@@ -1,24 +1,22 @@
 import { useState } from 'react';
-import { Box, Loader, DataTable } from '@infyenergy/component';
+import { Box, Loader, DataTable } from '@infygen/component';
 import { Typography, Tabs, Divider, TextField, InputAdornment } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import SearchIcon from '@mui/icons-material/Search';
 import { useStyles } from './styles';
 import { usePeopleRequests } from './hooks/useAccessRequests';
 import TabPanel from './components/TabPanel';
 import PersonDetailDialog from './dialogs/PersonDetailDialog';
 import { UserDetailDialog } from '../UserDetail';
-import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
+import { PeopleRequestsUtils } from './utils/accessRequests.utils';
+import { useAdminKeyframes } from '@infygen/hooks';
 
 const PeopleRequests = () => {
   const { classes } = useStyles();
   const keyframes = useAdminKeyframes();
+  const { statCards } = PeopleRequestsUtils();
   const {
     isLoading,
-    allRows,
     tabValue,
     setTabValue,
     tableSearch,
@@ -53,49 +51,6 @@ const PeopleRequests = () => {
       </>
     );
   }
-
-  const adminCount = allRows.filter((r) => r.requestedRole === 'admin').length;
-  const consultantCount = allRows.filter((r) => r.requestedRole === 'consultant').length;
-  const pendingCount = allRows.filter((r) => r.status === 'pending_approval').length;
-
-  const statCards = [
-    {
-      label: 'Total Requests',
-      value: allRows.length,
-      Icon: GroupIcon,
-      cls: classes.statCard0,
-      sub: 'All access requests',
-      color: '#4f46e5',
-      tabIndex: 0,
-    },
-    {
-      label: 'Admin Requests',
-      value: adminCount,
-      Icon: AdminPanelSettingsIcon,
-      cls: classes.statCard1,
-      sub: 'Full platform access',
-      color: '#f59e0b',
-      tabIndex: 1,
-    },
-    {
-      label: 'Consultant Requests',
-      value: consultantCount,
-      Icon: BusinessCenterIcon,
-      cls: classes.statCard2,
-      sub: 'Read-only access',
-      color: '#10b981',
-      tabIndex: 2,
-    },
-    {
-      label: 'Pending',
-      value: pendingCount,
-      Icon: PendingActionsIcon,
-      cls: classes.statCard3,
-      sub: 'Awaiting admin approval',
-      color: '#ef4444',
-      tabIndex: 3,
-    },
-  ];
 
   return (
     <>
@@ -213,7 +168,9 @@ const PeopleRequests = () => {
                   rowKey='id'
                   searchable={false}
                   initialRowsPerPage={10}
-                  onRowClick={(row: any) => { if (row.id && !row.isDraft) openDetail(row.id as number); }}
+                  onRowClick={(row: any) => {
+                    if (row.id && !row.isDraft) openDetail(row.id as number);
+                  }}
                 />
               </Box>
             )}
@@ -234,7 +191,9 @@ const PeopleRequests = () => {
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
         userId={detailUserId}
-        onActionComplete={() => { setDetailOpen(false); }}
+        onActionComplete={() => {
+          setDetailOpen(false);
+        }}
       />
     </>
   );

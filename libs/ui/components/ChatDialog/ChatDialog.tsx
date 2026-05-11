@@ -25,7 +25,7 @@ const ChatDialog: FC<ChatDialogProps> = ({ open, onClose }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your InfyEnergy AI assistant. I can help you with:\n\n• Creating and managing tickets\n• User account inquiries\n• System navigation help\n• Analytics and reports\n\nHow can I assist you today?",
+      text: "Hello! I'm your InfyGen AI assistant. I can help you with:\n\n• Creating and managing tickets\n• User account inquiries\n• System navigation help\n• Analytics and reports\n\nHow can I assist you today?",
       isUser: false,
       timestamp: new Date(),
     },

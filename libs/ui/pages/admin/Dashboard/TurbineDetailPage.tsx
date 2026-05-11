@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { constants } from '@infyenergy/utils';
-import { Typography, Box, IconButton, Chip, Paper, CircularProgress } from '@mui/material';
+import { constants } from '@infygen/utils';
+import { Typography, Box, IconButton, Chip, Paper, Loader } from '@infygen/component';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
 import { useTurbineDetailStyles } from './styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
@@ -24,6 +23,7 @@ import WindPowerIcon from '@mui/icons-material/WindPower';
 import TuneIcon from '@mui/icons-material/Tune';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import { TurbineData, STATUS_CONFIG, getTurbineById } from './types/turbineData.types';
+import { useAdminKeyframes } from '@infygen/hooks';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -295,7 +295,7 @@ const TurbineDetailPage: React.FC = () => {
         <Box
           sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
         >
-          <CircularProgress sx={{ color: '#4f46e5' }} />
+          <Loader />
         </Box>
       </>
     );

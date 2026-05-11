@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography } from '@infygen/component';
 
 const TurbineSVG = ({ size = 40 }: { size?: number }) => (
   <svg viewBox='0 0 100 100' style={{ width: size, height: size }}>
@@ -24,19 +24,20 @@ interface LogoMarkProps {
 const LogoMark = ({ compact = false }: LogoMarkProps) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-      <TurbineSVG size={compact ? 32 : 40} />
+      <TurbineSVG size={compact ? 28 : 40} />
       <Typography
         variant='h6'
         sx={{
           fontFamily: 'Orbitron, sans-serif',
           fontWeight: 700,
-          fontSize: compact ? '0.9rem' : '1.1rem',
+          fontSize: compact ? '0.75rem' : '1.1rem',
           color: '#fff',
-          letterSpacing: 2,
+          letterSpacing: compact ? 1 : 2,
           textShadow: '0 0 10px rgba(0,242,255,0.5)',
+          whiteSpace: 'nowrap',
         }}
       >
-        {!compact && 'INFYGEN'}
+        INFYGEN
       </Typography>
     </Box>
   );

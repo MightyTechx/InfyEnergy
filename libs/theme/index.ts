@@ -1,6 +1,6 @@
 /**
  * theme barrel export
- * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@infyenergy/theme'
+ * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@infygen/theme'
  *
  * Includes:
  * - Theme configuration (theme, palette)

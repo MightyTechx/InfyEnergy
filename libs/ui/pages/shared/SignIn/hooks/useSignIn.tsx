@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  useAuth,
-  useFormWithSessionStorage,
-  useNotification,
-  useFieldError,
-} from '@infyenergy/hooks';
-import { SignInSchema, UserRole } from '@infyenergy/interfaces';
-import { constants } from '@infyenergy/utils';
+import { useAuth, useFormWithSessionStorage, useNotification, useFieldError } from '@infygen/hooks';
+import { SignInSchema, UserRole } from '@infygen/interfaces';
+import { constants } from '@infygen/utils';
 
 const useSignIn = () => {
   const reqError = useFieldError();

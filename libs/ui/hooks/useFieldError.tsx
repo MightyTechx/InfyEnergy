@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import { createStyles } from '@infyenergy/theme';
+import { createStyles } from '@infygen/theme';
 
 const useStyles = createStyles((theme) => ({
   requiredErrorWrapper: {

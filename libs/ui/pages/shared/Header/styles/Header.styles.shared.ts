@@ -30,6 +30,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     padding: theme.spacing(0.75, 1.25),
     transition: 'all 0.22s ease',
     border: '1px solid transparent',
+    overflow: 'visible',
 
     '&:hover': {
       background: 'rgba(99,102,241,0.12)',
@@ -123,6 +124,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     gap: theme.spacing(1),
     minHeight: '64px',
     height: '64px',
+    overflow: 'visible',
 
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(1.5),

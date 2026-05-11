@@ -1,4 +1,4 @@
-# InfyEnergy — Admin & ITSM Portal
+# InfyGen — Admin & ITSM Portal
 
 A full-stack IT Service Management platform for energy companies, built as a Nx monorepo with a React/MUI frontend, Express/Prisma backend, and multi-tenant support.
 
@@ -35,7 +35,7 @@ A full-stack IT Service Management platform for energy companies, built as a Nx 
 
 ## Overview
 
-InfyEnergy is an enterprise admin and IT service management portal built for energy-sector organisations. It provides user lifecycle management, role-based access control, consultant onboarding workflows, and an analytics dashboard — all in a responsive React interface backed by a Node/Express REST API.
+InfyGen is an enterprise admin and IT service management portal built for energy-sector organisations. It provides user lifecycle management, role-based access control, consultant onboarding workflows, and an analytics dashboard — all in a responsive React interface backed by a Node/Express REST API.
 
 ### Key Principles
 
@@ -110,7 +110,7 @@ InfyEnergy is an enterprise admin and IT service management portal built for ene
 ## Project Structure
 
 ```
-InfyEnergy/
+InfyGen/
 │
 ├── gateways/                        # Backend (Express API)
 │   ├── api/
@@ -133,7 +133,6 @@ InfyEnergy/
 │   │   ├── middleware/              # Auth, error, logging
 │   │   ├── repository/              # Data access abstractions
 │   │   ├── service/                 # Business services
-│   │   ├── use-cases/               # Application use cases
 │   │   └── validation/              # Yup schemas (server-side)
 │   │
 │   ├── entities/                    # Shared TypeScript types
@@ -192,7 +191,7 @@ InfyEnergy/
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd InfyEnergy
+cd InfyGen
 
 # Install all dependencies
 npm install
@@ -221,9 +220,9 @@ npm run serve:administration
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@infyenergy.com` | `admin123` | Admin |
-| `consultant@infyenergy.com` | `consultant123` | Consultant |
-| `user@infyenergy.com` | `user123` | User |
+| `admin@infygen.tech` | `admin123` | Admin |
+| `consultant@infygen.tech` | `consultant123` | Consultant |
+| `user@infygen.tech` | `user123` | User |
 
 ---
 
@@ -249,7 +248,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-SMTP_FROM=InfyEnergy <noreply@infyenergy.com>
+SMTP_FROM=InfyGen <noreply@infygen.tech>
 
 # CORS
 CORS_ORIGIN=http://localhost:1600
@@ -359,7 +358,7 @@ All auth operations go through a single `POST /api/auth` endpoint with an `actio
 
 - **Pages** render pure UI and delegate all logic to custom hooks
 - **Hooks** call RTK Query mutations/queries and manage local state
-- **Services** (`@infyenergy/services`) define RTK Query endpoints
+- **Services** (`@infygen/services`) define RTK Query endpoints
 
 ### Styling
 
@@ -483,7 +482,7 @@ Authorization: Bearer <jwt-token>
 
 Configured via `render.yaml`:
 
-- **Service:** `infyenergy-api`
+- **Service:** `InfyGen-api`
 - **Region:** Oregon
 - **Build:** `npm run prisma:generate && npm run build:backend`
 - **Start:** `npx tsx gateways/src/index.ts`
@@ -500,8 +499,8 @@ Configured via `vercel.json`:
 ### Docker
 
 ```bash
-docker build -t infyenergy .
-docker run -p 3001:3001 --env-file .env infyenergy
+docker build -t InfyGen .
+docker run -p 3001:3001 --env-file .env InfyGen
 ```
 
 ---

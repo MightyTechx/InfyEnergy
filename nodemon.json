@@ -2,8 +2,9 @@
   "watch": ["gateways", "libs"],
   "ext": "ts,json",
   "ignore": ["**/*.spec.ts", "**/*.test.ts", "node_modules"],
-  "exec": "tsx --tsconfig tsconfig.app.json gateways/src/index.ts",
+  "exec": "npx tsx -r tsconfig-paths/register gateways/src/index.ts",
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "TS_NODE_PROJECT": "tsconfig.app.json"
   }
 }

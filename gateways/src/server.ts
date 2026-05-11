@@ -28,10 +28,10 @@ try {
 import app from './app';
 
 // Custom Winston logger
-import { logger } from '@infyenergy/config';
+import { logger } from '@infygen/config';
 
 // Prisma client for database access
-import { prisma } from '@infyenergy/database';
+import { prisma } from '@infygen/database';
 
 // Server configuration
 const PORT = parseInt(process.env.PORT || '3001', 10);

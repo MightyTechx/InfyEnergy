@@ -5,10 +5,10 @@ import { GlobalStyles } from '@mui/material';
 
 import { globalStyles } from './app.styles';
 import { LazyMenuItems } from './routes';
-import { constants } from '@infyenergy/utils';
-import { ErrorBoundary, MainContent, Loader } from '@infyenergy/component';
-import { useAuth } from '@infyenergy/hooks';
-import { AppRoleContext } from '@infyenergy/theme';
+import { constants } from '@infygen/utils';
+import { ErrorBoundary, MainContent, Loader } from '@infygen/component';
+import { useAuth } from '@infygen/hooks';
+import { AppRoleContext } from '@infygen/theme';
 
 const {
   // Admin pages

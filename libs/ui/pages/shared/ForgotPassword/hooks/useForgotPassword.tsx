@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  useForm,
-  useFormWithSessionStorage,
-  useNotification,
-  useFieldError,
-} from '@infyenergy/hooks';
-import { ForgotPasswordSchema, VerifyOtpSchema, ResetPasswordSchema } from '@infyenergy/interfaces';
-import { constants } from '@infyenergy/utils';
-import { useAuthActionMutation } from '@infyenergy/services';
+import { useForm, useFormWithSessionStorage, useNotification, useFieldError } from '@infygen/hooks';
+import { ForgotPasswordSchema, VerifyOtpSchema, ResetPasswordSchema } from '@infygen/interfaces';
+import { constants } from '@infygen/utils';
+import { useAuthActionMutation } from '@infygen/services';
 
 export type Step = 'email' | 'otp' | 'reset';
 

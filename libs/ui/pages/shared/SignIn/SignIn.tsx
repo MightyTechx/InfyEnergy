@@ -1,6 +1,6 @@
-import { Box, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider } from '@infygen/component';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import { constants } from '@infyenergy/utils';
+import { constants } from '@infygen/utils';
 import { useStyles } from './SignIn.styles';
 import useSignIn from './hooks/useSignIn';
 import SignInForm from './components/SignInForm';
@@ -38,7 +38,7 @@ const SignIn = () => {
               Welcome back
             </Typography>
             <Typography variant='body2' color='text.secondary' className={classes.formSubtitle}>
-              Sign in to your infyenergy account
+              Sign in to your infyGen account
             </Typography>
 
             <form onSubmit={formik.handleSubmit} noValidate>

@@ -5,5 +5,3 @@ export * from './repository';
 export * from './service';
 export * from './validation';
 export * from './gateways';
-export * from './infrastructure';
-export * from './use-cases';

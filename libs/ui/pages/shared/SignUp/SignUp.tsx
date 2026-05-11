@@ -1,5 +1,6 @@
-import { Box, Typography, Avatar, SelectChangeEvent } from '@mui/material';
-import { constants } from '@infyenergy/utils';
+import { Avatar, SelectChangeEvent } from '@mui/material';
+import { Box, Typography, Button } from '@infygen/component';
+import { constants } from '@infygen/utils';
 import { useStyles } from './SignUp.styles';
 import useSignUp, { STEPS } from './hooks/useSignUp';
 import StepProgress from './components/StepProgress';
@@ -7,7 +8,6 @@ import PersonalStep from './components/PersonalStep';
 import WorkDetailsStep from './components/WorkDetailsStep';
 import SecurityStep from './components/SecurityStep';
 import LeftPanel from './components/LeftPanel';
-import Button from '../../../components/Button/Button';
 
 const SignUp = () => {
   const { classes } = useStyles();

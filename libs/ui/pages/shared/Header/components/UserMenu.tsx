@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@infygen/component';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { constants } from '@infyenergy/utils';
+import { constants } from '@infygen/utils';
 
 interface UserMenuProps {
   anchorEl: HTMLElement | null;
@@ -50,7 +50,9 @@ const UserMenu = ({
           <ListItemIcon>
             <BadgeIcon fontSize='small' sx={{ color: '#10b981' }} />
           </ListItemIcon>
-          <ListItemText sx={{ '& .MuiListItemText-primary': { color: '#10b981', fontWeight: 600 } }}>
+          <ListItemText
+            sx={{ '& .MuiListItemText-primary': { color: '#10b981', fontWeight: 600 } }}
+          >
             Consultant Mode
           </ListItemText>
         </MenuItem>
@@ -60,7 +62,9 @@ const UserMenu = ({
           <ListItemIcon>
             <AdminPanelSettingsIcon fontSize='small' sx={{ color: '#6366f1' }} />
           </ListItemIcon>
-          <ListItemText sx={{ '& .MuiListItemText-primary': { color: '#6366f1', fontWeight: 600 } }}>
+          <ListItemText
+            sx={{ '& .MuiListItemText-primary': { color: '#6366f1', fontWeight: 600 } }}
+          >
             Admin Mode
           </ListItemText>
         </MenuItem>

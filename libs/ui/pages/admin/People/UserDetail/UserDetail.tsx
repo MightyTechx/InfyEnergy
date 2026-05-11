@@ -1,29 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { constants } from '@infyenergy/utils';
-import {
-  Typography,
-  Dialog,
-  DialogContent,
-  IconButton,
-  Box,
-  Button,
-  Avatar,
-  Chip,
-  Switch,
-  TextField,
-  Slide,
-  MenuItem,
-  InputAdornment,
-  Tooltip,
-} from '@mui/material';
+import { constants } from '@infygen/utils';
 import type { TransitionProps } from '@mui/material/transitions';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import EmailIcon from '@mui/icons-material/Email';
 import BadgeIcon from '@mui/icons-material/Badge';
 import BusinessIcon from '@mui/icons-material/Business';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -41,10 +24,24 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import CheckIcon from '@mui/icons-material/Check';
-import { useAuthActionMutation } from '@infyenergy/services';
-import { useNotification } from '@infyenergy/hooks';
-import { IAuthUser } from '@infyenergy/interfaces';
-import { Loader } from '@infyenergy/component';
+import { useAuthActionMutation } from '@infygen/services';
+import { useNotification } from '@infygen/hooks';
+import { IAuthUser } from '@infygen/interfaces';
+import {
+  Loader,
+  Typography,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Box,
+  Button,
+  Avatar,
+  TextField,
+  Slide,
+  MenuItem,
+  InputAdornment,
+  Tooltip,
+} from '@infygen/component';
 import { useStyles } from './styles';
 
 export const SlideUp = React.forwardRef(

@@ -316,6 +316,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      flexBasis: '100%',
+      marginLeft: 0,
     },
   },
 
@@ -428,5 +430,166 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     justifyContent: 'center',
     flexShrink: 0,
     '& svg': { color: '#fff' },
+  },
+
+  // ─── Add Button ────────────────────────────────────────────────────────────────
+  addButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 0.75,
+    px: 2.5,
+    width: '10%',
+    minHeight: 36,
+    borderRadius: 40,
+    background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
+    boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
+    '&:hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 24px rgba(99,102,241,0.5)',
+    },
+    '&:active': { transform: 'translateY(0)' },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexBasis: '100%',
+      borderRadius: '10px',
+    },
+  },
+
+  // ─── Access Control ────────────────────────────────────────────────────────────
+  roleCard: {
+    flex: 1,
+    borderRadius: 3,
+    border: `2px solid`,
+    padding: 1.5,
+    cursor: 'pointer',
+    transition: 'all 0.22s ease',
+    '&:hover': {},
+  },
+
+  accessControlBox: {
+    display: 'flex',
+    gap: 2,
+  },
+
+  // ─── Dialog Actions ────────────────────────────────────────────────────────────
+  dialogActions: {
+    px: 3,
+    py: 2.5,
+    borderTop: '1px solid rgba(99,102,241,0.15)',
+    bgcolor: '#f8fafc',
+    gap: 1.5,
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+
+  cancelButton: {
+    borderColor: 'rgba(100,116,139,0.3)',
+    color: '#64748b',
+    '&:hover': {
+      borderColor: 'rgba(100,116,139,0.5)',
+      bgcolor: 'rgba(100,116,139,0.05)',
+    },
+  },
+
+  submitButton: {
+    background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
+    color: '#fff',
+    fontWeight: 600,
+    px: 3,
+    boxShadow: '0 4px 14px rgba(99,102,241,0.35)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 50%, #6d28d9 100%)',
+      boxShadow: '0 6px 20px rgba(99,102,241,0.45)',
+      transform: 'translateY(-1px)',
+    },
+    '&:active': { transform: 'translateY(0)' },
+    '&.Mui-disabled': {
+      background: 'rgba(99,102,241,0.3)',
+      color: 'rgba(255,255,255,0.5)',
+    },
+  },
+
+  // ─── Actions Icon Buttons ──────────────────────────────────────────────────────
+  editButton: {
+    color: '#4338ca',
+    '&:hover': { background: 'rgba(99,102,241,0.1)' },
+  },
+
+  deleteButton: {
+    color: '#dc2626',
+    '&:hover': { background: 'rgba(220,38,38,0.1)' },
+  },
+
+  // ─── Alert Banner ─────────────────────────────────────────────────────────────
+  errorAlert: {
+    mb: 2,
+    borderRadius: 2,
+  },
+
+  // ─── Dialog Content ────────────────────────────────────────────────────────────
+  dialogContent: {
+    p: 3,
+    bgcolor: 'background.default',
+    maxHeight: '65vh',
+    overflow: 'auto',
+  },
+
+  // ─── Text Helpers ─────────────────────────────────────────────────────────────
+  textSmall: {
+    fontSize: '0.82rem',
+    color: '#64748b',
+  },
+
+  textSmallMuted: {
+    fontSize: '0.72rem',
+    color: '#94a3b8',
+  },
+
+  // ─── Form Field Styles ─────────────────────────────────────────────────────────
+  formFieldFocused: {
+    '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#6366f1' },
+    '& label.Mui-focused': { color: '#6366f1' },
+  },
+
+  // ─── Section Card with margin ─────────────────────────────────────────────────
+  sectionCardMt: {
+    mt: 2,
+  },
+
+  // ─── Page Header Icon Box ─────────────────────────────────────────────────────
+  pageHeaderIconBox: {
+    display: 'flex' as const,
+    alignItems: 'center' as const,
+    gap: 1.5,
+  },
+
+  pageHeaderChip: {
+    background: 'rgba(255,255,255,0.15)',
+    backdropFilter: 'blur(8px)',
+    color: '#fff',
+    fontWeight: 600,
+    fontSize: '0.75rem',
+    border: '1px solid rgba(255,255,255,0.25)',
+    alignSelf: 'flex-start' as const,
+    mt: 0.5,
+  },
+
+  // ─── Loading Spinner ──────────────────────────────────────────────────────────
+  loadingSpinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    py: 6,
+  },
+
+  // ─── Access Banner Text ───────────────────────────────────────────────────────
+  accessBannerText: {
+    fontSize: '0.85rem',
+    color: '#4338ca',
+    fontWeight: 500,
   },
 });

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AppBar, Badge, Chip, IconButton, Toolbar, useMediaQuery, useTheme } from '@mui/material';
-import { Box } from '@infyenergy/component';
+import { AppBar, Badge, Box, Chip, IconButton, Toolbar, useTheme } from '@infygen/component';
+import { useMediaQuery } from '@infygen/hooks';
 import { Tooltip } from '../../../components';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BadgeIcon from '@mui/icons-material/Badge';

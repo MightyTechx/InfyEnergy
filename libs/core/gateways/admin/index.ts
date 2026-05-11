@@ -1,3 +1,3 @@
-// Admin gateway interfaces are defined in @infyenergy/interfaces
-// Import directly from @infyenergy/interfaces instead of this barrel
+// Admin gateway interfaces are defined in @infygen/interfaces
+// Import directly from @infygen/interfaces instead of this barrel
 export {};

@@ -12,12 +12,10 @@ import {
   Alert,
   InputAdornment,
   Stack,
-} from '@mui/material';
+} from '@infygen/component';
 import { useStyles } from './styles/Profile.styles';
-import { useAuth, useNotification } from '@infyenergy/hooks';
-import { useAuthActionMutation } from '@infyenergy/services';
-import { useAppDispatch } from '@infyenergy/hooks';
-import { updateUser } from '@infyenergy/services';
+import { useAppDispatch, useAuth, useNotification } from '@infygen/hooks';
+import { updateUser, useAuthActionMutation } from '@infygen/services';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';

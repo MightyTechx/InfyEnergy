@@ -123,7 +123,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   searchField: {
     marginLeft: 'auto',
-    width: '240px',
+    width: 240,
     flexShrink: 0,
     '& .MuiOutlinedInput-root': {
       height: '36px',
@@ -157,6 +157,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      flexBasis: '100%',
+      marginLeft: 0,
     },
   },
 

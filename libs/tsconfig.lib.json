@@ -10,6 +10,8 @@
     "**/*.test.tsx",
     "**/*.stories.ts",
     "**/*.stories.tsx",
-    "jest.config.ts"
+    "jest.config.ts",
+    "core/**/*",
+    "**/node_modules"
   ]
 }

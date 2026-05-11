@@ -98,29 +98,6 @@ export interface IUserChangeLog {
   createdAt: string;
 }
 
-export interface IConsultantProfile {
-  id: number;
-  userId: number;
-  application: string;
-  consultantRole: string | null;
-  slaWorkingCalendar: string | null;
-  slaExceptionCalendar: string | null;
-  leadConsultant: string | null;
-  applicationManager: string | null;
-  isPocLead: boolean;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IConsultantRole {
-  id: number;
-  application: string;
-  roleName: string;
-  description: string | null;
-  createdAt: string;
-}
-
 export type AuthAction =
   | 'signin'
   | 'signup'

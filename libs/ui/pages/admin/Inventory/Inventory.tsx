@@ -1,15 +1,20 @@
 import { useState } from 'react';
-import { Box, Column, DataTable } from '@infyenergy/component';
 import {
+  Box,
+  DataTable,
   Typography,
   Grid,
   TextField,
-  InputAdornment,
   Button,
   IconButton,
-  Tooltip,
-  Chip,
+} from '@infygen/component';
+import {
+  CircularProgress,
   Autocomplete,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,440 +23,60 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import SyncIcon from '@mui/icons-material/Sync';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ImageIcon from '@mui/icons-material/Image';
-import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
+import CloseIcon from '@mui/icons-material/Close';
+import InventoryIcon from '@mui/icons-material/Inventory2';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useAdminKeyframes } from '@infygen/hooks';
 import { useStyles } from './styles';
+import {
+  InventoryRow,
+  CATEGORIES,
+  LOCATIONS,
+  STATUSES,
+  INVENTORY_DATA,
+} from './utils/inventory.utils';
+import { Utils } from './utils/Utils';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+const CATEGORY_OPTIONS = ['Hydraulic', 'Mechanical', 'Electrical', 'Tools'];
+const UOM_OPTIONS = ['PCS', 'SET', 'm', 'L', 'KG', 'BOX', 'ROLL'];
 
-interface InventoryRow {
-  id: number;
-  photo: string;
+interface ItemForm {
   itemCode: string;
-  description: string;
   category: string;
-  uom: string;
-  quantity: number;
-  minimum: number;
-  status: 'Active' | 'Inactive' | 'Low Stock';
+  description: string;
+  specifications: string;
+  unitOfMeasure: string;
   location: string;
   supplier: string;
-  lastUpdated: string;
+  minimumStock: string;
+  openingQty: string;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const CATEGORIES = ['Wind Turbine', 'Solar Panel', 'Battery', 'Electrical', 'Mechanical', 'Safety'];
-const LOCATIONS = ['Warehouse A', 'Warehouse B', 'Site Storage', 'Field Inventory'];
-const STATUSES: InventoryRow['status'][] = ['Active', 'Inactive', 'Low Stock'];
-
-const STATUS_CONFIG: Record<InventoryRow['status'], { bg: string; color: string }> = {
-  Active: { bg: 'rgba(16,185,129,0.1)', color: '#059669' },
-  Inactive: { bg: 'rgba(100,116,139,0.1)', color: '#475569' },
-  'Low Stock': { bg: 'rgba(245,158,11,0.1)', color: '#d97706' },
+const BLANK_FORM: ItemForm = {
+  itemCode: '',
+  category: '',
+  description: '',
+  specifications: '',
+  unitOfMeasure: '',
+  location: '',
+  supplier: '',
+  minimumStock: '',
+  openingQty: '',
 };
-
-// ─── Sample Data ───────────────────────────────────────────────────────────────
-
-const INVENTORY_DATA: InventoryRow[] = [
-  {
-    id: 1,
-    photo: '',
-    itemCode: 'WT-001',
-    description: 'Gearbox Oil Filter',
-    category: 'Mechanical',
-    uom: 'PC',
-    quantity: 150,
-    minimum: 20,
-    status: 'Active',
-    location: 'Warehouse A',
-    supplier: 'Siemens Energy',
-    lastUpdated: '2026-01-15',
-  },
-  {
-    id: 2,
-    photo: '',
-    itemCode: 'WT-002',
-    description: 'Brake Pad Set',
-    category: 'Mechanical',
-    uom: 'SET',
-    quantity: 8,
-    minimum: 10,
-    status: 'Low Stock',
-    location: 'Warehouse B',
-    supplier: 'Vestas',
-    lastUpdated: '2026-01-14',
-  },
-  {
-    id: 3,
-    photo: '',
-    itemCode: 'SP-001',
-    description: 'Solar Panel 400W',
-    category: 'Solar Panel',
-    uom: 'PC',
-    quantity: 200,
-    minimum: 25,
-    status: 'Active',
-    location: 'Warehouse A',
-    supplier: 'Jinko Solar',
-    lastUpdated: '2026-01-13',
-  },
-  {
-    id: 4,
-    photo: '',
-    itemCode: 'BT-001',
-    description: 'Lithium Battery Pack',
-    category: 'Battery',
-    uom: 'PC',
-    quantity: 45,
-    minimum: 10,
-    status: 'Active',
-    location: 'Site Storage',
-    supplier: 'Tesla Powerwall',
-    lastUpdated: '2026-01-12',
-  },
-  {
-    id: 5,
-    photo: '',
-    itemCode: 'EL-001',
-    description: 'Control Cable 50m',
-    category: 'Electrical',
-    uom: 'ROL',
-    quantity: 30,
-    minimum: 5,
-    status: 'Active',
-    location: 'Warehouse B',
-    supplier: 'Nexans',
-    lastUpdated: '2026-01-11',
-  },
-  {
-    id: 6,
-    photo: '',
-    itemCode: 'SF-001',
-    description: 'Safety Helmet',
-    category: 'Safety',
-    uom: 'PC',
-    quantity: 0,
-    minimum: 50,
-    status: 'Low Stock',
-    location: 'Field Inventory',
-    supplier: '3M',
-    lastUpdated: '2026-01-10',
-  },
-  {
-    id: 7,
-    photo: '',
-    itemCode: 'WT-003',
-    description: 'Yaw Motor Assembly',
-    category: 'Wind Turbine',
-    uom: 'PC',
-    quantity: 5,
-    minimum: 2,
-    status: 'Active',
-    location: 'Warehouse A',
-    supplier: 'ABB',
-    lastUpdated: '2026-01-09',
-  },
-  {
-    id: 8,
-    photo: '',
-    itemCode: 'SP-002',
-    description: 'Inverter Module',
-    category: 'Solar Panel',
-    uom: 'PC',
-    quantity: 12,
-    minimum: 5,
-    status: 'Active',
-    location: 'Warehouse B',
-    supplier: 'Huawei',
-    lastUpdated: '2026-01-08',
-  },
-  {
-    id: 9,
-    photo: '',
-    itemCode: 'MT-001',
-    description: 'Hydraulic Oil 20L',
-    category: 'Mechanical',
-    uom: 'DRM',
-    quantity: 25,
-    minimum: 10,
-    status: 'Active',
-    location: 'Warehouse A',
-    supplier: 'Shell',
-    lastUpdated: '2026-01-07',
-  },
-  {
-    id: 10,
-    photo: '',
-    itemCode: 'BT-002',
-    description: 'BMS Controller',
-    category: 'Battery',
-    uom: 'PC',
-    quantity: 18,
-    minimum: 5,
-    status: 'Inactive',
-    location: 'Site Storage',
-    supplier: 'BYD',
-    lastUpdated: '2026-01-06',
-  },
-];
-
-// ─── Helper Styles ────────────────────────────────────────────────────────────
-
-const CATEGORY_SX = {
-  minWidth: 220,
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '8px',
-    '&:hover fieldset': { borderColor: '#0d9488' },
-    '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
-  },
-  '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
-} as const;
-
-const LOCATION_SX = {
-  minWidth: 220,
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '8px',
-    '&:hover fieldset': { borderColor: '#0d9488' },
-    '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
-  },
-  '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
-} as const;
-
-const STATUS_SX = {
-  minWidth: 180,
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '8px',
-    '&:hover fieldset': { borderColor: '#0d9488' },
-    '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
-  },
-  '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
-} as const;
-
-const BUTTON_SX = {
-  fontSize: '0.8rem',
-  fontWeight: 600,
-  textTransform: 'none' as const,
-  borderRadius: '8px',
-  padding: '7px 16px',
-  minWidth: 110,
-  boxShadow: 'none',
-  transition: 'all 0.18s ease',
-  '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transform: 'translateY(-1px)' },
-  '&:active': { transform: 'translateY(0)' },
-} as const;
-
-// ─── Columns ─────────────────────────────────────────────────────────────────
-
-const columns: Column<InventoryRow>[] = [
-  {
-    id: 'id',
-    label: 'S.No',
-    minWidth: 70,
-    sortable: true,
-    align: 'center',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#64748b' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'photo',
-    label: 'Photo',
-    minWidth: 80,
-    sortable: false,
-    align: 'center',
-    format: () => (
-      <Box
-        sx={{
-          width: 40,
-          height: 40,
-          borderRadius: '8px',
-          background: 'rgba(13,148,136,0.08)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <ImageIcon sx={{ fontSize: 20, color: '#0d9488' }} />
-      </Box>
-    ),
-  },
-  {
-    id: 'itemCode',
-    label: 'Item Code',
-    minWidth: 100,
-    sortable: true,
-    align: 'left',
-    format: (v) => (
-      <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#0d9488' }}>
-        {String(v)}
-      </Typography>
-    ),
-  },
-  {
-    id: 'description',
-    label: 'Description',
-    minWidth: 180,
-    sortable: true,
-    align: 'left',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.85rem', color: '#1e293b' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'category',
-    label: 'Category',
-    minWidth: 130,
-    sortable: true,
-    align: 'left',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#475569' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'uom',
-    label: 'UoM',
-    minWidth: 70,
-    sortable: true,
-    align: 'center',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#64748b' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'quantity',
-    label: 'Quantity',
-    minWidth: 90,
-    sortable: true,
-    align: 'center',
-    format: (v) => (
-      <Typography
-        sx={{
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          fontVariantNumeric: 'tabular-nums',
-          color: '#1e293b',
-        }}
-      >
-        {Number(v)}
-      </Typography>
-    ),
-  },
-  {
-    id: 'minimum',
-    label: 'Minimum',
-    minWidth: 90,
-    sortable: true,
-    align: 'center',
-    format: (v) => (
-      <Typography
-        sx={{ fontSize: '0.83rem', color: '#64748b', fontVariantNumeric: 'tabular-nums' }}
-      >
-        {Number(v)}
-      </Typography>
-    ),
-  },
-  {
-    id: 'status',
-    label: 'Status',
-    minWidth: 110,
-    sortable: true,
-    align: 'center',
-    format: (v) => {
-      const status = v as InventoryRow['status'];
-      const cfg = STATUS_CONFIG[status];
-      return (
-        <Chip
-          label={status}
-          size='small'
-          sx={{
-            background: cfg.bg,
-            color: cfg.color,
-            fontWeight: 600,
-            fontSize: '0.72rem',
-            height: 24,
-          }}
-        />
-      );
-    },
-  },
-  {
-    id: 'location',
-    label: 'Location',
-    minWidth: 130,
-    sortable: true,
-    align: 'left',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#475569' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'supplier',
-    label: 'Supplier',
-    minWidth: 130,
-    sortable: true,
-    align: 'left',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#475569' }}>{String(v)}</Typography>
-    ),
-  },
-  {
-    id: 'lastUpdated',
-    label: 'Last Updated',
-    minWidth: 120,
-    sortable: true,
-    align: 'center',
-    format: (v) => (
-      <Typography sx={{ fontSize: '0.83rem', color: '#64748b' }}>
-        {new Date(String(v)).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })}
-      </Typography>
-    ),
-  },
-  {
-    id: 'actions',
-    label: 'Actions',
-    minWidth: 100,
-    sortable: false,
-    align: 'center',
-    format: () => (
-      <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-        <Tooltip title='Edit'>
-          <IconButton
-            size='small'
-            sx={{ color: '#0d9488', '&:hover': { background: 'rgba(13,148,136,0.1)' } }}
-          >
-            <EditIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title='Delete'>
-          <IconButton
-            size='small'
-            sx={{ color: '#dc2626', '&:hover': { background: 'rgba(220,38,38,0.1)' } }}
-          >
-            <DeleteIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ),
-  },
-];
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 const Inventory = () => {
   const { classes } = useStyles();
   const keyframes = useAdminKeyframes();
+  const { columns } = Utils();
 
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState<InventoryRow['status'] | ''>('');
   const [search, setSearch] = useState('');
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [form, setForm] = useState<ItemForm>(BLANK_FORM);
+  const [isSaving, setIsSaving] = useState(false);
 
   const filtered = INVENTORY_DATA.filter((row) => {
     const matchCategory = !categoryFilter || row.category === categoryFilter;
@@ -465,6 +90,30 @@ const Inventory = () => {
       row.category.toLowerCase().includes(q);
     return matchCategory && matchLocation && matchStatus && matchSearch;
   });
+
+  const openAddDialog = () => {
+    setForm(BLANK_FORM);
+    setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    setForm(BLANK_FORM);
+  };
+
+  const handleSave = async () => {
+    if (!form.itemCode.trim() || !form.description.trim()) return;
+    setIsSaving(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setIsSaving(false);
+    closeDialog();
+  };
+
+  const updateForm = (field: keyof ItemForm, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const isFormValid = form.itemCode.trim() && form.description.trim();
 
   return (
     <>
@@ -489,60 +138,29 @@ const Inventory = () => {
           <Button
             variant='contained'
             startIcon={<AddIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #0d9488, #0891b2)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #0f766e, #0e7490)',
-                boxShadow: '0 4px 14px rgba(13,148,136,0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonAdd}`}
+            onClick={openAddDialog}
           >
             Add Item
           </Button>
           <Button
             variant='contained'
             startIcon={<CallReceivedIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #059669, #10b981)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #047857, #059669)',
-                boxShadow: '0 4px 14px rgba(5,150,105,0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonReceive}`}
           >
             Receive
           </Button>
           <Button
             variant='contained'
             startIcon={<CallMadeIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #d97706, #f59e0b)',
-                boxShadow: '0 4px 14px rgba(245,158,11,0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonIssue}`}
           >
             Issue
           </Button>
           <Button
             variant='contained'
             startIcon={<SyncIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
-                boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonAdjust}`}
           >
             Adjust
           </Button>
@@ -550,30 +168,14 @@ const Inventory = () => {
           <Button
             variant='contained'
             startIcon={<FileDownloadIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #475569, #64748b)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #334155, #475569)',
-                boxShadow: '0 4px 14px rgba(71,85,105,0.35)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonExport}`}
           >
             Export
           </Button>
           <Button
             variant='contained'
             startIcon={<FileUploadIcon />}
-            sx={{
-              ...BUTTON_SX,
-              background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #7c3aed, #8b5cf6)',
-                boxShadow: '0 4px 14px rgba(139,92,246,0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
+            className={`${classes.actionButtonBase} ${classes.actionButtonImport}`}
           >
             Import
           </Button>
@@ -583,7 +185,7 @@ const Inventory = () => {
         <Box className={classes.tableSection}>
           <Box className={classes.tableSectionHeader}>
             <Autocomplete
-              sx={CATEGORY_SX}
+              className={classes.filterAutocomplete}
               options={CATEGORIES}
               value={categoryFilter || null}
               onChange={(_, v) => setCategoryFilter(v ?? '')}
@@ -598,7 +200,7 @@ const Inventory = () => {
             />
 
             <Autocomplete
-              sx={LOCATION_SX}
+              className={classes.filterAutocomplete}
               options={LOCATIONS}
               value={locationFilter || null}
               onChange={(_, v) => setLocationFilter(v ?? '')}
@@ -613,7 +215,7 @@ const Inventory = () => {
             />
 
             <Autocomplete
-              sx={STATUS_SX}
+              className={classes.filterAutocompleteSmall}
               options={STATUSES}
               value={statusFilter || null}
               onChange={(_, v) => setStatusFilter(v ?? '')}
@@ -651,6 +253,204 @@ const Inventory = () => {
           </Box>
         </Box>
       </Grid>
+
+      {/* ── Add Item Dialog ── */}
+      <Dialog
+        open={dialogOpen}
+        onClose={closeDialog}
+        maxWidth='md'
+        fullWidth
+        className={classes.dialog}
+      >
+        {/* Modal Header */}
+        <Box className={classes.modalHero}>
+          <Box className={classes.modalIconBox}>
+            <InventoryIcon sx={{ fontSize: 26, color: '#fff' }} />
+          </Box>
+          <Box className={classes.modalTitleBox}>
+            <Typography className={classes.modalTitle}>Add New Item</Typography>
+            <Typography className={classes.modalSubtitle}>
+              Fill in the details to add a new inventory item
+            </Typography>
+          </Box>
+          <IconButton onClick={closeDialog} className={classes.modalCloseBtn} size='small'>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </Box>
+
+        <DialogContent className={classes.dialogContent}>
+          <Grid container spacing={2}>
+            {/* Item Code */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label='Item Code *'
+                placeholder='Ex: WT-BRK-PAD-001'
+                value={form.itemCode}
+                onChange={(e) => updateForm('itemCode', e.target.value)}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Category */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Autocomplete
+                options={CATEGORY_OPTIONS}
+                value={form.category || null}
+                onChange={(_, v) => updateForm('category', v ?? '')}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Category'
+                    size='small'
+                    placeholder='Select category'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Description */}
+            <Grid size={12}>
+              <TextField
+                label='Description *'
+                placeholder='Enter item description'
+                value={form.description}
+                onChange={(e) => updateForm('description', e.target.value)}
+                className={classes.formFieldFull}
+                size='small'
+                fullWidth
+                multiline
+                rows={2}
+              />
+            </Grid>
+
+            {/* Specifications */}
+            <Grid size={12}>
+              <TextField
+                label='Specifications'
+                placeholder='Enter detailed specifications'
+                value={form.specifications}
+                onChange={(e) => updateForm('specifications', e.target.value)}
+                className={classes.formFieldFull}
+                size='small'
+                fullWidth
+                multiline
+                rows={3}
+              />
+            </Grid>
+
+            {/* Unit of Measure */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Autocomplete
+                options={UOM_OPTIONS}
+                value={form.unitOfMeasure || null}
+                onChange={(_, v) => updateForm('unitOfMeasure', v ?? '')}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Unit of Measure'
+                    size='small'
+                    placeholder='Select UOM'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Location */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Autocomplete
+                options={LOCATIONS}
+                value={form.location || null}
+                onChange={(_, v) => updateForm('location', v ?? '')}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Location'
+                    size='small'
+                    placeholder='Select location'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Supplier */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                label='Supplier'
+                placeholder='Enter vendor name'
+                value={form.supplier}
+                onChange={(e) => updateForm('supplier', e.target.value)}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Minimum Stock */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                label='Minimum Stock'
+                type='number'
+                placeholder='0'
+                value={form.minimumStock}
+                onChange={(e) => updateForm('minimumStock', e.target.value)}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Opening Qty */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                label='Opening Qty'
+                type='number'
+                placeholder='0'
+                value={form.openingQty}
+                onChange={(e) => updateForm('openingQty', e.target.value)}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Photo Upload */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Box className={classes.photoUpload}>
+                <Box className={classes.photoUploadIcon}>
+                  <CloudUploadIcon sx={{ fontSize: 24, color: '#0d9488' }} />
+                </Box>
+                <Typography className={classes.photoUploadText}>Click to upload photo</Typography>
+                <Typography className={classes.photoUploadHint}>PNG, JPG up to 5MB</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button onClick={closeDialog} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={!isFormValid || isSaving}
+            className={classes.submitButton}
+            startIcon={
+              isSaving ? (
+                <CircularProgress size={16} color='inherit' />
+              ) : (
+                <AddIcon fontSize='small' />
+              )
+            }
+          >
+            {isSaving ? 'Saving…' : 'Add Item'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

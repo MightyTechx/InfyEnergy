@@ -12,6 +12,8 @@ export interface DSCheckboxProps {
   indeterminate?: boolean;
   color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'default';
   size?: 'small' | 'medium';
+  sx?: Record<string, unknown>;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 const Checkbox: React.FC<DSCheckboxProps> = ({
@@ -25,12 +27,14 @@ const Checkbox: React.FC<DSCheckboxProps> = ({
   indeterminate,
   color = 'primary',
   size = 'medium',
+  sx,
+  onClick,
   ...rest
 }) => {
   const { cx, classes } = useStyles();
 
   return (
-    <Box className={cx(classes.root, className)}>
+    <Box className={cx(classes.root, className)} sx={sx as any}>
       <Box>
         <FormControlLabel
           control={
@@ -42,6 +46,7 @@ const Checkbox: React.FC<DSCheckboxProps> = ({
               indeterminate={indeterminate}
               color={color}
               size={size}
+              onClick={onClick}
               {...rest}
             />
           }

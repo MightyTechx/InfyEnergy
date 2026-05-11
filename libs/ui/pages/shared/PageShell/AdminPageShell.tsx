@@ -1,9 +1,17 @@
 import React, { ReactNode } from 'react';
-import { Box, Loader, DataTable } from '@infyenergy/component';
-import { Typography, Tabs, Divider, TextField, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Loader,
+  DataTable,
+  Typography,
+  Tabs,
+  Divider,
+  TextField,
+  InputAdornment,
+} from '@infygen/component';
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
-import { useAdminKeyframes } from '@infyenergy/hooks';
+import { useAdminKeyframes } from '@infygen/hooks';
 import { useStyles } from './styles/AdminPageShell.styles';
 import TabPanel from './TabPanel';
 

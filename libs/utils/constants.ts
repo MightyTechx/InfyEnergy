@@ -25,8 +25,11 @@ const ConsultantPath = {
   ACCESS_MANAGEMENT: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_ACCESS: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_MANAGEMENT: `${CONSULTANT_BASE}/people-management`,
+  REPORTS: `${CONSULTANT_BASE}/reports`,
+  INVENTORY: `${CONSULTANT_BASE}/inventory`,
+  TECHNICAL_DOCUMENTS: `${CONSULTANT_BASE}/technical-documents`,
   SETTINGS: `${CONSULTANT_BASE}/settings`,
-  FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
+  FEATURE_FLAGS: `${CONSULTANT_BASE}/feature-flags`,
 };
 
 const AuthPath = {

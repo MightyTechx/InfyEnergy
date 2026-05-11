@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { useNotification } from '@infyenergy/hooks';
-import { useAuthActionMutation } from '@infyenergy/services';
+import { useNotification } from '@infygen/hooks';
+import { useAuthActionMutation } from '@infygen/services';
 import { useFormik } from 'formik';
 
 export const CITY_OPTIONS = [

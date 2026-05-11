@@ -12,6 +12,7 @@ export interface DSSwitchProps {
   required?: boolean;
   color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'default';
   size?: 'small' | 'medium';
+  sx?: Record<string, unknown>;
 }
 
 const Switch: React.FC<DSSwitchProps> = ({
@@ -25,12 +26,13 @@ const Switch: React.FC<DSSwitchProps> = ({
   required,
   color = 'primary',
   size = 'medium',
+  sx,
   ...rest
 }) => {
   const { cx, classes } = useStyles();
 
   return (
-    <div className={cx(classes.root, className)}>
+    <div className={cx(classes.root, className)} style={sx as any}>
       <div>
         <FormControlLabel
           control={
@@ -41,6 +43,7 @@ const Switch: React.FC<DSSwitchProps> = ({
               required={required}
               color={color}
               size={size}
+              sx={sx as any}
               {...rest}
             />
           }

@@ -1,9 +1,7 @@
-import { Box, Typography, InputAdornment, IconButton } from '@mui/material';
+import { Box, Typography, InputAdornment, IconButton, TextField, Button } from '@infygen/component';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useFieldError } from '@infyenergy/hooks';
-import TextField from '../../../../components/TextField/TextField';
-import Button from '../../../../components/Button/Button';
+import { useFieldError } from '@infygen/hooks';
 
 function getStrength(pw: string) {
   let score = 0;

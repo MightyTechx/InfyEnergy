@@ -7,7 +7,20 @@
     "declaration": true,
     "declarationMap": true,
     "jsx": "react-jsx",
-    "outDir": "../../dist/out-tsc/shared"
+    "outDir": "../../dist/out-tsc/shared",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@infygen/theme": ["./theme/index.ts"],
+      "@infygen/interfaces": ["./entities/index.ts"],
+      "@infygen/hooks": ["./ui/hooks/index.ts"],
+      "@infygen/utils": ["./utils/index.ts"],
+      "@infygen/services": ["./services/index.ts"],
+      "@infygen/config": ["./core/config/index.ts"],
+      "@infygen/core": ["./core/index.ts"],
+      "@infygen/component": ["./ui/components/index.ts"],
+      "@infygen/component/*": ["./ui/components/*"]
+    }
   },
   "include": [
     "**/*.ts",

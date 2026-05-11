@@ -9,13 +9,13 @@ import {
   MenuItem,
   FormControl,
   Chip,
-} from '@mui/material';
+} from '@infygen/component';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import SecurityIcon from '@mui/icons-material/Security';
 import TuneIcon from '@mui/icons-material/Tune';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useThemeContext } from '@infyenergy/theme';
+import { useThemeContext } from '@infygen/theme';
 import { useStyles } from './styles/Settings.styles';
 
 // ── Theme Configs ─────────────────────────────────────────────────────────────
@@ -367,12 +367,12 @@ const GeneralTab = ({ classes }: { classes: Record<string, string> }) => (
       {
         title: 'Platform Name',
         desc: 'The name displayed across the admin panel and emails.',
-        value: 'infyenergy Admin',
+        value: 'infyGen Admin',
       },
       {
         title: 'Support Email',
         desc: 'Contact email shown to users for support queries.',
-        value: 'support@infyenergy.in',
+        value: 'support@infygen.in',
       },
       {
         title: 'Default Timezone',

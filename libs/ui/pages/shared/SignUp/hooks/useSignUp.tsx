@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFormWithSessionStorage, useNotification } from '@infyenergy/hooks';
-import { SignUpSchema } from '@infyenergy/interfaces';
-import { constants } from '@infyenergy/utils';
-import { useAuthActionMutation } from '@infyenergy/services';
+import { useFormWithSessionStorage, useNotification } from '@infygen/hooks';
+import { SignUpSchema } from '@infygen/interfaces';
+import { constants } from '@infygen/utils';
+import { useAuthActionMutation } from '@infygen/services';
 
 export const STEPS = [
   {

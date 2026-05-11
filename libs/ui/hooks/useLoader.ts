@@ -1,4 +1,4 @@
-import { hideLoader, showLoader } from '@infyenergy/services';
+import { hideLoader, showLoader } from '@infygen/services';
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
 

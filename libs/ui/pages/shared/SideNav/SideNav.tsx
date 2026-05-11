@@ -7,13 +7,13 @@ import {
   IconButton,
   Box,
   Typography,
-} from '@mui/material';
+} from '@infygen/component';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link, useLocation } from 'react-router-dom';
 import { useAdminMenuItems, useConsultantMenuItems } from './components/MenuItems';
 import { Tooltip } from '../../../components';
-import { useCollapse, useAuth } from '@infyenergy/hooks';
+import { useCollapse, useAuth } from '@infygen/hooks';
 import { useStyles } from './styles';
 
 // ── Group accent config ───────────────────────────────────────────────────────

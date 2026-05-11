@@ -6,10 +6,10 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
-} from '@mui/material';
+  TextField,
+} from '@infygen/component';
 import LockIcon from '@mui/icons-material/Lock';
-import { useFieldError } from '@infyenergy/hooks';
-import TextField from '../../../../components/TextField/TextField';
+import { useFieldError } from '@infygen/hooks';
 
 function getStrength(pw: string) {
   let score = 0;

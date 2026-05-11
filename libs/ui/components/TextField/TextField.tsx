@@ -24,13 +24,16 @@ export interface DSTextFieldProps {
   minRows?: number;
   maxRows?: number;
   fullWidth?: boolean;
-  icon?: React.ReactNode; // Optional icon to display
-  iconAlignment?: 'left' | 'right'; // Alignment for the icon
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>; // Native input props like maxLength
+  icon?: React.ReactNode;
+  iconAlignment?: 'left' | 'right';
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   size?: 'small' | 'medium';
   sx?: Record<string, unknown>;
   InputProps?: Record<string, unknown>;
   InputLabelProps?: Record<string, unknown>;
+  slotProps?: Record<string, unknown>;
+  children?: React.ReactNode;
+  select?: boolean;
 }
 
 const TextField: React.FC<DSTextFieldProps> = ({
@@ -54,12 +57,15 @@ const TextField: React.FC<DSTextFieldProps> = ({
   maxRows: maxRowsProp,
   fullWidth = true,
   icon,
-  iconAlignment = 'left', // Default alignment to left
+  iconAlignment = 'left',
   inputProps,
   size,
   sx,
   InputProps: externalInputProps,
   InputLabelProps,
+  slotProps,
+  children,
+  select,
   ...rest
 }) => {
   const { cx, classes } = useStyles();
@@ -72,14 +78,12 @@ const TextField: React.FC<DSTextFieldProps> = ({
     iconAdornments.endAdornment = <InputAdornment position='end'>{icon}</InputAdornment>;
   }
 
-  // Top-align the adornment when the field is multiline so the icon sits at the first line
   const mergedInputProps = {
     ...iconAdornments,
     ...(multiline && icon ? { sx: { alignItems: 'flex-start' } } : {}),
     ...externalInputProps,
   };
 
-  // Auto-stretch: when multiline is true and rows is not explicitly set, use minRows/maxRows
   const minRows = rows ? undefined : (minRowsProp ?? (multiline ? 2 : undefined));
   const maxRows = rows ? undefined : (maxRowsProp ?? (multiline ? 10 : undefined));
 
@@ -108,8 +112,12 @@ const TextField: React.FC<DSTextFieldProps> = ({
       InputProps={mergedInputProps}
       InputLabelProps={InputLabelProps as any}
       sx={sx}
+      slotProps={slotProps as any}
+      select={select}
       {...rest}
-    />
+    >
+      {children}
+    </MUITextField>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography } from '@infygen/component';
 import { useMetadata } from '../metadata';
 
 const TurbineSVG = ({ className }: { className?: string }) => (

@@ -157,6 +157,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      flexBasis: '100%',
+      marginLeft: 0,
     },
   },
 
@@ -180,8 +182,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
     [theme.breakpoints.down('sm')]: {
       gap: theme.spacing(1),
-      padding: theme.spacing(1.25, 1.5),
-      justifyContent: 'flex-start',
+      padding: theme.spacing(1.25, 3.5),
+      justifyContent: 'space-between',
     },
   },
 
@@ -194,6 +196,312 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     flexShrink: 0,
     [theme.breakpoints.down('sm')]: {
       display: 'none',
+    },
+  },
+
+  // ─── Action Buttons ───────────────────────────────────────────────────────────
+  actionButtonBase: {
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    textTransform: 'none' as const,
+    borderRadius: '8px',
+    padding: '7px 16px',
+    minWidth: 110,
+    boxShadow: 'none',
+    transition: 'all 0.18s ease',
+    '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transform: 'translateY(-1px)' },
+    '&:active': { transform: 'translateY(0)' },
+  },
+
+  actionButtonAdd: {
+    background: 'linear-gradient(135deg, #0d9488, #0891b2)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #0f766e, #0e7490)',
+      boxShadow: '0 4px 14px rgba(13,148,136,0.4)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  actionButtonReceive: {
+    background: 'linear-gradient(135deg, #059669, #10b981)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #047857, #059669)',
+      boxShadow: '0 4px 14px rgba(5,150,105,0.4)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  actionButtonIssue: {
+    background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #d97706, #f59e0b)',
+      boxShadow: '0 4px 14px rgba(245,158,11,0.4)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  actionButtonAdjust: {
+    background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
+      boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  actionButtonExport: {
+    background: 'linear-gradient(135deg, #475569, #64748b)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #334155, #475569)',
+      boxShadow: '0 4px 14px rgba(71,85,105,0.35)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  actionButtonImport: {
+    background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #7c3aed, #8b5cf6)',
+      boxShadow: '0 4px 14px rgba(139,92,246,0.4)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  // ─── Filter Autocompletes ────────────────────────────────────────────────────
+  filterAutocomplete: {
+    width: 220,
+    flexShrink: 0,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      '&:hover fieldset': { borderColor: '#0d9488' },
+      '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexBasis: '100%',
+    },
+  },
+
+  filterAutocompleteSmall: {
+    width: 180,
+    flexShrink: 0,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      '&:hover fieldset': { borderColor: '#0d9488' },
+      '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexBasis: '100%',
+    },
+  },
+
+  // ─── Action Icons ──────────────────────────────────────────────────────────────
+  editIconButton: {
+    color: '#0d9488',
+    '&:hover': { background: 'rgba(13,148,136,0.1)' },
+  },
+
+  deleteIconButton: {
+    color: '#dc2626',
+    '&:hover': { background: 'rgba(220,38,38,0.1)' },
+  },
+
+  // ─── Dialog Styles ───────────────────────────────────────────────────────────
+  dialog: {
+    '& .MuiDialog-paper': {
+      borderRadius: 16,
+      overflow: 'hidden',
+      maxHeight: '90vh',
+      display: 'flex',
+      flexDirection: 'column' as const,
+    },
+  },
+
+  modalHero: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #0f172a 0%, #134e4a 40%, #0d9488 70%, #0891b2 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative' as const,
+    flexShrink: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(94,234,212,0.3) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBox: {
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, #0d9488, #0891b2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 16px rgba(13,148,136,0.45)',
+    flexShrink: 0,
+  },
+
+  modalTitleBox: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  modalTitle: {
+    fontWeight: 700,
+    fontSize: '1.15rem',
+    color: '#fff',
+    letterSpacing: '-0.02em',
+  },
+
+  modalSubtitle: {
+    fontSize: '0.8rem',
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 4,
+  },
+
+  modalCloseBtn: {
+    color: 'rgba(255,255,255,0.7) !important',
+    '&:hover': { color: '#fff !important', background: 'rgba(255,255,255,0.1) !important' },
+  },
+
+  // ─── Section Card Styles ────────────────────────────────────────────────────
+  sectionCard: {
+    borderRadius: 12,
+    border: '1px solid',
+    borderColor: 'divider',
+    overflow: 'hidden',
+    backgroundColor: '#ffffff',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+  },
+
+  sectionCardMt: {
+    mt: 2,
+  },
+
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1.5, 2.5),
+    background: 'linear-gradient(135deg, rgba(13,148,136,0.05), rgba(8,145,178,0.03))',
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+  },
+
+  sectionIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: '8px',
+    background: 'linear-gradient(135deg, #0d9488, #0891b2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    '& svg': { color: '#fff' },
+  },
+
+  // ─── Dialog Content ────────────────────────────────────────────────────────────
+  dialogContent: {
+    p: 3,
+    bgcolor: 'background.default',
+    maxHeight: '65vh',
+    overflow: 'auto',
+  },
+
+  // ─── Form Field Styles ─────────────────────────────────────────────────────────
+  formFieldFocused: {
+    '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#0d9488' },
+    '& label.Mui-focused': { color: '#0d9488' },
+  },
+
+  photoUpload: {
+    border: '2px dashed rgba(13,148,136,0.3)',
+    borderRadius: 12,
+    padding: theme.spacing(3),
+    textAlign: 'center' as const,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    background: 'rgba(13,148,136,0.02)',
+    '&:hover': {
+      borderColor: '#0d9488',
+      background: 'rgba(13,148,136,0.05)',
+    },
+  },
+
+  photoUploadIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: '12px',
+    background: 'linear-gradient(135deg, rgba(13,148,136,0.1), rgba(8,145,178,0.1))',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 12px',
+  },
+
+  photoUploadText: {
+    fontSize: '0.85rem',
+    color: 'text.secondary',
+    fontWeight: 500,
+  },
+
+  photoUploadHint: {
+    fontSize: '0.75rem',
+    color: 'text.disabled',
+    marginTop: 4,
+  },
+
+  dialogActions: {
+    padding: theme.spacing(2, 3),
+    borderTop: '1px solid',
+    borderColor: 'divider',
+    background: '#fafafa',
+    gap: theme.spacing(1.5),
+  },
+
+  cancelButton: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 600,
+    fontSize: '0.85rem',
+    color: 'text.secondary',
+    border: '1px solid',
+    borderColor: 'divider',
+    '&:hover': {
+      background: 'rgba(0,0,0,0.04)',
+      borderColor: 'text.disabled',
+    },
+  },
+
+  submitButton: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
+    background: 'linear-gradient(135deg, #0d9488, #0891b2) !important',
+    boxShadow: '0 4px 14px rgba(13,148,136,0.35) !important',
+    color: '#fff !important',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(13,148,136,0.45) !important',
+    },
+    '&:disabled': {
+      background: 'rgba(0,0,0,0.12) !important',
+      boxShadow: 'none !important',
     },
   },
 });

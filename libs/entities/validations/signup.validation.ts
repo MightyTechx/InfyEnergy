@@ -3,10 +3,7 @@ import * as yup from 'yup';
 export const SignUpSchema = yup.object({
   firstName: yup.string().required('required').min(2, 'First name must be at least 2 characters'),
   lastName: yup.string().required('required').min(2, 'Last name must be at least 2 characters'),
-  email: yup
-    .string()
-    .email('Invalid email')
-    .required('required'),
+  email: yup.string().email('Invalid email').required('required'),
   phone: yup
     .string()
     .matches(/^[\d\s+\-()]*$/, 'Phone number must contain only numbers')
@@ -20,11 +17,7 @@ export const SignUpSchema = yup.object({
   employeeId: yup.string().matches(/^\d*$/, 'Employee ID must be numeric').optional().nullable(),
   department: yup.string().optional().nullable(),
   managerName: yup.string().optional().nullable(),
-  managerEmail: yup
-    .string()
-    .email('Invalid manager email')
-    .optional()
-    .nullable(),
+  managerEmail: yup.string().email('Invalid manager email').optional().nullable(),
   reasonForAccess: yup.string().required('required'),
   businessUnit: yup.string().optional().nullable(),
   password: yup.string().required('required').min(6, 'Password must be at least 6 characters'),
@@ -36,7 +29,10 @@ export const SignUpSchema = yup.object({
     .string()
     .required('required')
     .oneOf(['user', 'consultant', 'admin'], 'Role must be user, consultant, or admin'),
-  agreeToTerms: yup.boolean().required('You must agree to terms').oneOf([true], 'You must agree to terms'),
+  agreeToTerms: yup
+    .boolean()
+    .required('You must agree to terms')
+    .oneOf([true], 'You must agree to terms'),
   // Auto-detected locale fields — optional, sent silently from the browser
   timezone: yup.string().optional().nullable(),
   language: yup.string().optional().nullable(),

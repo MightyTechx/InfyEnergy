@@ -1,8 +1,13 @@
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
-import { setCredentials, logout as logoutAction, enterConsultantMode, exitConsultantMode } from '@infyenergy/services';
-import { useAuthActionMutation } from '@infyenergy/services';
-import { UserRole, ISignInResponse } from '@infyenergy/interfaces';
+import {
+  setCredentials,
+  logout as logoutAction,
+  enterConsultantMode,
+  exitConsultantMode,
+  useAuthActionMutation,
+} from '@infygen/services';
+import { UserRole, ISignInResponse } from '@infygen/interfaces';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();

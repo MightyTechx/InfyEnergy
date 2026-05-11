@@ -1,7 +1,5 @@
-import { Box } from '@mui/material';
-import { useFieldError } from '@infyenergy/hooks';
-import TextField from '../../../../components/TextField/TextField';
-import Button from '../../../../components/Button/Button';
+import { Box, TextField, Button } from '@infygen/component';
+import { useFieldError } from '@infygen/hooks';
 
 interface EmailStepProps {
   form: {

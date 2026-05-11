@@ -411,7 +411,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     display: 'flex',
     gap: theme.spacing(1),
     flexShrink: 0,
-    [theme.breakpoints.down('sm')]: { width: '100%' },
+    [theme.breakpoints.down('sm')]: { width: '100%', flexDirection: 'column' },
   },
 
   chartDatePicker: {
@@ -475,9 +475,266 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     padding: theme.spacing(2, 2.5),
     borderBottom: '1px solid #f1f5f9',
     background: 'linear-gradient(135deg, rgba(13,148,136,0.05) 0%, rgba(8,145,178,0.03) 100%)',
+    [theme.breakpoints.down('sm')]: { flexDirection: 'column' },
   },
 
   chartCardBody: {
     padding: theme.spacing(1.5, 2, 2),
+  },
+
+  // ─── Analytics Filter Panel ──────────────────────────────────────────────────
+  filterPanel: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+    gap: 2,
+    background: '#ffffff',
+    borderRadius: 14,
+    p: '14px 20px',
+    mb: 2,
+    border: '1px solid #e8eaf0',
+    borderLeft: '4px solid #6366f1',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+  },
+
+  filterLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+    mr: 1,
+  },
+
+  filterLabelIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: '9px',
+    background: 'linear-gradient(135deg,#f97316,#ec4899)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 3px 10px rgba(249,115,22,0.35)',
+  },
+
+  filterLabelText: {
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    color: '#4338ca',
+    letterSpacing: '0.03em',
+  },
+
+  filterDivider: {
+    borderColor: 'rgba(99,102,241,0.15)',
+    mx: 0.5,
+  },
+
+  filterChip: {
+    background: 'rgba(99,102,241,0.1)',
+    color: '#4338ca',
+    fontWeight: 600,
+    fontSize: '0.72rem',
+    border: '1px solid rgba(99,102,241,0.25)',
+    height: 26,
+  },
+
+  filterFieldsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap' as const,
+    gap: 2,
+    flex: 1,
+  },
+
+  filterAutocomplete: {
+    width: 220,
+  },
+
+  filterRangeChip: {
+    ml: 'auto',
+  },
+
+  // ─── KPI Card ────────────────────────────────────────────────────────────────
+  kpiCardsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: 1.5,
+    mb: 2.5,
+    [theme.breakpoints.up('sm')]: {
+      gridTemplateColumns: 'repeat(4, 1fr)',
+    },
+  },
+
+  kpiCard: {
+    borderRadius: '10px',
+    border: '1px solid #e8eaf0',
+    p: 1.75,
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+      transform: 'translateY(-2px)',
+    },
+  },
+
+  kpiCardHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    mb: 0.75,
+  },
+
+  kpiCardLabel: {
+    fontSize: '0.6rem',
+    fontWeight: 700,
+    color: '#94a3b8',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.08em',
+  },
+
+  kpiCardIconBox: {
+    width: 28,
+    height: 28,
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  kpiCardValue: {
+    fontSize: '1.1rem',
+    fontWeight: 800,
+    lineHeight: 1,
+    mb: 0.35,
+    fontVariantNumeric: 'tabular-nums' as const,
+    [theme.breakpoints.up('md')]: {
+      fontSize: '1.3rem',
+    },
+  },
+
+  kpiCardSub: {
+    fontSize: '0.65rem',
+    color: '#94a3b8',
+    fontWeight: 500,
+  },
+
+  // ─── Chart Card Header Elements ─────────────────────────────────────────────
+  chartHeaderLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1.5,
+  },
+
+  chartHeaderIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: '10px',
+    background: 'linear-gradient(135deg,#f97316,#ec4899)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(249,115,22,0.35)',
+    flexShrink: 0,
+  },
+
+  chartHeaderTitle: {
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    color: '#1e293b',
+    letterSpacing: '-0.01em',
+  },
+
+  chartHeaderSubtitle: {
+    fontSize: '0.72rem',
+    color: '#94a3b8',
+    mt: 0.2,
+  },
+
+  chartHeaderRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+  },
+
+  chartTypeChip: {
+    background: 'rgba(99,102,241,0.08)',
+    border: '1px solid rgba(99,102,241,0.2)',
+    color: '#4f46e5',
+    fontWeight: 600,
+    fontSize: '0.72rem',
+    height: 26,
+  },
+
+  liveIndicator: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 0.75,
+    background: 'rgba(16,185,129,0.08)',
+    borderRadius: '8px',
+    px: 1.5,
+    py: 0.625,
+    border: '1px solid rgba(16,185,129,0.2)',
+  },
+
+  liveDot: {
+    width: 7,
+    height: 7,
+    borderRadius: '50%',
+    background: '#10b981',
+    animation: 'livePulse 2s ease-in-out infinite',
+  },
+
+  liveText: {
+    fontSize: '0.68rem',
+    color: '#10b981',
+    fontWeight: 600,
+    letterSpacing: '0.06em',
+  },
+
+  // ─── Autocomplete Options ────────────────────────────────────────────────────
+  autocompleteCheckbox: {
+    mr: 0.5,
+  },
+
+  autocompleteColorDot: {
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    mr: 1,
+    flexShrink: 0,
+  },
+
+  // ─── Toggle Buttons ───────────────────────────────────────────────────────────
+  toggleBtnActive: {
+    background: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
+    '&:hover': {
+      background: 'linear-gradient(135deg,#4338ca,#6d28d9)',
+      boxShadow: '0 4px 12px rgba(79,70,229,0.35)',
+      transform: 'translateY(-1px)',
+    },
+  },
+
+  toggleBtnBase: {
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    textTransform: 'none' as const,
+    borderRadius: '8px',
+    padding: '6px 18px',
+    minWidth: 148,
+    transition: 'all 0.18s ease',
+    boxShadow: 'none',
+  },
+
+  toggleBtnActiveChart: {
+    background: 'linear-gradient(135deg,#f97316 0%,#ec4899 55%,#8b5cf6 100%)',
+    boxShadow: '0 4px 18px rgba(249,115,22,0.4)',
+    '&:hover': {
+      boxShadow: '0 6px 24px rgba(249,115,22,0.55)',
+      transform: 'translateY(-1px)',
+      background: 'linear-gradient(135deg,#ea580c 0%,#db2777 55%,#7c3aed 100%)',
+    },
+  },
+
+  toggleBtnInactive: {
+    color: '#64748b',
+    borderColor: '#e2e8f0',
+    background: '#f8fafc',
+    '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
   },
 });

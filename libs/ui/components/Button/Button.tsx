@@ -8,7 +8,7 @@ export interface DSButtonProps {
   icon?: React.ReactNode;
   iconPosition?: 'start' | 'end';
   variant?: 'contained' | 'outlined' | 'text';
-  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit';
   disabled?: boolean;
   className?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;

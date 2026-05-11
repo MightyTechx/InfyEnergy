@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { Box, Loader, DataTable } from '@infyenergy/component';
 import {
+  Box,
+  Loader,
+  DataTable,
   Typography,
   Grid,
   Tabs,
   Tab,
   Divider,
   TextField,
-  InputAdornment,
   Chip,
   Button,
-  Stack,
-} from '@mui/material';
+} from '@infygen/component';
+import { Stack, InputAdornment } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -22,12 +23,12 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TabPanel from './components/TabPanel';
 import usePeopleManagement from './hooks/useAccessManagement';
-import { useAdminKeyframes } from 'libs/ui/hooks/useAdminKeyframes';
-import { useStyles } from './styles';
 import { AccessRequestRow } from '../PeopleRequests/types/accessRequests.types';
-import { IAuthUser } from '@infyenergy/interfaces';
+import { IAuthUser } from '@infygen/interfaces';
 import { UserDetailDialog } from '../UserDetail';
 import { CreateUserDialog } from './components/CreateUserDialog';
+import { useAdminKeyframes } from '@infygen/hooks';
+import { useStyles } from './styles';
 // UserRow / constants imports removed — openDetail uses plain number ids
 
 const PeopleManagement = () => {

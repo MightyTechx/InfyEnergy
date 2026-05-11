@@ -3,6 +3,8 @@ import { useStyles } from './styles';
 
 export interface DSListItemProps extends React.ComponentProps<typeof MUIListItem> {
   className?: string;
+  component?: React.ElementType;
+  to?: string;
 }
 
 const ListItem: React.FC<DSListItemProps> = ({ className, ...props }) => {

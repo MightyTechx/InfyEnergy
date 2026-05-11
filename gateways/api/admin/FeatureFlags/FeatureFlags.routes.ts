@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { prisma } from '@infyenergy/database';
+import { prisma } from '@infygen/database';
 import { FeatureFlagsController } from './FeatureFlags.controller';
 
 const controller = new FeatureFlagsController(prisma);
