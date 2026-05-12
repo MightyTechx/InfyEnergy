@@ -2,5 +2,11 @@
   "buildCommand": "npm run prisma:generate && npm run build:administration",
   "outputDirectory": "dist/web/apps",
   "installCommand": "npm install",
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
