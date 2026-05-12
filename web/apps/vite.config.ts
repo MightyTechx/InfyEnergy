@@ -18,7 +18,6 @@ console.log('\u{1F535} Building Administration App');
 console.log('\u{1F4E6} PARTNER:', PARTNER);
 
 export default defineConfig(({ mode }) => ({
-  base: '/app/',
   root: __dirname,
 
   plugins: [
