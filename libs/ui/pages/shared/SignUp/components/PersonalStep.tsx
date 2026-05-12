@@ -24,9 +24,18 @@ import TextField from '../../../../components/TextField/TextField';
 import { SelectChangeEvent } from '@mui/material';
 
 const DuplicateError = ({ message }: { message: string }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4, color: 'error.main' }}>
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.4,
+      color: 'error.main !important',
+    }}
+  >
     <ErrorOutlineIcon sx={{ fontSize: '0.9rem' }} />
-    <Typography sx={{ fontSize: '0.75rem' }}>{message}</Typography>
+    <Typography sx={{ fontSize: '12px !important', color: 'error.main !important' }}>
+      {message}
+    </Typography>
   </Box>
 );
 
@@ -206,9 +215,6 @@ const PersonalStep = ({
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth required error={touched.gender && Boolean(errors.gender)}>
-              <InputLabel id='gender-label' required>
-                Gender
-              </InputLabel>
               <Select
                 labelId='gender-label'
                 id='gender'
@@ -217,6 +223,7 @@ const PersonalStep = ({
                 label='Gender'
                 onChange={onSelectChange('gender')}
                 onBlur={onBlur}
+                required
               >
                 {GENDER_OPTIONS.map(({ value, label }) => (
                   <MenuItem key={value} value={value}>
@@ -319,6 +326,7 @@ const PersonalStep = ({
               errorText={touched.zipcode ? errors.zipcode : undefined}
               inputProps={{ inputMode: 'numeric', maxLength: 10 }}
               fullWidth
+              required
             />
           </Grid>
 
@@ -387,6 +395,7 @@ const PersonalStep = ({
                       ),
                     } as Record<string, unknown>
                   }
+                  required
                 />
               )}
             />

@@ -44,7 +44,10 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             <Box>
               <Typography className={classes.title}>{title}</Typography>
               {description && (
-                <Typography className={classes.description}>{description}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                  <Typography className={classes.description}>{description}</Typography>
+                  {chip && <Chip label={chip} size='small' className={chipClass} />}
+                </Box>
               )}
             </Box>
           </Box>

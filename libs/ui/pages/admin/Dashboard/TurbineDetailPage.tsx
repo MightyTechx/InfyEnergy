@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { constants } from '@infygen/utils';
-import { Typography, Box, IconButton, Chip, Paper, Loader } from '@infygen/component';
+import { Typography, Box, IconButton, Paper, Loader, PageHeader } from '@infygen/component';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTurbineDetailStyles } from './styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -325,55 +325,11 @@ const TurbineDetailPage: React.FC = () => {
       {keyframes}
       <Box className={classes.container}>
         {/* ── Page Header ── */}
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb} />
-
-          {isActive && (
-            <Box className={classes.liveDataBadge}>
-              <Box className={classes.liveDataDot} />
-              <Typography className={classes.liveDataText}>LIVE DATA</Typography>
-            </Box>
-          )}
-
-          <Box className={classes.pageHeaderContent}>
-            <Box className={classes.turbineIdBox}>
-              <Typography className={classes.turbineIdLabel}>WTG</Typography>
-              <Typography className={classes.turbineIdNumber}>{turbine.turbineNo}</Typography>
-            </Box>
-
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography className={classes.headerTitle}>SCADA Live Parameters</Typography>
-              <Box className={classes.headerMetaRow}>
-                <Chip
-                  size='small'
-                  icon={statusIcon(turbine.status) as React.ReactElement}
-                  label={cfg.label}
-                  sx={{
-                    background: `${cfg.color}22`,
-                    border: `1px solid ${cfg.color}55`,
-                    color: cfg.color,
-                    fontWeight: 700,
-                    fontSize: '0.72rem',
-                    '& .MuiChip-icon': { color: cfg.color },
-                  }}
-                />
-                <Chip
-                  size='small'
-                  label={turbine.operatingMode}
-                  sx={{
-                    background: 'rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.9)',
-                    fontSize: '0.68rem',
-                    fontWeight: 600,
-                  }}
-                />
-                <Typography sx={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)' }}>
-                  Last Update: {turbine.time}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
+        <PageHeader
+          title={`WTG ${turbine.turbineNo}`}
+          description='SCADA Live Parameters'
+          variant='admin'
+        />
 
         {/* ── Key Performance Indicators ── */}
         <Box sx={{ mb: 4 }}>

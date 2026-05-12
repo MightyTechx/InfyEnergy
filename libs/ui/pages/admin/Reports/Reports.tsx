@@ -5,26 +5,18 @@ import {
   Typography,
   Grid,
   TextField,
-  Select,
-  MenuItem,
-  Checkbox,
-  ListItemText,
   Button,
   PageHeader,
 } from '@infygen/component';
 
-import {
-  InputAdornment,
-  Autocomplete,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  SelectChangeEvent,
-} from '@mui/material';
+import { InputAdornment, Autocomplete } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import ImageIcon from '@mui/icons-material/Image';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -52,33 +44,15 @@ const Reports = () => {
   }, []);
 
   const [reportType, setReportType] = useState<string | null>(null);
-  const [turbines, setTurbines] = useState<string[]>([]);
+  const [turbine, setTurbine] = useState<string | null>(null);
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
   const [toDate, setToDate] = useState<Dayjs | null>(null);
-  const [docType, setDocType] = useState('');
+  const [docType, setDocType] = useState<string | null>(null);
 
   const [kpiSearch, setKpiSearch] = useState('');
   const [dtSearch, setDtSearch] = useState('');
 
-  const downloadEnabled =
-    !!reportType && turbines.length > 0 && !!fromDate && !!toDate && !!docType;
-
-  const handleTurbineChange = (e: SelectChangeEvent<typeof turbines>) => {
-    const value = typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value;
-
-    if (value.includes('__all__')) {
-      setTurbines(turbines.length === TURBINE_LIST.length ? [] : [...TURBINE_LIST]);
-    } else {
-      setTurbines(value);
-    }
-  };
-
-  const turbineLabel =
-    turbines.length === 0
-      ? ''
-      : turbines.length === TURBINE_LIST.length
-        ? 'All Turbines'
-        : turbines.join(', ');
+  const downloadEnabled = !!reportType && !!turbine && !!fromDate && !!toDate && !!docType;
 
   const filteredKpi = kpiSearch
     ? kpiRows.filter((r: any) => r.kpi.toLowerCase().includes(kpiSearch.toLowerCase()))
@@ -102,116 +76,98 @@ const Reports = () => {
           variant='admin'
         />
 
-        {/* FILTER TOOLBAR */}
-        <Box className={classes.filterToolbar}>
+        {/* ── Action Buttons & Filters Section ── */}
+        <Box className={classes.actionButtonsSection}>
+          {/* Report Type Filter */}
           <Autocomplete
-            className={`${classes.filterAutocomplete} ${classes.filterField}`}
+            className={classes.filterAutocomplete}
             options={REPORT_TYPES}
             value={reportType}
             onChange={(_, v) => setReportType(v)}
-            size='small'
             renderInput={(params) => (
-              <TextField {...params} label='Report Type' placeholder='Search report...' />
+              <TextField
+                {...params}
+                label='Report Type'
+                size='small'
+                placeholder='Select type...'
+              />
             )}
           />
 
-          <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
-            <Select
-              multiple
-              value={turbines}
-              label='Turbine'
-              onChange={handleTurbineChange}
-              input={<OutlinedInput label='Turbine' />}
-              renderValue={() => turbineLabel}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 280,
-                  },
-                },
-              }}
-            >
-              <MenuItem value='__all__'>
-                <Checkbox
-                  checked={turbines.length === TURBINE_LIST.length}
-                  indeterminate={turbines.length > 0 && turbines.length < TURBINE_LIST.length}
-                  className={classes.filterCheckbox}
-                />
+          {/* Turbine Filter */}
+          <Autocomplete
+            className={classes.filterAutocomplete}
+            options={TURBINE_LIST}
+            value={turbine}
+            onChange={(_, v) => setTurbine(v)}
+            renderInput={(params) => (
+              <TextField {...params} label='Turbine' size='small' placeholder='Select turbine...' />
+            )}
+          />
 
-                <ListItemText
-                  primary='Select All'
-                  primaryTypographyProps={{
-                    fontWeight: 600,
-                  }}
-                />
-              </MenuItem>
-
-              {TURBINE_LIST.map((t) => (
-                <MenuItem key={t} value={t}>
-                  <Checkbox checked={turbines.includes(t)} className={classes.filterCheckbox} />
-
-                  <ListItemText primary={t} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
+          {/* From Date Filter */}
           <DatePicker
             label='From Date'
             value={fromDate}
             onChange={(v) => setFromDate(v)}
+            maxDate={toDate || undefined}
             slotProps={{
               textField: {
                 size: 'small',
-                className: `${classes.datePickerField} ${classes.filterField}`,
-                sx: {
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '14px !important',
-                  },
-                },
+                className: classes.datePickerInput,
               },
             }}
           />
 
+          {/* To Date Filter */}
           <DatePicker
             label='To Date'
             value={toDate}
-            minDate={fromDate ?? undefined}
             onChange={(v) => setToDate(v)}
+            minDate={fromDate || undefined}
             slotProps={{
               textField: {
                 size: 'small',
-                className: `${classes.datePickerField} ${classes.filterField}`,
-                sx: {
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '14px !important',
-                  },
-                },
+                className: classes.datePickerInput,
               },
             }}
           />
 
-          <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
-            <Select
-              value={docType}
-              onChange={(e) => setDocType(e.target.value)}
-              label='Document Type'
-            >
-              {DOC_TYPES.map((d) => (
-                <MenuItem key={d.value} value={d.value}>
-                  {d.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {/* Document Type Filter */}
+          <Autocomplete
+            className={classes.filterAutocompleteSmall}
+            options={DOC_TYPES.map((d) => d.label)}
+            value={docType}
+            onChange={(_, v) => setDocType(v)}
+            renderInput={(params) => (
+              <TextField {...params} label='Document Type' size='small' placeholder='Select...' />
+            )}
+            renderOption={(props, option) => {
+              const icon =
+                option === 'PDF' ? (
+                  <PictureAsPdfIcon sx={{ fontSize: 18, color: '#ef4444' }} />
+                ) : option === 'Excel (XLSX)' ? (
+                  <TableChartIcon sx={{ fontSize: 18, color: '#10b981' }} />
+                ) : (
+                  <ImageIcon sx={{ fontSize: 18, color: '#8b5cf6' }} />
+                );
+              return (
+                <li {...props} key={option} className={classes.docOption}>
+                  {icon}
+                  <Typography sx={{ ml: 1 }}>{option}</Typography>
+                </li>
+              );
+            }}
+          />
 
+          {/* Download Button */}
           <Button
             variant='contained'
-            disabled={!downloadEnabled}
             startIcon={<DownloadIcon />}
-            className={classes.downloadBtn}
+            className={`${classes.actionButtonBase} ${classes.actionButtonAdd}`}
+            disabled={!downloadEnabled}
           >
-            Download
+            Download Report
           </Button>
         </Box>
 
@@ -220,15 +176,14 @@ const Reports = () => {
           <Box className={classes.tableSectionHeader}>
             <Box className={classes.tableSectionTitleGroup}>
               <Typography className={classes.tableSectionTitle}>Daily Generation Report</Typography>
-
               <Typography className={classes.tableSectionDate}>{formatDateTime(now)}</Typography>
             </Box>
-
             <TextField
               placeholder='Search KPI...'
               value={kpiSearch}
               onChange={(e) => setKpiSearch(e.target.value)}
               className={classes.searchField}
+              size='small'
               slotProps={{
                 input: {
                   endAdornment: (
@@ -240,7 +195,6 @@ const Reports = () => {
               }}
             />
           </Box>
-
           <Box className={classes.tableWrapper}>
             <DataTable
               columns={kpiColumns}
@@ -258,15 +212,14 @@ const Reports = () => {
           <Box className={classes.tableSectionHeader}>
             <Box className={classes.tableSectionTitleGroup}>
               <Typography className={classes.tableSectionTitle}>Detailed Downtime Log</Typography>
-
               <Typography className={classes.tableSectionDate}>{formatDateTime(now)}</Typography>
             </Box>
-
             <TextField
               placeholder='Search turbine / status...'
               value={dtSearch}
               onChange={(e) => setDtSearch(e.target.value)}
               className={classes.searchField}
+              size='small'
               slotProps={{
                 input: {
                   endAdornment: (
@@ -278,7 +231,6 @@ const Reports = () => {
               }}
             />
           </Box>
-
           <Box className={classes.tableWrapper}>
             <DataTable
               columns={downtimeColumns}

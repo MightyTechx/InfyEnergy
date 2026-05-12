@@ -69,11 +69,11 @@ const WorkDetailsStep = ({
               errorText={touched.employeeId ? errors.employeeId : undefined}
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               fullWidth
+              required
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth>
-              <InputLabel id='department-label'>Department (Optional)</InputLabel>
               <Select
                 labelId='department-label'
                 id='department'
@@ -113,9 +113,6 @@ const WorkDetailsStep = ({
           {/* Requested Role */}
           <Grid size={{ xs: 12 }}>
             <FormControl fullWidth required error={touched.role && Boolean(errors.role)}>
-              <InputLabel id='role-label' required>
-                Requested Role
-              </InputLabel>
               <Select
                 labelId='role-label'
                 id='role'
@@ -124,6 +121,7 @@ const WorkDetailsStep = ({
                 label='Requested Role'
                 onChange={onRoleChange}
                 onBlur={onBlur}
+                required
               >
                 <MenuItem value='admin'>
                   Admin — Manage platform settings, users &amp; reports

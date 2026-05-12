@@ -4,242 +4,202 @@ import { CSSObject } from 'tss-react';
 export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   container: {
     padding: theme.spacing(3),
-    background: 'linear-gradient(160deg, #f0f4ff 0%, #fafbff 50%, #f0f4ff 100%)',
     minHeight: '100vh',
-
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(1.5),
     },
   },
 
-  /* PAGE HEADER OVERRIDE (smaller + cleaner) */
-  pageHeaderTitle: {
-    fontSize: '1.15rem',
-    fontWeight: 700,
-    color: '#0f172a',
-    letterSpacing: '-0.01em',
-  },
-
-  pageHeaderDesc: {
-    fontSize: '0.78rem',
-    color: '#64748b',
-    marginTop: 2,
-  },
-
-  /* FILTER TOOLBAR */
-  filterToolbar: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
-    gap: theme.spacing(2),
-    padding: theme.spacing(2),
-    paddingBottom: theme.spacing(0),
-    marginBottom: theme.spacing(3),
-    background: '#ffffff',
+  // ─── Action Buttons & Filters Section ─────────────────────────────────────────
+  actionButtonsSection: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing(1.5),
+    marginBottom: theme.spacing(2.5),
+    padding: theme.spacing(1.75, 2.5),
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(240,244,255,0.95) 100%)',
     borderRadius: 14,
-    border: '1px solid rgba(79,70,229,0.12)',
-    boxShadow: '0 4px 16px rgba(99,102,241,0.08)',
-
-    [theme.breakpoints.down('lg')]: {
-      gridTemplateColumns: 'repeat(3, 1fr)',
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr',
+    border: '1px solid rgba(99,102,241,0.12)',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
+    [theme.breakpoints.down('md')]: {
+      gap: theme.spacing(1.25),
       padding: theme.spacing(1.5),
     },
-  },
-
-  /* FILTER FIELD */
-  filterField: {
-    width: '100%',
-
-    '& .MuiOutlinedInput-root': {
-      height: 38,
-      fontSize: '0.78rem',
-      background: '#fff',
-      display: 'flex',
-      alignItems: 'center',
-
-      '& fieldset': {
-        borderColor: 'rgba(79,70,229,0.15)',
-      },
-
-      '&:hover fieldset': {
-        borderColor: 'rgba(79,70,229,0.35)',
-      },
-
-      '&.Mui-focused fieldset': {
-        borderColor: '#4f46e5',
-        borderWidth: 2,
-      },
-    },
-
-    '& .MuiInputBase-input': {
-      fontSize: '0.78rem',
-      padding: '9px 10px',
-    },
-
-    '& .MuiInputLabel-root': {
-      fontSize: '0.78rem',
-      color: '#64748b',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column' as const,
+      alignItems: 'stretch' as const,
+      gap: theme.spacing(1),
     },
   },
 
-  /* FORM CONTROL (SELECT) */
-  formControl: {
-    width: '100%',
-
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '14px !important',
-      height: 38,
-      fontSize: '0.78rem',
-      background: '#fff',
-      display: 'flex',
-      alignItems: 'center',
-
-      '& fieldset': {
-        borderColor: 'rgba(79,70,229,0.15)',
-      },
-
-      '&:hover fieldset': {
-        borderColor: 'rgba(79,70,229,0.35)',
-      },
-
-      '&.Mui-focused fieldset': {
-        borderColor: '#4f46e5',
-        borderWidth: 2,
-      },
-    },
-
-    '& .MuiSelect-select': {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  },
-
-  /* FILTER AUTOCOMPLETE */
+  // ─── Filter Autocompletes (Flexible Width) ──────────────────────────────────────
   filterAutocomplete: {
-    width: '100%',
-
+    flex: '1 1 160px',
+    minWidth: 150,
+    maxWidth: 220,
     '& .MuiOutlinedInput-root': {
-      borderRadius: '14px !important',
-      height: 38,
-      fontSize: '0.78rem',
-      background: '#fff',
-      display: 'flex',
-      alignItems: 'center',
-
-      '& fieldset': {
-        borderColor: 'rgba(79,70,229,0.15)',
-      },
-
-      '&:hover fieldset': {
-        borderColor: 'rgba(79,70,229,0.35)',
-      },
-
-      '&.Mui-focused fieldset': {
-        borderColor: '#4f46e5',
-        borderWidth: 2,
-      },
+      borderRadius: '8px',
+      '&:hover fieldset': { borderColor: '#6366f1' },
+      '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('sm')]: {
+      flex: 'none',
+      width: '100%',
+      maxWidth: '100%',
     },
   },
 
-  /* DATE PICKER FIELD */
-  datePickerField: {
+  filterAutocompleteSmall: {
+    flex: '1 1 150px',
+    minWidth: 140,
+    maxWidth: 200,
     '& .MuiOutlinedInput-root': {
-      borderRadius: 14,
+      borderRadius: '8px',
+      '&:hover fieldset': { borderColor: '#6366f1' },
+      '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('sm')]: {
+      flex: 'none',
+      width: '100%',
+      maxWidth: '100%',
     },
   },
 
-  /* DOWNLOAD */
-  downloadBtn: {
-    height: 38,
-    borderRadius: 10,
-    fontSize: '0.78rem',
+  // ─── Date Picker Input (Flexible Width) ─────────────────────────────────────────
+  datePickerInput: {
+    flex: '1 1 150px',
+    minWidth: 140,
+    maxWidth: 200,
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      height: '40px',
+      '&:hover fieldset': { borderColor: '#6366f1' },
+      '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('sm')]: {
+      flex: 'none',
+      width: '100%',
+      maxWidth: '100%',
+    },
+  },
+
+  // ─── Action Buttons ───────────────────────────────────────────────────────────
+  actionButtonBase: {
+    fontSize: '0.8rem',
     fontWeight: 600,
-    textTransform: 'none',
-    background: '#180de9 0%',
-    color: '#fff',
-
-    '&:hover': {
-      transform: 'translateY(-2px)',
+    textTransform: 'none' as const,
+    borderRadius: '8px',
+    padding: '8px 18px',
+    minWidth: 130,
+    boxShadow: 'none',
+    transition: 'all 0.18s ease',
+    '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transform: 'translateY(-1px)' },
+    '&:active': { transform: 'translateY(0)' },
+    '&:disabled': {
+      opacity: 0.5,
+      transform: 'none',
+      boxShadow: 'none',
     },
   },
 
-  /* TABLE WRAPPER */
+  actionButtonAdd: {
+    flex: '0 0 auto',
+    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+      boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
+      transform: 'translateY(-1px)',
+    },
+    '&:disabled': {
+      background: 'linear-gradient(135deg, #e2e8f0, #cbd5e1)',
+      color: '#94a3b8',
+    },
+    [theme.breakpoints.down('sm')]: {
+      flex: 'none',
+      width: '100%',
+    },
+  },
+
+  // ─── Doc Option ───────────────────────────────────────────────────────────────
+  docOption: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+    py: '8px !important',
+    px: '12px !important',
+    fontSize: '0.82rem',
+  },
+
+  // ─── Table Section ───────────────────────────────────────────────────────────
   tableSection: {
     borderRadius: 14,
     overflow: 'hidden',
-    background: '#fff',
-    border: '1px solid rgba(79,70,229,0.1)',
+    border: '1px solid rgba(99,102,241,0.1)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
     marginBottom: theme.spacing(3),
   },
 
-  /* TABLE HEADER (FIXED SMALLER TYPOGRAPHY) */
   tableSectionHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap' as const,
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5, 2),
-
-    background: 'linear-gradient(135deg, rgba(79,70,229,0.04), rgba(14,165,233,0.02))',
-    borderBottom: '1px solid rgba(79,70,229,0.08)',
-
+    padding: theme.spacing(1.5, 2.5),
+    background: 'linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(124,58,237,0.05) 100%)',
+    borderBottom: '1px solid rgba(99,102,241,0.1)',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
+      padding: theme.spacing(1.5),
+      gap: theme.spacing(1),
     },
   },
 
-  tableSectionTitle: {
-    fontWeight: 600,
-    color: '#1e293b',
-    fontSize: '16px !important',
-  },
-
-  tableSectionDate: {
-    fontSize: '13px !important',
-    color: '#64748b',
-  },
-
-  /* SEARCH */
   searchField: {
-    width: 220,
-
+    marginLeft: 'auto',
+    width: 240,
+    flexShrink: 0,
     '& .MuiOutlinedInput-root': {
-      height: 36,
+      height: '36px',
+      fontSize: '0.85rem',
+      background: 'rgba(255,255,255,0.92)',
+      backdropFilter: 'blur(14px)',
       borderRadius: 40,
-      fontSize: '0.75rem',
+      transition: 'all 0.22s ease',
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: '1px solid rgba(99,102,241,0.18)',
+        borderRadius: 40,
+      },
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        border: '1px solid rgba(99,102,241,0.4)',
+      },
+      '&.Mui-focused': {
+        boxShadow: '0 0 0 3px rgba(99,102,241,0.1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+          border: '1px solid #6366f1',
+        },
+      },
     },
-
     '& .MuiInputBase-input': {
-      fontSize: '0.75rem',
+      padding: '4px 4px 4px 12px',
+      fontSize: '0.85rem',
+      '&::placeholder': { color: '#94a3b8', opacity: 1 },
+    },
+    '& .MuiInputAdornment-root .MuiSvgIcon-root': {
+      fontSize: '1.1rem',
+      color: 'rgba(99,102,241,0.6)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexBasis: '100%',
+      marginLeft: 0,
     },
   },
 
-  /* TABLE WRAPPER */
   tableWrapper: {
-    overflowX: 'auto',
-  },
-
-  /* TABLE BODY FONT FIX */
-  tableCell: {
-    fontSize: '12px !important',
-    padding: '5px 10px !important',
-    color: '#334155',
-  },
-
-  tableCellBold: {
-    fontSize: '12px !important',
-    fontWeight: 600,
-    padding: '5px 10px !important',
-  },
-
-  tableHeaderCell: {
-    fontSize: '12px !important',
-    fontWeight: 600,
-    color: '#0f172a',
-    padding: '7px 10px !important',
-    background: '#f8fafc',
+    overflowX: 'auto' as const,
+    background: '#fff',
   },
 });

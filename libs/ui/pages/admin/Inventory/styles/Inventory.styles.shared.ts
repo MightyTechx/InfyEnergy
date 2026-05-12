@@ -182,7 +182,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
     [theme.breakpoints.down('sm')]: {
       gap: theme.spacing(1),
-      padding: theme.spacing(1.25, 3.5),
+      padding: theme.spacing(1.25),
       justifyContent: 'space-between',
     },
   },
@@ -430,7 +430,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   photoUpload: {
     border: '2px dashed rgba(13,148,136,0.3)',
     borderRadius: 12,
-    padding: theme.spacing(3),
+    padding: theme.spacing(1.5),
     textAlign: 'center' as const,
     cursor: 'pointer',
     transition: 'all 0.2s ease',
@@ -442,26 +442,26 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   photoUploadIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: '12px',
+    width: 36,
+    height: 36,
+    borderRadius: '10px',
     background: 'linear-gradient(135deg, rgba(13,148,136,0.1), rgba(8,145,178,0.1))',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '0 auto 12px',
+    margin: '0 auto 8px',
   },
 
   photoUploadText: {
-    fontSize: '0.85rem',
+    fontSize: '0.8rem',
     color: 'text.secondary',
     fontWeight: 500,
   },
 
   photoUploadHint: {
-    fontSize: '0.75rem',
+    fontSize: '0.7rem',
     color: 'text.disabled',
-    marginTop: 4,
+    marginTop: 2,
   },
 
   dialogActions: {

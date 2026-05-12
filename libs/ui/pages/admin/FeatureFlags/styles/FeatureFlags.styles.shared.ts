@@ -367,14 +367,14 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   modalIconBox: {
-    width: 46,
-    height: 46,
-    borderRadius: '12px',
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
     background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(79,70,229,0.45)',
+    boxShadow: '0 4px 16px rgba(79,70,229,0.45)',
     flexShrink: 0,
   },
 
@@ -385,29 +385,20 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   modalTitle: {
     fontWeight: 700,
-    fontSize: '1.1rem',
+    fontSize: '1.15rem',
     color: '#fff',
     letterSpacing: '-0.02em',
   },
 
   modalSubtitle: {
-    fontSize: '0.78rem',
+    fontSize: '0.8rem',
     color: 'rgba(255,255,255,0.7)',
-    marginTop: 2,
+    marginTop: 4,
   },
 
   modalCloseBtn: {
     color: 'rgba(255,255,255,0.7) !important',
     '&:hover': { color: '#fff !important', background: 'rgba(255,255,255,0.1) !important' },
-  },
-
-  sectionCard: {
-    borderRadius: 12,
-    border: '1px solid',
-    borderColor: 'divider',
-    overflow: 'hidden',
-    backgroundColor: '#ffffff',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
   },
 
   sectionHeader: {
@@ -458,57 +449,59 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
   },
 
-  // ─── Access Control ────────────────────────────────────────────────────────────
-  roleCard: {
-    flex: 1,
-    borderRadius: 3,
-    border: `2px solid`,
-    padding: 1.5,
-    cursor: 'pointer',
-    transition: 'all 0.22s ease',
-    '&:hover': {},
-  },
-
-  accessControlBox: {
-    display: 'flex',
-    gap: 2,
-  },
-
   // ─── Dialog Actions ────────────────────────────────────────────────────────────
   dialogActions: {
-    px: 3,
-    py: 2.5,
-    borderTop: '1px solid rgba(99,102,241,0.15)',
-    bgcolor: '#f8fafc',
-    gap: 1.5,
-    display: 'flex',
-    justifyContent: 'flex-end',
+    padding: theme.spacing(2, 3),
+    borderTop: '1px solid',
+    borderColor: 'divider',
+    background: '#fafafa',
+    gap: theme.spacing(1.5),
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      padding: theme.spacing(2),
+      gap: theme.spacing(1),
+    },
   },
 
   cancelButton: {
-    borderColor: 'rgba(100,116,139,0.3)',
-    color: '#64748b',
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 600,
+    fontSize: '0.85rem',
+    color: 'text.secondary',
+    border: '1px solid',
+    borderColor: 'divider',
+    minWidth: 'auto',
     '&:hover': {
-      borderColor: 'rgba(100,116,139,0.5)',
-      bgcolor: 'rgba(100,116,139,0.05)',
+      background: 'rgba(0,0,0,0.04)',
+      borderColor: 'text.disabled',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 
   submitButton: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
     background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
-    color: '#fff',
-    fontWeight: 600,
-    px: 3,
     boxShadow: '0 4px 14px rgba(99,102,241,0.35)',
+    color: '#fff',
     '&:hover': {
-      background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 50%, #6d28d9 100%)',
-      boxShadow: '0 6px 20px rgba(99,102,241,0.45)',
       transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(99,102,241,0.45)',
+      background: 'linear-gradient(135deg, #4338ca 0%, #4f46e5 50%, #6d28d9 100%)',
     },
-    '&:active': { transform: 'translateY(0)' },
     '&.Mui-disabled': {
       background: 'rgba(99,102,241,0.3)',
       color: 'rgba(255,255,255,0.5)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 
@@ -552,11 +545,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   formFieldFocused: {
     '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#6366f1' },
     '& label.Mui-focused': { color: '#6366f1' },
-  },
-
-  // ─── Section Card with margin ─────────────────────────────────────────────────
-  sectionCardMt: {
-    mt: 2,
   },
 
   // ─── Page Header Icon Box ─────────────────────────────────────────────────────

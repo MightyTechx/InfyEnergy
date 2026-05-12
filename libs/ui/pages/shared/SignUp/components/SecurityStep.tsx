@@ -94,7 +94,10 @@ const SecurityStep = ({
                     />
                   ))}
                 </Box>
-                <Typography variant='caption' sx={{ color: strength.color, fontWeight: 600 }}>
+                <Typography
+                  variant='caption'
+                  sx={{ color: strength.color, fontWeight: 600, fontSize: '14px !important' }}
+                >
                   {strength.label}
                 </Typography>
               </Box>

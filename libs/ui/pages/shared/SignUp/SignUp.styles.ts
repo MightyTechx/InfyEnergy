@@ -166,14 +166,14 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   avatarPreview: {
-    width: 60,
-    height: 60,
-    fontSize: '1.4rem',
+    width: 48,
+    height: 48,
+    fontSize: '1.1rem',
     fontWeight: 700,
     background: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
     color: '#fff',
     flexShrink: 0,
-    boxShadow: '0 4px 14px rgba(37,99,235,0.4)',
+    boxShadow: '0 2px 8px rgba(37,99,235,0.3)',
   },
 
   // ── Step progress ──────────────────────────────────────────────────────────

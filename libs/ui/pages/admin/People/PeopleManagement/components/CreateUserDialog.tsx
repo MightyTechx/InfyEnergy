@@ -356,13 +356,13 @@ export const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ open, onClos
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <FormControl fullWidth size='small'>
-                    <InputLabel>Gender</InputLabel>
                     <Select
                       name='gender'
                       value={formik.values.gender}
-                      label='Gender'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
+                      label='Gender'
+                      required
                     >
                       {GENDER_OPTIONS.map((opt) => (
                         <MenuItem key={opt.value} value={opt.value}>
@@ -453,6 +453,7 @@ export const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ open, onClos
                     value={formik.values.zipcode}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    required
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -464,6 +465,7 @@ export const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ open, onClos
                     value={formik.values.employeeId}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    required
                   />
                 </Grid>
               </Grid>
@@ -566,6 +568,7 @@ export const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ open, onClos
                             ),
                           } as Record<string, unknown>
                         }
+                        required
                       />
                     )}
                   />
