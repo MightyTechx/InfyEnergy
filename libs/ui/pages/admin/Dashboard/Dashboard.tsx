@@ -1079,7 +1079,7 @@ const Dashboard = () => {
                         lineHeight: 1.4,
                       }}
                     >
-                      {chartType === 'bar' ? 'Stacked Energy Generation *' : 'Generation Trend *'}
+                      {chartType === 'bar' ? 'Stacked Energy Generation' : 'Generation Trend'}
                     </Typography>
                     <Typography
                       sx={{
@@ -1144,7 +1144,7 @@ const Dashboard = () => {
                     key={label}
                     sx={{
                       p: { xs: '8px 10px', md: '10px 12px' },
-                      borderRadius: { xs: 8, md: 10 },
+                      borderRadius: 1.2,
                       border: '1px solid',
                       borderColor: 'divider',
                       display: 'flex',
@@ -1156,7 +1156,7 @@ const Dashboard = () => {
                       sx={{
                         width: { xs: 30, md: 38 },
                         height: { xs: 30, md: 38 },
-                        borderRadius: { xs: 6, md: 8 },
+                        borderRadius: 1.2,
                         background: `${color}15`,
                         border: '1px solid',
                         borderColor: `${color}30`,
@@ -1174,7 +1174,7 @@ const Dashboard = () => {
                           fontSize: { xs: '0.6rem', md: '0.65rem' },
                           fontWeight: 600,
                           color: 'text.secondary',
-                          lineHeight: 1.2,
+                          lineHeight: 1.6,
                         }}
                       >
                         {label}
