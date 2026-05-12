@@ -116,11 +116,10 @@ const Reports = () => {
           />
 
           <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
-            <InputLabel>Turbine</InputLabel>
-
             <Select
               multiple
               value={turbines}
+              label='Turbine'
               onChange={handleTurbineChange}
               input={<OutlinedInput label='Turbine' />}
               renderValue={() => turbineLabel}
@@ -183,8 +182,6 @@ const Reports = () => {
           />
 
           <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
-            <InputLabel>Document Type</InputLabel>
-
             <Select
               value={docType}
               onChange={(e) => setDocType(e.target.value)}

@@ -91,7 +91,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     fontSize: '0.78rem',
     fontWeight: 600,
     textTransform: 'none',
-    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+    background: '#180de9 0%',
+    color: '#fff',
 
     '&:hover': {
       transform: 'translateY(-2px)',
