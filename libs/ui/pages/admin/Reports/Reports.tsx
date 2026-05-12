@@ -12,6 +12,7 @@ import {
   Button,
   PageHeader,
 } from '@infygen/component';
+
 import {
   InputAdornment,
   Autocomplete,
@@ -20,13 +21,17 @@ import {
   OutlinedInput,
   SelectChangeEvent,
 } from '@mui/material';
+
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import type { Dayjs } from 'dayjs';
+
 import { useStyles } from './styles';
 import { REPORT_TYPES, TURBINE_LIST, DOC_TYPES } from './utils/reports.utils';
 import { Utils } from './utils/Utils';
@@ -34,12 +39,15 @@ import { useAdminKeyframes } from '@infygen/hooks';
 
 const Reports = () => {
   const { classes } = useStyles();
+
   const keyframes = useAdminKeyframes();
+
   const { kpiRows, kpiColumns, downtimeRows, downtimeColumns, formatDateTime } = Utils();
 
   const [now, setNow] = useState(() => new Date());
+
   useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 60_000);
+    const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
 
@@ -49,15 +57,19 @@ const Reports = () => {
   const [toDate, setToDate] = useState<Dayjs | null>(null);
   const [docType, setDocType] = useState('');
 
+  const [kpiSearch, setKpiSearch] = useState('');
+  const [dtSearch, setDtSearch] = useState('');
+
   const downloadEnabled =
     !!reportType && turbines.length > 0 && !!fromDate && !!toDate && !!docType;
 
-  const handleTurbineChange = (e: SelectChangeEvent<string[]>) => {
-    const val = e.target.value as string[];
-    if (val.includes('__all__')) {
+  const handleTurbineChange = (e: SelectChangeEvent<typeof turbines>) => {
+    const value = typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value;
+
+    if (value.includes('__all__')) {
       setTurbines(turbines.length === TURBINE_LIST.length ? [] : [...TURBINE_LIST]);
     } else {
-      setTurbines(val);
+      setTurbines(value);
     }
   };
 
@@ -67,9 +79,6 @@ const Reports = () => {
       : turbines.length === TURBINE_LIST.length
         ? 'All Turbines'
         : turbines.join(', ');
-
-  const [kpiSearch, setKpiSearch] = useState('');
-  const [dtSearch, setDtSearch] = useState('');
 
   const filteredKpi = kpiSearch
     ? kpiRows.filter((r: any) => r.kpi.toLowerCase().includes(kpiSearch.toLowerCase()))
@@ -84,6 +93,7 @@ const Reports = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {keyframes}
+
       <Grid className={classes.container}>
         <PageHeader
           title='Generation Reports'
@@ -92,109 +102,123 @@ const Reports = () => {
           variant='admin'
         />
 
+        {/* FILTER TOOLBAR */}
         <Box className={classes.filterToolbar}>
-          <Box className={classes.filterRow}>
-            <Autocomplete
-              className={classes.filterAutocomplete}
-              options={REPORT_TYPES}
-              value={reportType}
-              onChange={(_, v) => setReportType(v)}
-              size='small'
-              renderInput={(params) => (
-                <TextField {...params} label='Report Type' placeholder='Search report…' />
-              )}
-            />
+          <Autocomplete
+            className={`${classes.filterAutocomplete} ${classes.filterField}`}
+            options={REPORT_TYPES}
+            value={reportType}
+            onChange={(_, v) => setReportType(v)}
+            size='small'
+            renderInput={(params) => (
+              <TextField {...params} label='Report Type' placeholder='Search report...' />
+            )}
+          />
 
-            <FormControl className={classes.formControl} size='small'>
-              <InputLabel>Turbine</InputLabel>
-              <Select
-                multiple
-                value={turbines}
-                onChange={handleTurbineChange}
-                input={<OutlinedInput label='Turbine' />}
-                renderValue={() => turbineLabel}
-                MenuProps={{ PaperProps: { style: { maxHeight: 280 } } }}
-              >
-                <MenuItem value='__all__'>
-                  <Checkbox
-                    checked={turbines.length === TURBINE_LIST.length}
-                    indeterminate={turbines.length > 0 && turbines.length < TURBINE_LIST.length}
-                    className={classes.filterCheckbox}
-                  />
-                  <ListItemText primary='Select All' primaryTypographyProps={{ fontWeight: 600 }} />
-                </MenuItem>
-                {TURBINE_LIST.map((t) => (
-                  <MenuItem key={t} value={t}>
-                    <Checkbox checked={turbines.includes(t)} className={classes.filterCheckbox} />
-                    <ListItemText primary={t} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
+            <InputLabel>Turbine</InputLabel>
 
-            <DatePicker
-              label='From Date'
-              value={fromDate}
-              onChange={(v) => setFromDate(v)}
-              slotProps={{
-                textField: {
-                  size: 'small',
-                  className: classes.datePickerField,
+            <Select
+              multiple
+              value={turbines}
+              onChange={handleTurbineChange}
+              input={<OutlinedInput label='Turbine' />}
+              renderValue={() => turbineLabel}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 280,
+                  },
                 },
-                desktopPaper: { className: classes.datePickerPaper },
               }}
-            />
-
-            <DatePicker
-              label='To Date'
-              value={toDate}
-              minDate={fromDate ?? undefined}
-              onChange={(v) => setToDate(v)}
-              slotProps={{
-                textField: {
-                  size: 'small',
-                  className: classes.datePickerField,
-                },
-                desktopPaper: { className: classes.datePickerPaper },
-              }}
-            />
-
-            <FormControl className={classes.formControl} size='small'>
-              <InputLabel>Document Type</InputLabel>
-              <Select
-                value={docType}
-                onChange={(e) => setDocType(e.target.value)}
-                label='Document Type'
-              >
-                {DOC_TYPES.map((d) => (
-                  <MenuItem key={d.value} value={d.value}>
-                    {d.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-
-          <Box className={classes.filterRowEnd}>
-            <Button
-              variant='contained'
-              disabled={!downloadEnabled}
-              startIcon={<DownloadIcon />}
-              className={classes.downloadBtn}
             >
-              Download
-            </Button>
-          </Box>
+              <MenuItem value='__all__'>
+                <Checkbox
+                  checked={turbines.length === TURBINE_LIST.length}
+                  indeterminate={turbines.length > 0 && turbines.length < TURBINE_LIST.length}
+                  className={classes.filterCheckbox}
+                />
+
+                <ListItemText
+                  primary='Select All'
+                  primaryTypographyProps={{
+                    fontWeight: 600,
+                  }}
+                />
+              </MenuItem>
+
+              {TURBINE_LIST.map((t) => (
+                <MenuItem key={t} value={t}>
+                  <Checkbox checked={turbines.includes(t)} className={classes.filterCheckbox} />
+
+                  <ListItemText primary={t} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <DatePicker
+            label='From Date'
+            value={fromDate}
+            onChange={(v) => setFromDate(v)}
+            slotProps={{
+              textField: {
+                size: 'small',
+                className: `${classes.datePickerField} ${classes.filterField}`,
+              },
+            }}
+          />
+
+          <DatePicker
+            label='To Date'
+            value={toDate}
+            minDate={fromDate ?? undefined}
+            onChange={(v) => setToDate(v)}
+            slotProps={{
+              textField: {
+                size: 'small',
+                className: `${classes.datePickerField} ${classes.filterField}`,
+              },
+            }}
+          />
+
+          <FormControl className={`${classes.formControl} ${classes.filterField}`} size='small'>
+            <InputLabel>Document Type</InputLabel>
+
+            <Select
+              value={docType}
+              onChange={(e) => setDocType(e.target.value)}
+              label='Document Type'
+            >
+              {DOC_TYPES.map((d) => (
+                <MenuItem key={d.value} value={d.value}>
+                  {d.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant='contained'
+            disabled={!downloadEnabled}
+            startIcon={<DownloadIcon />}
+            className={classes.downloadBtn}
+          >
+            Download
+          </Button>
         </Box>
 
+        {/* KPI TABLE */}
         <Box className={classes.tableSection}>
           <Box className={classes.tableSectionHeader}>
             <Box className={classes.tableSectionTitleGroup}>
               <Typography className={classes.tableSectionTitle}>Daily Generation Report</Typography>
+
               <Typography className={classes.tableSectionDate}>{formatDateTime(now)}</Typography>
             </Box>
+
             <TextField
-              placeholder='Search KPI…'
+              placeholder='Search KPI...'
               value={kpiSearch}
               onChange={(e) => setKpiSearch(e.target.value)}
               className={classes.searchField}
@@ -209,6 +233,7 @@ const Reports = () => {
               }}
             />
           </Box>
+
           <Box className={classes.tableWrapper}>
             <DataTable
               columns={kpiColumns}
@@ -221,14 +246,17 @@ const Reports = () => {
           </Box>
         </Box>
 
+        {/* DOWNTIME TABLE */}
         <Box className={classes.tableSection}>
           <Box className={classes.tableSectionHeader}>
             <Box className={classes.tableSectionTitleGroup}>
               <Typography className={classes.tableSectionTitle}>Detailed Downtime Log</Typography>
+
               <Typography className={classes.tableSectionDate}>{formatDateTime(now)}</Typography>
             </Box>
+
             <TextField
-              placeholder='Search turbine / status…'
+              placeholder='Search turbine / status...'
               value={dtSearch}
               onChange={(e) => setDtSearch(e.target.value)}
               className={classes.searchField}
@@ -243,6 +271,7 @@ const Reports = () => {
               }}
             />
           </Box>
+
           <Box className={classes.tableWrapper}>
             <DataTable
               columns={downtimeColumns}
