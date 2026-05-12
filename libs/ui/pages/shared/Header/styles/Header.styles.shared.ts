@@ -134,6 +134,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
+      gap: theme.spacing(0.75),
       minHeight: '56px',
       height: '56px',
     },
