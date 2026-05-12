@@ -347,7 +347,7 @@ const Dashboard = () => {
     yaxis: commonAxisY,
     grid: commonGrid,
     legend: commonLegend,
-    tooltip: { ...commonTooltip, shared: true },
+    tooltip: commonTooltip,
   };
 
   const lineOptions: ApexOptions = {
@@ -1063,7 +1063,15 @@ const Dashboard = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 1,
+                      flexWrap: 'wrap',
+                      flexDirection: { xs: 'column', md: 'row' },
+                      alignItems: { xs: 'flex-start', md: 'center' },
+                    }}
+                  >
                     <Typography
                       sx={{
                         fontSize: { xs: '0.7rem', md: '0.75rem' },
@@ -1071,8 +1079,15 @@ const Dashboard = () => {
                         lineHeight: 1.4,
                       }}
                     >
-                      {chartType === 'bar' ? 'Stacked Energy Generation' : 'Generation Trend'}
-                      {' · '}
+                      {chartType === 'bar' ? 'Stacked Energy Generation *' : 'Generation Trend *'}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: { xs: '0.7rem', md: '0.75rem' },
+                        color: 'text.secondary',
+                        lineHeight: 1.4,
+                      }}
+                    >
                       {fromDate.format('DD MMM')} – {toDate.format('DD MMM YYYY')}
                     </Typography>
                     <Box

@@ -88,7 +88,7 @@ async function seedNavFlags() {
           description: flag.description,
           environment: 'Production',
           status: 'Disabled',
-          roles: JSON.stringify(['Admin']),
+          roles: JSON.stringify(['Admin', 'Consultant']),
         },
       });
     }

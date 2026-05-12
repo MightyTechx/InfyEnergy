@@ -1,4 +1,4 @@
-import { PrismaClient } from '@infygen/prisma';
+import { PrismaClient } from '../../../gateways/src/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as dns from 'dns';

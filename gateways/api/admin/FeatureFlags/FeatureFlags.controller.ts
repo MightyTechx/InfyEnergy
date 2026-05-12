@@ -62,16 +62,37 @@ export class FeatureFlagsController {
     const id = parseInt(req.params.id, 10);
     const { name, key, description, environment, status, roles, updatedBy } = req.body;
 
+    const db = await this.db();
+    const existing = await db.featureFlag.findUnique({ where: { id } });
+
+    if (!existing) {
+      res.status(404).json({ message: 'Feature flag not found' });
+      return;
+    }
+
     const data: Record<string, unknown> = {};
     if (name !== undefined) data.name = name;
     if (key !== undefined) data.key = key;
     if (description !== undefined) data.description = description;
     if (environment !== undefined) data.environment = environment;
-    if (status !== undefined) data.status = status;
-    if (roles !== undefined) data.roles = JSON.stringify(roles);
     if (updatedBy !== undefined) data.updatedBy = updatedBy;
 
-    const db = await this.db();
+    // Handle status update with auto-role for nav flags
+    if (status !== undefined) {
+      const isEnabling = status === 'Enabled';
+      let currentRoles = roles ?? parseRoles(existing.roles);
+
+      // Auto-add Consultant role for nav-related flags when enabling
+      if (isEnabling && existing.key.startsWith('nav_') && !currentRoles.includes('Consultant')) {
+        currentRoles = [...currentRoles, 'Consultant'];
+      }
+
+      data.status = status;
+      data.roles = JSON.stringify(currentRoles);
+    } else if (roles !== undefined) {
+      data.roles = JSON.stringify(roles);
+    }
+
     const flag = await db.featureFlag.update({ where: { id }, data });
     res.json({ data: parseFlag(flag), message: 'Feature flag updated' });
   };

@@ -7,6 +7,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
 import LogoMark from './components/LogoMark';
@@ -125,6 +126,13 @@ const Header = () => {
           </Tooltip>
 
           <Box className={classes.headerRightSpacer} />
+
+          {/* Wind Farm View */}
+          <Tooltip title='Wind Farm View' placement='bottom' arrow>
+            <IconButton size='small' className={classes.iconBtnBase}>
+              <ViewInArIcon className={classes.icon} />
+            </IconButton>
+          </Tooltip>
 
           {/* AI Chat */}
           <Tooltip title='AI Assistant' placement='bottom' arrow>

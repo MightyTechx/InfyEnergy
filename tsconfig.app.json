@@ -8,12 +8,13 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@infygen/*": ["./libs/*"],
+      "@infygen/*": ["./libs/*", "./gateways/src/*"],
       "@infygen/interfaces": ["./libs/entities/interfaces/index.ts"],
       "@infygen/config": ["./libs/core/config/index.ts"],
       "@infygen/database": ["./libs/core/database/index.ts"],
       "@infygen/middleware": ["./libs/core/middleware/index.ts"],
-      "@infygen/constants": ["./libs/shared/constants/index.ts"]
+      "@infygen/constants": ["./libs/shared/constants/index.ts"],
+      "@infygen/prisma": ["./gateways/src/generated/prisma/client"]
     }
   },
   "include": ["gateways/src/**/*", "libs/core/**/*", "libs/shared/**/*", "libs/entities/**/*"],

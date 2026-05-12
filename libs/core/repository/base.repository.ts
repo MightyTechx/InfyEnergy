@@ -1,4 +1,4 @@
-import { PrismaClient } from '@infygen/prisma';
+import { PrismaClient } from '../../../../gateways/src/generated/prisma/client';
 
 /**
  * Base repository interface defining standard CRUD operations

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Box, DataTable, Typography, Grid, TextField } from '@infygen/component';
+import { Box, DataTable, Typography, Grid, TextField, PageHeader } from '@infygen/component';
 import { InputAdornment, Autocomplete } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { useStyles } from './styles';
 import {
   FOLDERS,
@@ -38,17 +39,12 @@ const TechnicalDocuments = () => {
       {keyframes}
       <Grid className={classes.container}>
         {/* ── Page Header ── */}
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb} />
-          <Box className={classes.pageHeaderRow}>
-            <Typography variant='h5' className={classes.title}>
-              Technical Documents
-            </Typography>
-          </Box>
-          <Typography variant='body2' className={classes.description}>
-            Access and manage technical documentation, manuals, and specifications.
-          </Typography>
-        </Box>
+        <PageHeader
+          title='Technical Documents'
+          description='Access and manage technical documentation, manuals, and specifications.'
+          icon={DescriptionIcon}
+          variant='admin'
+        />
 
         {/* ── Documents Table ── */}
         <Box className={classes.tableSection}>

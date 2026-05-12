@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Box, Loader, DataTable } from '@infygen/component';
-import { Typography, Tabs, Divider, TextField, InputAdornment } from '@mui/material';
+import { Box, Loader, DataTable, Card, PageHeader } from '@infygen/component';
+import { Typography, Tabs, TextField, InputAdornment } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
 import { useStyles } from './styles';
@@ -57,27 +57,28 @@ const PeopleRequests = () => {
       {keyframes}
       <Box className={classes.container}>
         {/* Page header */}
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb3} />
-          <Box className={classes.pageHeaderRow}>
-            <Typography variant='h5' className={classes.title}>
-              People Requests
-            </Typography>
-          </Box>
-          <Typography variant='body2' className={classes.description}>
-            Manage all role access requests — approve or reject admin and consultant requests from a
-            single view.
-          </Typography>
-        </Box>
+        <PageHeader
+          title='People Requests'
+          description='Manage all role access requests — approve or reject admin and consultant requests from a single view.'
+          icon={GroupIcon}
+          variant='admin'
+        />
 
         {/* Stat Cards */}
         <Box className={classes.statsGrid}>
-          {statCards.map(({ label, value, Icon, cls, sub, color, tabIndex }) => {
+          {statCards.map(({ label, value, Icon, cls, sub, color, tabIndex }, idx) => {
             const isActive = tabValue === tabIndex;
             return (
-              <Box
+              <Card
                 key={label}
-                className={`${classes.statCard} ${cls}`}
+                cardVariant='getstatus'
+                value={value}
+                label={label}
+                sub={sub}
+                icon={Icon}
+                color={color}
+                colorIndex={idx}
+                className={cls}
                 onClick={() => {
                   setTabValue(tabIndex);
                   setTableSearch('');
@@ -90,30 +91,7 @@ const PeopleRequests = () => {
                   transform: isActive ? 'translateY(-6px)' : undefined,
                   boxShadow: isActive ? `0 16px 40px ${color}30, 0 4px 16px ${color}18` : undefined,
                 }}
-              >
-                <Box className={classes.statCardTop} sx={{ flex: 1, alignItems: 'flex-start' }}>
-                  <Box>
-                    <Typography className={classes.statValue} sx={{ color }}>
-                      {value}
-                    </Typography>
-                    <Typography className={classes.statLabel}>{label}</Typography>
-                  </Box>
-                  <Box
-                    className={classes.statIconWrap}
-                    sx={{ background: `${color}14`, border: `1.5px solid ${color}28` }}
-                  >
-                    <Icon className={classes.statIcon} sx={{ color }} />
-                  </Box>
-                </Box>
-                <Divider className={classes.statDivider} />
-                <Box className={classes.statSubRow}>
-                  <Box
-                    className={classes.statSubDot}
-                    sx={{ background: color, boxShadow: `0 0 6px ${color}` }}
-                  />
-                  <Typography className={classes.statSub}>{sub}</Typography>
-                </Box>
-              </Box>
+              />
             );
           })}
         </Box>

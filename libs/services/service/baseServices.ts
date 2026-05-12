@@ -37,6 +37,14 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
   const result = await rawBaseQuery(args, api, extraOptions);
 
+  // Invalidate FeatureFlags cache after mutations so SideNav updates immediately
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const method = result.meta?.request?.method?.toUpperCase();
+  if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (api as any).dispatch((0, baseApi.util.invalidateTags)([{ type: 'FeatureFlags', id: 'LIST' }]));
+  }
+
   if (result.error?.status === 401) {
     const token = localStorage.getItem('infygen_token');
     if (token) {

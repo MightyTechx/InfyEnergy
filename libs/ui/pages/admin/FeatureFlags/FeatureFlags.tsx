@@ -11,6 +11,8 @@ import {
   Checkbox,
   Grid,
   Loader,
+  Card,
+  PageHeader,
 } from '@infygen/component';
 import { InputAdornment, Dialog, DialogContent, DialogActions } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -112,34 +114,17 @@ const FeatureFlags = () => {
       {keyframes}
 
       <Box className={classes.container}>
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb} />
-          <Box className={classes.pageHeaderRow}>
-            <Box className={classes.pageHeaderIconBox}>
-              <TuneIcon sx={{ color: 'rgba(255,255,255,0.85)', fontSize: 32 }} />
-              <Typography variant='h5' className={classes.title}>
-                Feature Flags
-              </Typography>
-            </Box>
-            <Chip
-              label={isAdmin ? 'Admin Control' : 'View Only'}
-              size='small'
-              icon={
-                isAdmin ? (
-                  <TuneIcon style={{ color: '#a5b4fc', fontSize: 14 }} />
-                ) : (
-                  <LockOutlinedIcon style={{ color: '#a5b4fc', fontSize: 14 }} />
-                )
-              }
-              className={classes.pageHeaderChip}
-            />
-          </Box>
-          <Typography variant='body2' className={classes.description}>
-            {isAdmin
+        <PageHeader
+          title='Feature Flags'
+          description={
+            isAdmin
               ? 'Control feature rollouts across environments and manage role-based access for each flag.'
-              : 'View features currently enabled for your Consultant role. Contact an admin to request access.'}
-          </Typography>
-        </Box>
+              : 'View features currently enabled for your Consultant role. Contact an admin to request access.'
+          }
+          icon={TuneIcon}
+          chip={isAdmin ? 'Admin Control' : 'View Only'}
+          variant='admin'
+        />
 
         {isConsultant && !isAdmin && (
           <Box className={classes.accessBanner}>
@@ -152,35 +137,19 @@ const FeatureFlags = () => {
         )}
 
         <Box className={classes.statsGrid}>
-          {statCards.map(({ label, value, Icon, cls, sub, color }) => (
-            <Box
+          {statCards.map(({ label, value, Icon, cls, sub, color }, idx) => (
+            <Card
               key={label}
-              className={`${classes.statCard} ${cls}`}
+              cardVariant='getstatus'
+              value={value}
+              label={label}
+              sub={sub}
+              icon={Icon}
+              color={color}
+              colorIndex={idx}
+              className={cls}
               sx={{ display: 'flex', flexDirection: 'column' }}
-            >
-              <Box className={classes.statCardTop} sx={{ flex: 1, alignItems: 'flex-start' }}>
-                <Box>
-                  <Typography className={classes.statValue} sx={{ color }}>
-                    {value}
-                  </Typography>
-                  <Typography className={classes.statLabel}>{label}</Typography>
-                </Box>
-                <Box
-                  className={classes.statIconWrap}
-                  sx={{ background: `${color}14`, border: `1.5px solid ${color}28` }}
-                >
-                  <Icon className={classes.statIcon} sx={{ color }} />
-                </Box>
-              </Box>
-              <Divider className={classes.statDivider} />
-              <Box className={classes.statSubRow}>
-                <Box
-                  className={classes.statSubDot}
-                  sx={{ background: color, boxShadow: `0 0 6px ${color}` }}
-                />
-                <Typography className={classes.statSub}>{sub}</Typography>
-              </Box>
-            </Box>
+            />
           ))}
         </Box>
 

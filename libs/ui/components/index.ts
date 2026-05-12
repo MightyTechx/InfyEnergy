@@ -1,6 +1,7 @@
 export * from './Accordion';
 export * from './Alert';
 export * from './AutoGrid';
+export * from './PageHeader';
 export * from './Button';
 export * from './ButtonMenu';
 export * from './Box';

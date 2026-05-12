@@ -98,6 +98,10 @@ const AppRoutes = () => {
               path={ConsultantPath.ACCESS_MANAGEMENT}
               element={<AdminPeopleManagementPage />}
             />
+            <Route path={ConsultantPath.REPORTS} element={<AdminReportsPage />} />
+            <Route path={ConsultantPath.INVENTORY} element={<AdminInventoryPage />} />
+            <Route path={ConsultantPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
+            <Route path={ConsultantPath.ANALYTICS} element={<AdminDashboardPage />} />
 
             <Route path={Path.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>

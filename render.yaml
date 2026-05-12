@@ -8,7 +8,7 @@ services:
     region: oregon
     plan: free
     buildCommand: npm run prisma:generate && npm run build:backend
-    startCommand: npx tsx gateways/src/index.ts
+    startCommand: TS_NODE_PROJECT=tsconfig.app.json npx tsx -r tsconfig-paths/register gateways/src/index.ts
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV

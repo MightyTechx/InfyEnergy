@@ -28,6 +28,7 @@ const ConsultantPath = {
   REPORTS: `${CONSULTANT_BASE}/reports`,
   INVENTORY: `${CONSULTANT_BASE}/inventory`,
   TECHNICAL_DOCUMENTS: `${CONSULTANT_BASE}/technical-documents`,
+  ANALYTICS: `${CONSULTANT_BASE}/analytics`,
   SETTINGS: `${CONSULTANT_BASE}/settings`,
   FEATURE_FLAGS: `${CONSULTANT_BASE}/feature-flags`,
 };

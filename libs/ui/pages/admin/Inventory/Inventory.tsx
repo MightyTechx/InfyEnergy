@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   IconButton,
+  PageHeader,
 } from '@infygen/component';
 import {
   CircularProgress,
@@ -120,18 +121,12 @@ const Inventory = () => {
       {keyframes}
       <Grid className={classes.container}>
         {/* ── Page Header ── */}
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb} />
-          <Box className={classes.pageHeaderRow}>
-            <Typography variant='h5' className={classes.title}>
-              Inventory Management
-            </Typography>
-          </Box>
-          <Typography variant='body2' className={classes.description}>
-            Manage stock master, item photos/specifications, and track stock movements (Receive /
-            Issue / Adjust).
-          </Typography>
-        </Box>
+        <PageHeader
+          title='Inventory Management'
+          description='Track and manage inventory items, stock levels, and supplier information.'
+          icon={InventoryIcon}
+          variant='admin'
+        />
 
         {/* ── Action Buttons ── */}
         <Box className={classes.actionButtonsSection}>

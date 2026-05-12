@@ -7,12 +7,13 @@ import {
   Grid,
   Tabs,
   Tab,
-  Divider,
   TextField,
   Chip,
   Button,
+  Card,
+  PageHeader,
 } from '@infygen/component';
-import { Stack, InputAdornment } from '@mui/material';
+import { Card as MUICard, Divider, InputAdornment, Stack } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -122,17 +123,12 @@ const PeopleManagement = () => {
       {keyframes}
       <Grid className={classes.container}>
         {/* ── Page header ── */}
-        <Box className={classes.pageHeader}>
-          <Box className={classes.headerOrb3} />
-          <Box className={classes.pageHeaderRow}>
-            <Typography variant='h1' className={classes.title}>
-              People Management
-            </Typography>
-          </Box>
-          <Typography variant='body2' className={classes.description}>
-            View and manage all users and their access across different roles in the system.
-          </Typography>
-        </Box>
+        <PageHeader
+          title='People Management'
+          description='View and manage all users and their access across different roles in the system.'
+          icon={GroupIcon}
+          variant='admin'
+        />
 
         {/* ── Action Bar (Create User + Pending Badge) ── */}
         <Box className={classes.actionBar}>
@@ -201,48 +197,30 @@ const PeopleManagement = () => {
 
         {/* ── Stat Cards ── */}
         <Box className={classes.statsGrid}>
-          {statCards.map(({ label, value, Icon, cls, sub, color, tabIndex }) => {
+          {statCards.map(({ label, value, Icon, cls, sub, color, tabIndex }, idx) => {
             const isActive = tabValue === tabIndex;
             return (
-              <Box
+              <Card
                 key={label}
-                className={`${classes.statCard} ${cls}`}
+                cardVariant='getstatus'
+                value={value}
+                label={label}
+                sub={sub}
+                icon={Icon}
+                color={color}
+                colorIndex={idx}
+                className={cls}
                 onClick={() => {
                   setTabValue(tabIndex);
                   setTableSearch('');
                 }}
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
                   outline: isActive ? `2px solid ${color}` : 'none',
                   outlineOffset: 2,
                   transform: isActive ? 'translateY(-6px)' : undefined,
                   boxShadow: isActive ? `0 16px 40px ${color}30, 0 4px 16px ${color}18` : undefined,
                 }}
-              >
-                <Box className={classes.statCardTop} sx={{ flex: 1, alignItems: 'flex-start' }}>
-                  <Box>
-                    <Typography className={classes.statValue} sx={{ color }}>
-                      {value}
-                    </Typography>
-                    <Typography className={classes.statLabel}>{label}</Typography>
-                  </Box>
-                  <Box
-                    className={classes.statIconWrap}
-                    sx={{ background: `${color}14`, border: `1.5px solid ${color}28` }}
-                  >
-                    <Icon className={classes.statIcon} sx={{ color }} />
-                  </Box>
-                </Box>
-                <Divider className={classes.statDivider} />
-                <Box className={classes.statSubRow}>
-                  <Box
-                    className={classes.statSubDot}
-                    sx={{ background: color, boxShadow: `0 0 6px ${color}` }}
-                  />
-                  <Typography className={classes.statSub}>{sub}</Typography>
-                </Box>
-              </Box>
+              />
             );
           })}
         </Box>
