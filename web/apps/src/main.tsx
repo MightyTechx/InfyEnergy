@@ -17,7 +17,7 @@ root.render(
       <DynamicThemeProvider>
         <CssBaseline />
         <NotificationModal />
-        <BrowserRouter>
+        <BrowserRouter basename='app'>
           <CollapseProvider>
             <Suspense fallback={<Loader />}>
               <App />
