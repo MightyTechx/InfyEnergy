@@ -117,6 +117,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
     background: 'linear-gradient(135deg, rgba(79,70,229,0.04), rgba(14,165,233,0.02))',
     borderBottom: '1px solid rgba(79,70,229,0.08)',
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
 
   tableSectionTitle: {
