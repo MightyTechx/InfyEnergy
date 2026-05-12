@@ -11,6 +11,8 @@ export interface PageHeaderProps {
   chip?: string;
   variant?: PageHeaderVariant;
   className?: string;
+  children?: React.ReactNode;
+  showDefaultContent?: boolean;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -20,35 +22,36 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   chip,
   variant = 'admin',
   className,
+  children,
+  showDefaultContent = true,
 }) => {
   const { cx, classes } = useStyles();
 
   const isAdmin = variant === 'admin';
   const headerClass = isAdmin ? classes.headerAdmin : classes.headerConsultant;
-  const orbClass = isAdmin ? classes.headerOrb : classes.headerOrbConsultant;
   const chipClass = isAdmin ? classes.pageHeaderChip : classes.pageHeaderChipConsultant;
 
   return (
     <Box className={cx(classes.pageHeader, headerClass, className)}>
-      <Box className={orbClass} />
-      <Box className={classes.pageHeaderRow}>
-        <Box className={classes.pageHeaderIconBox}>
-          {Icon && (
-            <Box className={classes.pageHeaderIconWrap}>
-              <Icon sx={{ color: 'rgba(255,255,255,0.85)', fontSize: 28 }} />
+      {showDefaultContent && (
+        <Box className={classes.pageHeaderRow}>
+          <Box className={classes.pageHeaderIconBox}>
+            {Icon && (
+              <Box className={classes.pageHeaderIconWrap}>
+                <Icon sx={{ color: '#ffffff', fontSize: 22 }} />
+              </Box>
+            )}
+            <Box>
+              <Typography className={classes.title}>{title}</Typography>
+              {description && (
+                <Typography className={classes.description}>{description}</Typography>
+              )}
             </Box>
-          )}
-          <Typography variant='h5' className={classes.title}>
-            {title}
-          </Typography>
+          </Box>
+          {chip && <Chip label={chip} size='small' className={chipClass} />}
         </Box>
-        {chip && <Chip label={chip} size='small' className={chipClass} />}
-      </Box>
-      {description && (
-        <Typography variant='body2' className={classes.description}>
-          {description}
-        </Typography>
       )}
+      {children}
     </Box>
   );
 };

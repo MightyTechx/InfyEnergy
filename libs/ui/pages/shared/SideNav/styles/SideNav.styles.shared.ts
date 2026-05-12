@@ -144,25 +144,12 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     overflow: 'hidden',
     border: '1px solid transparent',
 
-    // Subtle shimmer on hover
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      borderRadius: '10px',
-      opacity: 0,
-      transition: 'opacity 0.22s ease',
-      background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 100%)',
-    },
-
     '&:hover': {
       background: 'rgba(99,102,241,0.12)',
       color: '#c7d2fe',
       border: '1px solid rgba(99,102,241,0.2)',
       transform: 'translateX(3px)',
       boxShadow: '0 2px 12px rgba(99,102,241,0.12)',
-
-      '&::before': { opacity: 1 },
 
       '& .MuiListItemIcon-root': {
         color: '#a5b4fc',
@@ -259,7 +246,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
   },
 
-  // ── Scrollable nav area ──────────────────────────────────────────────────────
   navScrollArea: {
     overflowY: 'auto' as const,
     overflowX: 'hidden' as const,
@@ -283,7 +269,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     marginBottom: theme.spacing(0.5),
   },
 
-  // Section header for expanded state (static parts - dynamic cfg values stay in sx)
   sectionHeaderExpanded: {
     marginLeft: theme.spacing(0.75),
     marginRight: theme.spacing(0.75),
@@ -313,7 +298,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     lineHeight: 1,
   },
 
-  // Collapsed divider pill (static parts)
   sectionDividerCollapsed: {
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -323,7 +307,6 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     cursor: 'default',
   },
 
-  // Legacy — kept for backwards compat with any sub-item usage
   subItem: {
     paddingLeft: 6.875,
     color: '#64748b',

@@ -14,6 +14,7 @@ export const LazyMenuItems = {
   AdminTechnicalDocumentsPage: lazy(() => import('@infygen/pages/admin/TechnicalDocuments')),
   AdminFeatureFlagsPage: lazy(() => import('@infygen/pages/admin/FeatureFlags')),
   SettingsPage: lazy(() => import('@infygen/pages/shared/Settings')),
+  AdminConfigurationPage: lazy(() => import('@infygen/pages/admin/Configuration')),
 
   // Auth pages (shared/public)
   SignInPage: lazy(() => import('@infygen/pages/shared/SignIn')),

@@ -164,6 +164,11 @@ const Reports = () => {
               textField: {
                 size: 'small',
                 className: `${classes.datePickerField} ${classes.filterField}`,
+                sx: {
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '14px !important',
+                  },
+                },
               },
             }}
           />
@@ -177,6 +182,11 @@ const Reports = () => {
               textField: {
                 size: 'small',
                 className: `${classes.datePickerField} ${classes.filterField}`,
+                sx: {
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '14px !important',
+                  },
+                },
               },
             }}
           />

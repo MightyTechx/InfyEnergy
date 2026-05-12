@@ -14,6 +14,7 @@ const AdminPath = {
   SETTINGS: `${ADMIN_BASE}/settings`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
+  CONFIGURATION: `${ADMIN_BASE}/configuration`,
 };
 
 const UserPath = {

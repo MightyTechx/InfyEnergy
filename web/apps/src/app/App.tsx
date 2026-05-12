@@ -21,6 +21,7 @@ const {
   AdminInventoryPage,
   AdminTechnicalDocumentsPage,
   AdminFeatureFlagsPage,
+  AdminConfigurationPage,
   SettingsPage,
 
   // Auth pages
@@ -86,6 +87,7 @@ const AppRoutes = () => {
             <Route path={AdminPath.INVENTORY} element={<AdminInventoryPage />} />
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
             <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
+            <Route path={AdminPath.CONFIGURATION} element={<AdminConfigurationPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
 
             {/* User routes */}

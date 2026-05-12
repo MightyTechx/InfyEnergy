@@ -295,7 +295,11 @@ export function DataTable<T extends object>({
                   {columns.map((column) => {
                     const value = row[column.id as keyof T];
                     return (
-                      <TableCell key={String(column.id)} align='center' sx={{ py: 1, px: 0.75 }}>
+                      <TableCell
+                        key={String(column.id)}
+                        align='center'
+                        sx={{ py: 1, px: 0.75, '& p': { fontSize: '13px' } }}
+                      >
                         {column.format ? column.format(value, row) : String(value ?? '')}
                       </TableCell>
                     );

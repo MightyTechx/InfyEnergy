@@ -55,9 +55,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
     '& .MuiOutlinedInput-root': {
       height: 38,
-      borderRadius: 10,
       fontSize: '0.78rem',
       background: '#fff',
+      display: 'flex',
+      alignItems: 'center',
 
       '& fieldset': {
         borderColor: 'rgba(79,70,229,0.15)',
@@ -81,6 +82,72 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '& .MuiInputLabel-root': {
       fontSize: '0.78rem',
       color: '#64748b',
+    },
+  },
+
+  /* FORM CONTROL (SELECT) */
+  formControl: {
+    width: '100%',
+
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '14px !important',
+      height: 38,
+      fontSize: '0.78rem',
+      background: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+
+      '& fieldset': {
+        borderColor: 'rgba(79,70,229,0.15)',
+      },
+
+      '&:hover fieldset': {
+        borderColor: 'rgba(79,70,229,0.35)',
+      },
+
+      '&.Mui-focused fieldset': {
+        borderColor: '#4f46e5',
+        borderWidth: 2,
+      },
+    },
+
+    '& .MuiSelect-select': {
+      display: 'flex',
+      alignItems: 'center',
+    },
+  },
+
+  /* FILTER AUTOCOMPLETE */
+  filterAutocomplete: {
+    width: '100%',
+
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '14px !important',
+      height: 38,
+      fontSize: '0.78rem',
+      background: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+
+      '& fieldset': {
+        borderColor: 'rgba(79,70,229,0.15)',
+      },
+
+      '&:hover fieldset': {
+        borderColor: 'rgba(79,70,229,0.35)',
+      },
+
+      '&.Mui-focused fieldset': {
+        borderColor: '#4f46e5',
+        borderWidth: 2,
+      },
+    },
+  },
+
+  /* DATE PICKER FIELD */
+  datePickerField: {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: 14,
     },
   },
 
@@ -125,13 +192,13 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   tableSectionTitle: {
-    fontSize: '0.9rem',
     fontWeight: 600,
     color: '#1e293b',
+    fontSize: '16px !important',
   },
 
   tableSectionDate: {
-    fontSize: '0.72rem',
+    fontSize: '13px !important',
     color: '#64748b',
   },
 
@@ -157,22 +224,22 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   /* TABLE BODY FONT FIX */
   tableCell: {
-    fontSize: '0.72rem !important',
-    padding: '6px 10px !important',
+    fontSize: '12px !important',
+    padding: '5px 10px !important',
     color: '#334155',
   },
 
   tableCellBold: {
-    fontSize: '0.72rem !important',
+    fontSize: '12px !important',
     fontWeight: 600,
-    padding: '6px 10px !important',
+    padding: '5px 10px !important',
   },
 
   tableHeaderCell: {
-    fontSize: '0.72rem !important',
+    fontSize: '12px !important',
     fontWeight: 600,
     color: '#0f172a',
-    padding: '8px 10px !important',
+    padding: '7px 10px !important',
     background: '#f8fafc',
   },
 });

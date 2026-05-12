@@ -21,7 +21,7 @@ export const Utils = () => {
       align: 'left',
       format: (v) => (
         <Typography
-          sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#1e293b', whiteSpace: 'nowrap' }}
+          sx={{ fontWeight: 600, fontSize: '13px', color: '#1e293b', whiteSpace: 'nowrap' }}
         >
           {String(v)}
         </Typography>
@@ -41,7 +41,7 @@ export const Utils = () => {
       sortable: false,
       align: 'center',
       format: (v) => (
-        <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#4f46e5' }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '13px', color: '#4f46e5' }}>
           {String(v ?? '-')}
         </Typography>
       ),
@@ -61,7 +61,7 @@ export const Utils = () => {
       align: 'center',
       format: (v) => (
         <Typography
-          sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#4f46e5', letterSpacing: '0.03em' }}
+          sx={{ fontWeight: 700, fontSize: '13px', color: '#4f46e5', letterSpacing: '0.03em' }}
         >
           {String(v)}
         </Typography>
@@ -92,8 +92,8 @@ export const Utils = () => {
               color: s.color,
               border: `1px solid ${s.border}`,
               fontWeight: 600,
-              fontSize: '0.72rem',
-              height: 24,
+              fontSize: '12px',
+              height: 22,
             }}
           />
         );

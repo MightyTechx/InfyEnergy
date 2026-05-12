@@ -1,10 +1,11 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import PeopleIcon from '@mui/icons-material/People';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { constants } from '@infygen/utils';
 import { useGetFeatureFlagsQuery } from '@infygen/services';
 
@@ -59,7 +60,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
       group: '',
       items: [
         { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
-        { label: 'People Management', icon: <VpnKeyIcon />, path: AdminPath.ACCESS_MANAGEMENT },
+        { label: 'People Management', icon: <PeopleIcon />, path: AdminPath.ACCESS_MANAGEMENT },
         { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
         { label: 'Inventory Management', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
         {
@@ -69,6 +70,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
         },
         // { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
         { label: 'Feature Flags', icon: <TuneIcon />, path: AdminPath.FEATURE_FLAGS },
+        { label: 'Configuration', icon: <ManageAccountsIcon />, path: AdminPath.CONFIGURATION },
       ],
     },
   ];
@@ -92,13 +94,17 @@ export const useConsultantMenuItems = (): MenuGroup[] => {
   if (showPeopleManagement) {
     items.push({
       label: 'People Management',
-      icon: <VpnKeyIcon />,
+      icon: <PeopleIcon />,
       path: ConsultantPath.ACCESS_MANAGEMENT,
     });
   }
 
   if (showReports) {
-    items.push({ label: 'Generation Reports', icon: <AssessmentIcon />, path: ConsultantPath.REPORTS });
+    items.push({
+      label: 'Generation Reports',
+      icon: <AssessmentIcon />,
+      path: ConsultantPath.REPORTS,
+    });
   }
 
   if (showInventory) {

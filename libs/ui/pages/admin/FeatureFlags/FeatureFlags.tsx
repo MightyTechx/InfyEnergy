@@ -122,7 +122,6 @@ const FeatureFlags = () => {
               : 'View features currently enabled for your Consultant role. Contact an admin to request access.'
           }
           icon={TuneIcon}
-          chip={isAdmin ? 'Admin Control' : 'View Only'}
           variant='admin'
         />
 
@@ -156,9 +155,15 @@ const FeatureFlags = () => {
         <Box className={classes.tableContainer}>
           <Box className={classes.tableSectionHeader}>
             {isAdmin && (
-              <Box onClick={openCreate} className={classes.addButton}>
-                <AddIcon sx={{ fontSize: 17, color: '#fff' }} />
-                <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#fff' }}>
+              <Box onClick={openCreate} className={classes.addButton} sx={{ p: 0.7 }}>
+                <AddIcon sx={{ fontSize: 14, color: '#fff' }} />
+                <Typography
+                  sx={{
+                    fontSize: '14px !important',
+                    fontWeight: 600,
+                    color: '#fff',
+                  }}
+                >
                   Create New Flag
                 </Typography>
               </Box>

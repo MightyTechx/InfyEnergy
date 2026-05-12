@@ -212,18 +212,10 @@ export const getDocumentsByType = (type: DocType): DocumentRow[] => {
   return DOCUMENTS.filter((doc) => doc.type === type);
 };
 
-export const formatModifiedDate = (iso: string): string => {
-  return new Date(iso).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-};
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Style Constants ──────────────────────────────────────────────────────────
 
 export const FOLDER_SX = {
-  width: 220,
+  width: 160,
   flexShrink: 0,
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
