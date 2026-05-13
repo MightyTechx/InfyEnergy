@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material';
 import { constants } from '@infygen/utils';
-import { Typography, Box, IconButton, Paper, Loader, PageHeader } from '@infygen/component';
+import { Typography, Box, IconButton, Paper, Loader, Chip, Tooltip } from '@infygen/component';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
 import { useTurbineDetailStyles } from './styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
@@ -31,7 +33,7 @@ function fmt(v: number, d = 1) {
   return v.toFixed(d);
 }
 
-function statusIcon(status: TurbineData['status']) {
+function getStatusIcon(status: TurbineData['status']) {
   const sz = { fontSize: 16 };
   switch (status) {
     case 'running':
@@ -72,185 +74,132 @@ const ALERT_COLOR: Record<Alert, string> = {
   alert: '#ef4444',
 };
 
-const SECTION_ACCENT: Record<string, string> = {
-  performance: '#4f46e5',
-  wind: '#0ea5e9',
-  electrical: '#8b5cf6',
-  rotor: '#06b6d4',
-  nacelle: '#f59e0b',
-  temperature: '#ef4444',
-  pressure: '#10b981',
-  hydraulic: '#14b8a6',
-  cabinet: '#6366f1',
+const SECTION_ACCENT: Record<string, { primary: string; secondary: string }> = {
+  performance: { primary: '#4f46e5', secondary: '#7c3aed' },
+  wind: { primary: '#0ea5e9', secondary: '#06b6d4' },
+  electrical: { primary: '#8b5cf6', secondary: '#a855f7' },
+  rotor: { primary: '#06b6d4', secondary: '#14b8a6' },
+  nacelle: { primary: '#f59e0b', secondary: '#f97316' },
+  temperature: { primary: '#ef4444', secondary: '#dc2626' },
+  pressure: { primary: '#10b981', secondary: '#059669' },
+  hydraulic: { primary: '#14b8a6', secondary: '#0d9488' },
+  cabinet: { primary: '#6366f1', secondary: '#8b5cf6' },
 };
 
 // ─── Components ────────────────────────────────────────────────────────────────
 
-interface ParamCardProps {
-  label: string;
-  value: string | number;
-  unit: string;
-  alert?: Alert;
-  icon?: React.ReactNode;
-  accent?: string;
-}
-
-const ParamCard: React.FC<ParamCardProps> = ({
-  label,
-  value,
-  unit,
-  alert = 'normal',
-  icon,
-  accent = '#4f46e5',
-}) => (
-  <Paper
-    elevation={0}
-    sx={{
-      p: 1.5,
-      borderRadius: 2,
-      border: '1px solid',
-      borderColor: `${alert !== 'normal' ? ALERT_COLOR[alert] : 'divider'}22`,
-      background: alert !== 'normal' ? `${ALERT_COLOR[alert]}08` : 'background.paper',
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        borderColor: `${accent}44`,
-        boxShadow: `0 4px 12px ${accent}12`,
-      },
-    }}
-  >
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
-      {icon && (
-        <Box
-          sx={{
-            width: 24,
-            height: 24,
-            borderRadius: '6px',
-            background: `${accent}14`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            '& svg': { fontSize: 14, color: accent },
-          }}
-        >
-          {icon}
-        </Box>
-      )}
-      <Typography
-        sx={{
-          fontSize: '0.65rem',
-          fontWeight: 600,
-          color: 'text.secondary',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          lineHeight: 1.2,
-        }}
-      >
-        {label}
-      </Typography>
-    </Box>
-    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
-      <Typography
-        sx={{
-          fontSize: '1.25rem',
-          fontWeight: 800,
-          color: alert !== 'normal' ? ALERT_COLOR[alert] : 'text.primary',
-          fontVariantNumeric: 'tabular-nums',
-          lineHeight: 1,
-        }}
-      >
-        {value}
-      </Typography>
-      <Typography sx={{ fontSize: '0.7rem', color: 'text.disabled', fontWeight: 500 }}>
-        {unit}
-      </Typography>
-      {alert !== 'normal' && (
-        <Box
-          sx={{
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            background: ALERT_COLOR[alert],
-            ml: 'auto',
-            boxShadow: `0 0 6px ${ALERT_COLOR[alert]}`,
-          }}
-        />
-      )}
-    </Box>
-  </Paper>
-);
-
-interface SectionHeaderProps {
+interface SectionCardProps {
   icon: React.ReactNode;
   title: string;
   subtitle: string;
-  accent: string;
+  accent: { primary: string; secondary: string };
+  children: React.ReactNode;
+  gridClass: string;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ icon, title, subtitle, accent }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 1.5,
-      mb: 2,
-      pb: 1.5,
-      borderBottom: '2px solid',
-      borderColor: `${accent}22`,
-    }}
-  >
-    <Box
+const SectionCard: React.FC<SectionCardProps> = ({
+  icon,
+  title,
+  subtitle,
+  accent,
+  children,
+  gridClass,
+}) => {
+  const { classes, cx } = useTurbineDetailStyles();
+
+  return (
+    <Paper elevation={0} className={classes.sectionCard}>
+      <Box className={classes.sectionCardHeader}>
+        <Box
+          className={classes.sectionCardIcon}
+          sx={{ background: `linear-gradient(135deg, ${accent.primary}, ${accent.secondary})` }}
+        >
+          {icon}
+        </Box>
+        <Box>
+          <Typography className={classes.sectionCardTitle}>{title}</Typography>
+          <Typography className={classes.sectionCardSubtitle}>{subtitle}</Typography>
+        </Box>
+      </Box>
+      <Box className={cx(classes.sectionCardContent, classes[gridClass])}>{children}</Box>
+    </Paper>
+  );
+};
+
+interface MiniParamProps {
+  label: string;
+  value: string | number;
+  unit: string;
+  icon: React.ReactNode;
+  accent: string;
+  alert?: Alert;
+}
+
+const MiniParam: React.FC<MiniParamProps> = ({
+  label,
+  value,
+  unit,
+  icon,
+  accent,
+  alert = 'normal',
+}) => {
+  const { classes } = useTurbineDetailStyles();
+
+  return (
+    <Paper
+      elevation={0}
+      className={classes.miniParam}
       sx={{
-        width: 40,
-        height: 40,
-        borderRadius: '10px',
-        background: `linear-gradient(135deg, ${accent}, ${accent}cc)`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: `0 4px 14px ${accent}44`,
-        '& svg': { fontSize: 20, color: '#fff' },
+        background: alert !== 'normal' ? `${ALERT_COLOR[alert]}08` : '#ffffff',
+        borderColor: alert !== 'normal' ? `${ALERT_COLOR[alert]}30` : '#e8eaf0',
+        '&:hover': {
+          background: alert !== 'normal' ? `${ALERT_COLOR[alert]}12` : '#f8fafc',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+          transform: 'translateY(-2px)',
+        },
       }}
     >
-      {icon}
-    </Box>
-    <Box>
-      <Typography
-        sx={{ fontWeight: 800, fontSize: '1rem', color: 'text.primary', letterSpacing: '-0.01em' }}
+      <Box
+        className={classes.miniParamIcon}
+        sx={{ background: `${accent}15`, '& svg': { color: accent } }}
       >
-        {title}
-      </Typography>
-      <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled' }}>{subtitle}</Typography>
-    </Box>
-  </Box>
-);
-
-const ParamGrid: React.FC<{ children: React.ReactNode; cols?: number }> = ({
-  children,
-  cols = 3,
-}) => (
-  <Box
-    sx={{
-      display: 'grid',
-      gridTemplateColumns: {
-        xs: 'repeat(2, 1fr)',
-        sm: 'repeat(3, 1fr)',
-        md: `repeat(${Math.min(cols, 6)}, 1fr)`,
-        lg: `repeat(${Math.min(cols, 6)}, 1fr)`,
-      },
-      gap: 1.5,
-    }}
-  >
-    {children}
-  </Box>
-);
+        {icon}
+      </Box>
+      <Box>
+        <Typography
+          className={classes.miniParamValue}
+          sx={{ color: alert !== 'normal' ? ALERT_COLOR[alert] : 'text.primary' }}
+        >
+          {value}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
+          <Typography className={classes.miniParamLabel}>
+            {label} {unit}
+          </Typography>
+        </Box>
+      </Box>
+      {alert !== 'normal' && (
+        <Box
+          className={classes.miniParamAlertDot}
+          sx={{
+            background: ALERT_COLOR[alert],
+            boxShadow: `0 0 8px ${ALERT_COLOR[alert]}`,
+            animation: 'pulse 2s ease-in-out infinite',
+          }}
+        />
+      )}
+    </Paper>
+  );
+};
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 const TurbineDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const theme = useTheme();
   const { AdminPath } = constants;
-  const { classes } = useTurbineDetailStyles();
+  const { classes, cx } = useTurbineDetailStyles();
   const keyframes = useAdminKeyframes();
 
   const [turbine, setTurbine] = useState<TurbineData | null>(null);
@@ -261,7 +210,7 @@ const TurbineDetailPage: React.FC = () => {
       const found = getTurbineById(Number(id));
       setTurbine(found || null);
       setLoading(false);
-    }, 300);
+    }, 400);
     return () => clearTimeout(timer);
   }, [id]);
 
@@ -319,598 +268,726 @@ const TurbineDetailPage: React.FC = () => {
 
   const cfg = STATUS_CONFIG[turbine.status];
   const isActive = turbine.status === 'running' || turbine.status === 'standby';
+  const isFaultOrMaintenance = turbine.status === 'fault' || turbine.status === 'maintenance';
+
+  // Stats data for metric cards - same pattern as Dashboard
+  const statsData = [
+    {
+      icon: getStatusIcon(turbine.status),
+      bg: cfg.bgColor,
+      border: cfg.borderColor,
+      value: cfg.label,
+      label: 'Status',
+      valueColor: cfg.color,
+    },
+    {
+      icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
+      bg: 'rgba(245,158,11,0.12)',
+      border: 'rgba(245,158,11,0.3)',
+      value: fmt(turbine.activePower, 0),
+      label: 'Active (kW)',
+      valueColor: '#f59e0b',
+    },
+    {
+      icon: <WindPowerIcon sx={{ color: '#0ea5e9', fontSize: 20 }} />,
+      bg: 'rgba(14,165,233,0.12)',
+      border: 'rgba(14,165,233,0.3)',
+      value: fmt(turbine.windSpeed),
+      label: 'Wind (m/s)',
+      valueColor: '#0ea5e9',
+    },
+    {
+      icon: <SpeedIcon sx={{ color: '#10b981', fontSize: 20 }} />,
+      bg: 'rgba(16,185,129,0.12)',
+      border: 'rgba(16,185,129,0.3)',
+      value: fmt(turbine.rotorRpm, 1),
+      label: 'Rotor RPM',
+      valueColor: '#10b981',
+    },
+    {
+      icon: <BoltIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
+      bg: 'rgba(139,92,246,0.12)',
+      border: 'rgba(139,92,246,0.3)',
+      value: fmt(turbine.todayGeneration, 0),
+      label: 'Today (kWh)',
+      valueColor: '#8b5cf6',
+    },
+    {
+      icon: (
+        <ThermostatIcon
+          sx={{
+            color: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#ef4444',
+            fontSize: 20,
+          }}
+        />
+      ),
+      bg:
+        tempAlert(turbine.gearboxTemp) !== 'normal'
+          ? 'rgba(239,68,68,0.12)'
+          : 'rgba(239,68,68,0.12)',
+      border:
+        tempAlert(turbine.gearboxTemp) !== 'normal' ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.3)',
+      value: fmt(turbine.gearboxTemp, 0),
+      label: 'Gearbox (°C)',
+      valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
+    },
+    {
+      icon: <SettingsIcon sx={{ color: '#6366f1', fontSize: 20 }} />,
+      bg: 'rgba(99,102,241,0.12)',
+      border: 'rgba(99,102,241,0.3)',
+      value:
+        turbine.operatingMode.length > 12
+          ? `${turbine.operatingMode.substring(0, 10)}..`
+          : turbine.operatingMode,
+      label: 'Mode',
+      valueColor: '#6366f1',
+    },
+  ];
 
   return (
     <>
       {keyframes}
       <Box className={classes.container}>
-        {/* ── Page Header ── */}
-        <PageHeader
-          title={`WTG ${turbine.turbineNo}`}
-          description='SCADA Live Parameters'
-          variant='admin'
-        />
+        {/* ── Hero Header (Dashboard Pattern) ── */}
+        <Box className={classes.heroHeader}>
+          <Box className={classes.heroLeft}>
+            <Box
+              className={classes.heroIconWrap}
+              sx={{ background: `linear-gradient(135deg, ${cfg.color}, ${cfg.color}cc)` }}
+            >
+              {getStatusIcon(turbine.status)}
+            </Box>
+            <Box>
+              <Typography className={classes.heroTitleText}>WTG {turbine.turbineNo}</Typography>
+              <Typography className={classes.heroSubtitle}>SCADA Live Parameters</Typography>
+            </Box>
+          </Box>
+
+          <Box className={classes.heroCenter}>
+            <Typography className={classes.heroCenterTitle}>TURBINE DETAIL</Typography>
+            <Box className={classes.heroCenterBadge}>
+              <Box className={classes.heroCenterDot} />
+              <Typography className={classes.heroCenterLive}>Live Tracking</Typography>
+            </Box>
+          </Box>
+
+          <Box className={classes.heroRight}>
+            <Chip
+              icon={getStatusIcon(turbine.status)}
+              label={cfg.label}
+              size='small'
+              className={classes.statusChip}
+              sx={{
+                background: cfg.bgColor,
+                border: `1px solid ${cfg.borderColor}`,
+                color: cfg.color,
+                fontWeight: 600,
+                fontSize: '0.72rem',
+                height: 26,
+                mr: 1,
+                '& .MuiChip-icon': { color: cfg.color },
+                [theme.breakpoints.down('sm')]: {
+                  mr: 0.75,
+                },
+              }}
+            />
+            <Tooltip title='Back to Dashboard' arrow placement='bottom'>
+              <IconButton
+                onClick={() => navigate(AdminPath.DASHBOARD)}
+                size='small'
+                className='closeButton'
+                sx={{
+                  color: '#64748b',
+                  background: '#f1f5f9',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  p: 0.75,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    background: '#fee2e2',
+                    color: '#ef4444',
+                    borderColor: '#fecaca',
+                    transform: 'scale(1.05)',
+                    '& .closeIcon': {
+                      transform: 'rotate(90deg)',
+                    },
+                  },
+                  '&:active': {
+                    transform: 'scale(0.95)',
+                  },
+                  [theme.breakpoints.down('sm')]: {
+                    p: 0.5,
+                  },
+                  '& .closeIcon': {
+                    transition: 'transform 0.2s ease',
+                  },
+                }}
+              >
+                <CloseIcon className='closeIcon' sx={{ fontSize: 16 }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+
+        {/* ── Stat Cards Row (Dashboard Pattern) ── */}
+        <Box className={classes.statsRow}>
+          {statsData.map(({ icon, bg, border, value, label, valueColor }, idx) => (
+            <Paper key={idx} className={classes.statCard} elevation={0}>
+              <Box
+                className={classes.statCardIconWrap}
+                sx={{ background: bg, border: `1px solid ${border}` }}
+              >
+                {icon}
+              </Box>
+              <Box>
+                <Typography
+                  className={classes.statCardValue}
+                  sx={valueColor ? { color: valueColor } : {}}
+                >
+                  {value}
+                </Typography>
+                <Typography className={classes.statCardLabel}>{label}</Typography>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
 
         {/* ── Key Performance Indicators ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
+        <SectionCard
+          icon={<BoltIcon />}
+          title='Key Performance Indicators'
+          subtitle='Real-time operational metrics'
+          accent={SECTION_ACCENT.performance}
+          gridClass='sectionGrid4'
+        >
+          <MiniParam
+            label='Active Power'
+            value={fmt(turbine.activePower, 0)}
+            unit='kW'
+            icon={<FlashOnIcon />}
+            accent='#4f46e5'
+          />
+          <MiniParam
+            label='Total Production'
+            value={fmt(turbine.totalProduction, 0)}
+            unit='MWh'
             icon={<BoltIcon />}
-            title='Key Performance Indicators'
-            subtitle='Real-time operational metrics'
-            accent={SECTION_ACCENT.performance}
+            accent='#10b981'
           />
-          <ParamGrid cols={6}>
-            <ParamCard
-              label='Active Power'
-              value={fmt(turbine.activePower, 0)}
-              unit='kW'
-              icon={<FlashOnIcon sx={{ fontSize: 14, color: '#4f46e5' }} />}
-              accent='#4f46e5'
-            />
-            <ParamCard
-              label='Wind Speed'
-              value={fmt(turbine.windSpeed)}
-              unit='m/s'
-              icon={<AirIcon sx={{ fontSize: 14, color: '#0ea5e9' }} />}
-              accent='#0ea5e9'
-            />
-            <ParamCard
-              label='Brake Programme'
-              value={turbine.breakProgramme}
-              unit=''
-              icon={
-                <StopIcon
-                  sx={{
-                    fontSize: 14,
-                    color: turbine.breakProgramme === 'Released' ? '#10b981' : '#f59e0b',
-                  }}
-                />
-              }
-              accent={turbine.breakProgramme === 'Released' ? '#10b981' : '#f59e0b'}
-              alert={turbine.breakProgramme === 'Emergency' ? 'warn' : 'normal'}
-            />
-            <ParamCard
-              label='Operation Mode'
-              value={turbine.operatingMode}
-              unit=''
-              icon={<SettingsIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Today Production'
-              value={fmt(turbine.todayGeneration, 0)}
-              unit='kWh'
-              icon={<BoltIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-            <ParamCard
-              label='Total Production'
-              value={fmt(turbine.totalProduction, 0)}
-              unit='MWh'
-              icon={<BoltIcon sx={{ fontSize: 14, color: '#10b981' }} />}
-              accent='#10b981'
-            />
-            <ParamCard
-              label='Total Op. Hours'
-              value={fmt(turbine.totalOperatingHours, 0)}
-              unit='h'
-              icon={<SpeedIcon sx={{ fontSize: 14, color: '#6366f1' }} />}
-              accent='#6366f1'
-            />
-            <ParamCard
-              label='Production Hours'
-              value={fmt(turbine.totalProductionHours, 0)}
-              unit='h'
-              icon={<SpeedIcon sx={{ fontSize: 14, color: '#14b8a6' }} />}
-              accent='#14b8a6'
-            />
-            <ParamCard
-              label='Op. Hours Today'
-              value={fmt(turbine.operationHoursToday)}
-              unit='h'
-              icon={<SpeedIcon sx={{ fontSize: 14, color: '#ec4899' }} />}
-              accent='#ec4899'
-            />
-          </ParamGrid>
-        </Box>
-
-        {/* ── Wind & Environmental ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
-            icon={<WindPowerIcon />}
-            title='Wind & Environmental Conditions'
-            subtitle='Wind resource and meteorological parameters'
-            accent={SECTION_ACCENT.wind}
+          <MiniParam
+            label='Total Op. Hours'
+            value={fmt(turbine.totalOperatingHours, 0)}
+            unit='h'
+            icon={<SpeedIcon />}
+            accent='#6366f1'
           />
-          <ParamGrid cols={4}>
-            <ParamCard
-              label='Wind Speed'
-              value={fmt(turbine.windSpeed)}
-              unit='m/s'
-              icon={<AirIcon sx={{ fontSize: 14, color: '#0ea5e9' }} />}
-              accent='#0ea5e9'
-            />
-            <ParamCard
-              label='Wind Direction'
-              value={fmt(turbine.windDirection, 0)}
-              unit='°'
-              icon={<WindPowerIcon sx={{ fontSize: 14, color: '#0ea5e9' }} />}
-              accent='#0ea5e9'
-            />
-            <ParamCard
-              label='Relative Wind Dir.'
-              value={fmt(turbine.relativeWindDirection, 0)}
-              unit='°'
-              icon={<WindPowerIcon sx={{ fontSize: 14, color: '#0ea5e9' }} />}
-              accent='#0ea5e9'
-              alert={Math.abs(turbine.relativeWindDirection) > 15 ? 'warn' : 'normal'}
-            />
-            <ParamCard
-              label='Outdoor Temp.'
-              value={fmt(turbine.outdoorTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#0ea5e9' }} />}
-              accent='#0ea5e9'
-              alert={tempAlert(turbine.outdoorTemp, 40, 50)}
-            />
-          </ParamGrid>
-        </Box>
-
-        {/* ── Electrical Parameters MFR300 ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
-            icon={<ElectricMeterIcon />}
-            title='Electrical Parameters — MFR300'
-            subtitle='Grid connection and power quality metrics'
-            accent={SECTION_ACCENT.electrical}
+          <MiniParam
+            label='Production Hours'
+            value={fmt(turbine.totalProductionHours, 0)}
+            unit='h'
+            icon={<BoltIcon />}
+            accent='#14b8a6'
           />
-          <ParamGrid cols={5}>
-            <ParamCard
-              label='Current L1'
-              value={fmt(turbine.currentL1, 0)}
-              unit='A'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Current L2'
-              value={fmt(turbine.currentL2, 0)}
-              unit='A'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Current L3'
-              value={fmt(turbine.currentL3, 0)}
-              unit='A'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Power Frequency'
-              value={isActive ? fmt(turbine.powerFrequency, 2) : '—'}
-              unit='Hz'
-              icon={<SensorsIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-              alert={
-                isActive && (turbine.powerFrequency < 49.5 || turbine.powerFrequency > 50.5)
-                  ? 'warn'
-                  : 'normal'
-              }
-            />
-            <ParamCard
-              label='Voltage L1'
-              value={fmt(turbine.voltageL1, 0)}
-              unit='V'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Voltage L2'
-              value={fmt(turbine.voltageL2, 0)}
-              unit='V'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Voltage L3'
-              value={fmt(turbine.voltageL3, 0)}
-              unit='V'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Apparent Power'
-              value={fmt(turbine.apparentPower, 0)}
-              unit='kVA'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Reactive Power'
-              value={fmt(turbine.reactivePower, 0)}
-              unit='kVAR'
-              icon={<ElectricMeterIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-            />
-            <ParamCard
-              label='Power Factor'
-              value={isActive ? fmt(turbine.powerFactor, 3) : '—'}
-              unit=''
-              icon={<SensorsIcon sx={{ fontSize: 14, color: '#8b5cf6' }} />}
-              accent='#8b5cf6'
-              alert={isActive && turbine.powerFactor < 0.9 ? 'warn' : 'normal'}
-            />
-          </ParamGrid>
-        </Box>
-
-        {/* ── Rotor & Drive Train ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
-            icon={<TuneIcon />}
-            title='Rotor & Drive Train'
-            subtitle='Mechanical rotation and transmission parameters'
-            accent={SECTION_ACCENT.rotor}
+          <MiniParam
+            label='Op. Hours Today'
+            value={fmt(turbine.operationHoursToday)}
+            unit='h'
+            icon={<SpeedIcon />}
+            accent='#ec4899'
           />
-          <ParamGrid cols={4}>
-            <ParamCard
-              label='Rotor Speed'
-              value={fmt(turbine.rotorRpm, 1)}
-              unit='rpm'
-              icon={<SpeedIcon sx={{ fontSize: 14, color: '#06b6d4' }} />}
-              accent='#06b6d4'
-            />
-            <ParamCard
-              label='Gear Speed'
-              value={fmt(turbine.gearSpeed, 0)}
-              unit='rpm'
-              icon={<TuneIcon sx={{ fontSize: 14, color: '#06b6d4' }} />}
-              accent='#06b6d4'
-            />
-            <ParamCard
-              label='Generator Speed'
-              value={fmt(turbine.generatorRpm, 0)}
-              unit='rpm'
-              icon={<SpeedIcon sx={{ fontSize: 14, color: '#06b6d4' }} />}
-              accent='#06b6d4'
-            />
-            <ParamCard
-              label='Nacelle Position'
-              value={fmt(turbine.nacellePosition, 1)}
-              unit='°'
-              icon={<AcUnitIcon sx={{ fontSize: 14, color: '#06b6d4' }} />}
-              accent='#06b6d4'
-            />
-          </ParamGrid>
-        </Box>
-
-        {/* ── Pitch & Yaw Control ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
-            icon={<SettingsIcon />}
-            title='Pitch & Yaw Control'
-            subtitle='Blade pitch and nacelle orientation systems'
-            accent={SECTION_ACCENT.nacelle}
-          />
-          <ParamGrid cols={4}>
-            <ParamCard
-              label='Blade Angle (Pitch)'
-              value={fmt(turbine.pitchAngle, 1)}
-              unit='°'
-              icon={<SettingsIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-            <ParamCard
-              label='Pitch Cylinder 1'
-              value={fmt(turbine.pitchCylinder1, 0)}
-              unit='mm'
-              icon={<TuneIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-            <ParamCard
-              label='Pitch Cylinder 2'
-              value={fmt(turbine.pitchCylinder2, 0)}
-              unit='mm'
-              icon={<TuneIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-            <ParamCard
-              label='Pitch Cylinder 3'
-              value={fmt(turbine.pitchCylinder3, 0)}
-              unit='mm'
-              icon={<TuneIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-            <ParamCard
-              label='Cable Winding'
-              value={fmt(turbine.cableWinding, 0)}
-              unit='°'
-              icon={<AcUnitIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-              alert={Math.abs(turbine.cableWinding) > 300 ? 'warn' : 'normal'}
-            />
-            <ParamCard
-              label='Nacelle Orientation'
-              value={fmt(turbine.nacellePosition, 1)}
-              unit='°'
-              icon={<AcUnitIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-            />
-          </ParamGrid>
-        </Box>
-
-        {/* ── Structural Monitoring ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
-            icon={<ArchitectureIcon />}
-            title='Structural Monitoring'
-            subtitle='Tower oscillation and vibration analysis'
+          <MiniParam
+            label='Today Generation'
+            value={fmt(turbine.todayGeneration, 0)}
+            unit='kWh'
+            icon={<BoltIcon />}
             accent='#f59e0b'
           />
-          <ParamGrid cols={2}>
-            <ParamCard
-              label='Tower Oscillation X'
-              value={fmt(turbine.towerOscillationX, 3)}
-              unit='mm/s'
-              icon={<ArchitectureIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-              alert={oscAlert(turbine.towerOscillationX)}
-            />
-            <ParamCard
-              label='Tower Oscillation Y'
-              value={fmt(turbine.towerOscillationY, 3)}
-              unit='mm/s'
-              icon={<ArchitectureIcon sx={{ fontSize: 14, color: '#f59e0b' }} />}
-              accent='#f59e0b'
-              alert={oscAlert(turbine.towerOscillationY)}
-            />
-          </ParamGrid>
-        </Box>
+          <MiniParam
+            label='Break Programme'
+            value={turbine.breakProgramme}
+            unit=''
+            icon={<StopIcon />}
+            accent={turbine.breakProgramme === 'Released' ? '#10b981' : '#f59e0b'}
+            alert={turbine.breakProgramme === 'Emergency' ? 'warn' : 'normal'}
+          />
+          <MiniParam
+            label='Operating Mode'
+            value={
+              turbine.operatingMode.length > 15
+                ? `${turbine.operatingMode.substring(0, 12)}..`
+                : turbine.operatingMode
+            }
+            unit=''
+            icon={<SettingsIcon />}
+            accent='#8b5cf6'
+          />
+        </SectionCard>
+
+        {/* ── Wind & Environmental ── */}
+        <SectionCard
+          icon={<WindPowerIcon />}
+          title='Wind & Environmental'
+          subtitle='Wind resource and meteorological parameters'
+          accent={SECTION_ACCENT.wind}
+          gridClass='sectionGrid4'
+        >
+          <MiniParam
+            label='Wind Speed'
+            value={fmt(turbine.windSpeed)}
+            unit='m/s'
+            icon={<AirIcon />}
+            accent='#0ea5e9'
+          />
+          <MiniParam
+            label='Wind Direction'
+            value={fmt(turbine.windDirection, 0)}
+            unit='°'
+            icon={<WindPowerIcon />}
+            accent='#0ea5e9'
+          />
+          <MiniParam
+            label='Relative Wind'
+            value={fmt(turbine.relativeWindDirection, 0)}
+            unit='°'
+            icon={<WindPowerIcon />}
+            accent='#0ea5e9'
+            alert={Math.abs(turbine.relativeWindDirection) > 15 ? 'warn' : 'normal'}
+          />
+          <MiniParam
+            label='Outdoor Temp'
+            value={fmt(turbine.outdoorTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#0ea5e9'
+            alert={tempAlert(turbine.outdoorTemp, 40, 50)}
+          />
+        </SectionCard>
+
+        {/* ── Electrical Parameters ── */}
+        <SectionCard
+          icon={<ElectricMeterIcon />}
+          title='Electrical Parameters'
+          subtitle='Grid connection and power quality metrics'
+          accent={SECTION_ACCENT.electrical}
+          gridClass='sectionGrid5'
+        >
+          <MiniParam
+            label='Current L1'
+            value={fmt(turbine.currentL1, 0)}
+            unit='A'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Current L2'
+            value={fmt(turbine.currentL2, 0)}
+            unit='A'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Current L3'
+            value={fmt(turbine.currentL3, 0)}
+            unit='A'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Power Freq'
+            value={isActive ? fmt(turbine.powerFrequency, 2) : '—'}
+            unit='Hz'
+            icon={<SensorsIcon />}
+            accent='#8b5cf6'
+            alert={
+              isActive && (turbine.powerFrequency < 49.5 || turbine.powerFrequency > 50.5)
+                ? 'warn'
+                : 'normal'
+            }
+          />
+          <MiniParam
+            label='Voltage L1'
+            value={fmt(turbine.voltageL1, 0)}
+            unit='V'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Voltage L2'
+            value={fmt(turbine.voltageL2, 0)}
+            unit='V'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Voltage L3'
+            value={fmt(turbine.voltageL3, 0)}
+            unit='V'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Apparent Power'
+            value={fmt(turbine.apparentPower, 0)}
+            unit='kVA'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Reactive Power'
+            value={fmt(turbine.reactivePower, 0)}
+            unit='kVAR'
+            icon={<ElectricMeterIcon />}
+            accent='#8b5cf6'
+          />
+          <MiniParam
+            label='Power Factor'
+            value={isActive ? fmt(turbine.powerFactor, 3) : '—'}
+            unit=''
+            icon={<SensorsIcon />}
+            accent='#8b5cf6'
+            alert={isActive && turbine.powerFactor < 0.9 ? 'warn' : 'normal'}
+          />
+        </SectionCard>
+
+        {/* ── Rotor & Drive Train ── */}
+        <SectionCard
+          icon={<TuneIcon />}
+          title='Rotor & Drive Train'
+          subtitle='Mechanical rotation and transmission parameters'
+          accent={SECTION_ACCENT.rotor}
+          gridClass='sectionGrid4'
+        >
+          <MiniParam
+            label='Rotor Speed'
+            value={fmt(turbine.rotorRpm, 1)}
+            unit='rpm'
+            icon={<SpeedIcon />}
+            accent='#06b6d4'
+          />
+          <MiniParam
+            label='Gear Speed'
+            value={fmt(turbine.gearSpeed, 0)}
+            unit='rpm'
+            icon={<TuneIcon />}
+            accent='#06b6d4'
+          />
+          <MiniParam
+            label='Generator Speed'
+            value={fmt(turbine.generatorRpm, 0)}
+            unit='rpm'
+            icon={<SpeedIcon />}
+            accent='#06b6d4'
+          />
+          <MiniParam
+            label='Nacelle Position'
+            value={fmt(turbine.nacellePosition, 1)}
+            unit='°'
+            icon={<AcUnitIcon />}
+            accent='#06b6d4'
+          />
+        </SectionCard>
+
+        {/* ── Pitch & Yaw Control ── */}
+        <SectionCard
+          icon={<SettingsIcon />}
+          title='Pitch & Yaw Control'
+          subtitle='Blade pitch and nacelle orientation systems'
+          accent={SECTION_ACCENT.nacelle}
+          gridClass='sectionGrid3'
+        >
+          <MiniParam
+            label='Blade Angle'
+            value={fmt(turbine.pitchAngle, 1)}
+            unit='°'
+            icon={<SettingsIcon />}
+            accent='#f59e0b'
+          />
+          <MiniParam
+            label='Pitch Cyl 1'
+            value={fmt(turbine.pitchCylinder1, 0)}
+            unit='mm'
+            icon={<TuneIcon />}
+            accent='#f59e0b'
+          />
+          <MiniParam
+            label='Pitch Cyl 2'
+            value={fmt(turbine.pitchCylinder2, 0)}
+            unit='mm'
+            icon={<TuneIcon />}
+            accent='#f59e0b'
+          />
+          <MiniParam
+            label='Pitch Cyl 3'
+            value={fmt(turbine.pitchCylinder3, 0)}
+            unit='mm'
+            icon={<TuneIcon />}
+            accent='#f59e0b'
+          />
+          <MiniParam
+            label='Cable Winding'
+            value={fmt(turbine.cableWinding, 0)}
+            unit='°'
+            icon={<AcUnitIcon />}
+            accent='#f59e0b'
+            alert={Math.abs(turbine.cableWinding) > 300 ? 'warn' : 'normal'}
+          />
+          <MiniParam
+            label='Nacelle Orient'
+            value={fmt(turbine.nacellePosition, 1)}
+            unit='°'
+            icon={<AcUnitIcon />}
+            accent='#f59e0b'
+          />
+        </SectionCard>
+
+        {/* ── Structural Monitoring ── */}
+        <SectionCard
+          icon={<ArchitectureIcon />}
+          title='Structural Monitoring'
+          subtitle='Tower oscillation and vibration analysis'
+          accent={{ primary: '#f59e0b', secondary: '#f97316' }}
+          gridClass='sectionGrid2'
+        >
+          <MiniParam
+            label='Tower Osc X'
+            value={fmt(turbine.towerOscillationX, 3)}
+            unit='mm/s'
+            icon={<ArchitectureIcon />}
+            accent='#f59e0b'
+            alert={oscAlert(turbine.towerOscillationX)}
+          />
+          <MiniParam
+            label='Tower Osc Y'
+            value={fmt(turbine.towerOscillationY, 3)}
+            unit='mm/s'
+            icon={<ArchitectureIcon />}
+            accent='#f59e0b'
+            alert={oscAlert(turbine.towerOscillationY)}
+          />
+        </SectionCard>
 
         {/* ── Temperature Monitoring ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
+        <SectionCard
+          icon={<ThermostatIcon />}
+          title='Temperature Monitoring'
+          subtitle='Thermal status of major components'
+          accent={SECTION_ACCENT.temperature}
+          gridClass='sectionGrid4'
+        >
+          <MiniParam
+            label='Nacelle Temp'
+            value={fmt(turbine.nacelleTemp, 0)}
+            unit='°C'
             icon={<ThermostatIcon />}
-            title='Temperature Monitoring'
-            subtitle='Thermal status of major components'
-            accent={SECTION_ACCENT.temperature}
+            accent='#ef4444'
+            alert={tempAlert(turbine.nacelleTemp, 50, 65)}
           />
-          <ParamGrid cols={4}>
-            <ParamCard
-              label='Nacelle Temp.'
-              value={fmt(turbine.nacelleTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.nacelleTemp, 50, 65)}
-            />
-            <ParamCard
-              label='Outdoor Temp.'
-              value={fmt(turbine.outdoorTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-            />
-            <ParamCard
-              label='Gear Oil Sump Temp.'
-              value={fmt(turbine.gearOilSumpTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.gearOilSumpTemp, 70, 85)}
-            />
-            <ParamCard
-              label='Gearbox Temp.'
-              value={fmt(turbine.gearboxTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.gearboxTemp, 70, 85)}
-            />
-            <ParamCard
-              label='Generator Temp.'
-              value={fmt(turbine.generatorTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.generatorTemp, 90, 110)}
-            />
-            <ParamCard
-              label='Transformer Temp.'
-              value={fmt(turbine.transformerTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.transformerTemp, 50, 65)}
-            />
-            <ParamCard
-              label='Hub Exhaust Temp.'
-              value={fmt(turbine.hubExhaustTemp, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-            />
-            <ParamCard
-              label='CNV Heat Ex. In'
-              value={fmt(turbine.coolCnvHeatExIn, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.coolCnvHeatExIn, 65, 80)}
-            />
-            <ParamCard
-              label='CNV Heat Ex. Out'
-              value={fmt(turbine.coolCnvHeatExOut, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.coolCnvHeatExOut, 50, 65)}
-            />
-            <ParamCard
-              label='TRF Heat Ex. In'
-              value={fmt(turbine.coolTrfHeatExIn, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.coolTrfHeatExIn, 60, 75)}
-            />
-            <ParamCard
-              label='Generator Winding U'
-              value={fmt(turbine.generatorWindingTempU, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.generatorWindingTempU, 90, 110)}
-            />
-            <ParamCard
-              label='Generator Winding V'
-              value={fmt(turbine.generatorWindingTempV, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.generatorWindingTempV, 90, 110)}
-            />
-            <ParamCard
-              label='Generator Winding W'
-              value={fmt(turbine.generatorWindingTempW, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.generatorWindingTempW, 90, 110)}
-            />
-            <ParamCard
-              label='TRF Winding U'
-              value={fmt(turbine.trfWindingTempU, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.trfWindingTempU)}
-            />
-            <ParamCard
-              label='TRF Winding V'
-              value={fmt(turbine.trfWindingTempV, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.trfWindingTempV)}
-            />
-            <ParamCard
-              label='TRF Winding W'
-              value={fmt(turbine.trfWindingTempW, 0)}
-              unit='°C'
-              icon={<ThermostatIcon sx={{ fontSize: 14, color: '#ef4444' }} />}
-              accent='#ef4444'
-              alert={tempAlert(turbine.trfWindingTempW)}
-            />
-          </ParamGrid>
-        </Box>
+          <MiniParam
+            label='Outdoor Temp'
+            value={fmt(turbine.outdoorTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+          />
+          <MiniParam
+            label='Gear Oil Sump'
+            value={fmt(turbine.gearOilSumpTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.gearOilSumpTemp, 70, 85)}
+          />
+          <MiniParam
+            label='Gearbox Temp'
+            value={fmt(turbine.gearboxTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.gearboxTemp, 70, 85)}
+          />
+          <MiniParam
+            label='Generator Temp'
+            value={fmt(turbine.generatorTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.generatorTemp, 90, 110)}
+          />
+          <MiniParam
+            label='Transformer'
+            value={fmt(turbine.transformerTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.transformerTemp, 50, 65)}
+          />
+          <MiniParam
+            label='Hub Exhaust'
+            value={fmt(turbine.hubExhaustTemp, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+          />
+          <MiniParam
+            label='CNV Heat In'
+            value={fmt(turbine.coolCnvHeatExIn, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.coolCnvHeatExIn, 65, 80)}
+          />
+          <MiniParam
+            label='CNV Heat Out'
+            value={fmt(turbine.coolCnvHeatExOut, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.coolCnvHeatExOut, 50, 65)}
+          />
+          <MiniParam
+            label='TRF Heat In'
+            value={fmt(turbine.coolTrfHeatExIn, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.coolTrfHeatExIn, 60, 75)}
+          />
+          <MiniParam
+            label='Gen Winding U'
+            value={fmt(turbine.generatorWindingTempU, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.generatorWindingTempU, 90, 110)}
+          />
+          <MiniParam
+            label='Gen Winding V'
+            value={fmt(turbine.generatorWindingTempV, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.generatorWindingTempV, 90, 110)}
+          />
+          <MiniParam
+            label='Gen Winding W'
+            value={fmt(turbine.generatorWindingTempW, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+            alert={tempAlert(turbine.generatorWindingTempW, 90, 110)}
+          />
+          <MiniParam
+            label='TRF Winding U'
+            value={fmt(turbine.trfWindingTempU, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+          />
+          <MiniParam
+            label='TRF Winding V'
+            value={fmt(turbine.trfWindingTempV, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+          />
+          <MiniParam
+            label='TRF Winding W'
+            value={fmt(turbine.trfWindingTempW, 0)}
+            unit='°C'
+            icon={<ThermostatIcon />}
+            accent='#ef4444'
+          />
+        </SectionCard>
 
         {/* ── Hydraulic System ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
+        <SectionCard
+          icon={<WaterDropIcon />}
+          title='Hydraulic System'
+          subtitle='Pressure and fluid management parameters'
+          accent={SECTION_ACCENT.hydraulic}
+          gridClass='sectionGrid4'
+        >
+          <MiniParam
+            label='Hydraulic Press'
+            value={fmt(turbine.hydraulicPressure, 0)}
+            unit='bar'
             icon={<WaterDropIcon />}
-            title='Hydraulic System'
-            subtitle='Pressure and fluid management parameters'
-            accent={SECTION_ACCENT.hydraulic}
+            accent='#14b8a6'
+            alert={pressAlert(turbine.hydraulicPressure, 160, 200)}
           />
-          <ParamGrid cols={4}>
-            <ParamCard
-              label='Hydraulic Pressure'
-              value={fmt(turbine.hydraulicPressure, 0)}
-              unit='bar'
-              icon={<WaterDropIcon sx={{ fontSize: 14, color: '#14b8a6' }} />}
-              accent='#14b8a6'
-              alert={pressAlert(turbine.hydraulicPressure, 160, 200)}
-            />
-            <ParamCard
-              label='Gear Oil Pressure'
-              value={fmt(turbine.gearOilPressure, 1)}
-              unit='bar'
-              icon={<WaterDropIcon sx={{ fontSize: 14, color: '#14b8a6' }} />}
-              accent='#14b8a6'
-              alert={pressAlert(turbine.gearOilPressure, 2.5, 3.8)}
-            />
-            <ParamCard
-              label='Coolant Inlet Pressure'
-              value={fmt(turbine.coolantInletPressure, 1)}
-              unit='bar'
-              icon={<WaterDropIcon sx={{ fontSize: 14, color: '#14b8a6' }} />}
-              accent='#14b8a6'
-              alert={pressAlert(turbine.coolantInletPressure, 1.2, 2.2)}
-            />
-            <ParamCard
-              label='Coolant Outlet Pressure'
-              value={fmt(turbine.coolantOutletPressure, 1)}
-              unit='bar'
-              icon={<WaterDropIcon sx={{ fontSize: 14, color: '#14b8a6' }} />}
-              accent='#14b8a6'
-              alert={pressAlert(turbine.coolantOutletPressure, 0.8, 1.8)}
-            />
-          </ParamGrid>
-        </Box>
+          <MiniParam
+            label='Gear Oil Press'
+            value={fmt(turbine.gearOilPressure, 1)}
+            unit='bar'
+            icon={<WaterDropIcon />}
+            accent='#14b8a6'
+            alert={pressAlert(turbine.gearOilPressure, 2.5, 3.8)}
+          />
+          <MiniParam
+            label='Coolant Inlet'
+            value={fmt(turbine.coolantInletPressure, 1)}
+            unit='bar'
+            icon={<WaterDropIcon />}
+            accent='#14b8a6'
+            alert={pressAlert(turbine.coolantInletPressure, 1.2, 2.2)}
+          />
+          <MiniParam
+            label='Coolant Outlet'
+            value={fmt(turbine.coolantOutletPressure, 1)}
+            unit='bar'
+            icon={<WaterDropIcon />}
+            accent='#14b8a6'
+            alert={pressAlert(turbine.coolantOutletPressure, 0.8, 1.8)}
+          />
+        </SectionCard>
 
         {/* ── Control Cabinet Temperatures ── */}
-        <Box sx={{ mb: 4 }}>
-          <SectionHeader
+        <SectionCard
+          icon={<SensorsIcon />}
+          title='Control Cabinet'
+          subtitle='Switchgear and electronics thermal monitoring'
+          accent={SECTION_ACCENT.cabinet}
+          gridClass='sectionGrid3'
+        >
+          <MiniParam
+            label='Tower Cabinet'
+            value={fmt(turbine.tempSwCabTower, 0)}
+            unit='°C'
             icon={<SensorsIcon />}
-            title='Control Cabinet Temperatures'
-            subtitle='Switchgear and electronics thermal monitoring'
-            accent={SECTION_ACCENT.cabinet}
+            accent='#6366f1'
+            alert={tempAlert(turbine.tempSwCabTower, 45, 55)}
           />
-          <ParamGrid cols={3}>
-            <ParamCard
-              label='Tower Cabinet Temp.'
-              value={fmt(turbine.tempSwCabTower, 0)}
-              unit='°C'
-              icon={<SensorsIcon sx={{ fontSize: 14, color: '#6366f1' }} />}
-              accent='#6366f1'
-              alert={tempAlert(turbine.tempSwCabTower, 45, 55)}
-            />
-            <ParamCard
-              label='Nacelle Cabinet Temp.'
-              value={fmt(turbine.tempSwCabNacelle, 0)}
-              unit='°C'
-              icon={<SensorsIcon sx={{ fontSize: 14, color: '#6366f1' }} />}
-              accent='#6366f1'
-              alert={tempAlert(turbine.tempSwCabNacelle, 45, 55)}
-            />
-            <ParamCard
-              label='Hub Cabinet Temp.'
-              value={fmt(turbine.tempSwCabHub, 0)}
-              unit='°C'
-              icon={<SensorsIcon sx={{ fontSize: 14, color: '#6366f1' }} />}
-              accent='#6366f1'
-              alert={tempAlert(turbine.tempSwCabHub, 45, 55)}
-            />
-          </ParamGrid>
-        </Box>
+          <MiniParam
+            label='Nacelle Cabinet'
+            value={fmt(turbine.tempSwCabNacelle, 0)}
+            unit='°C'
+            icon={<SensorsIcon />}
+            accent='#6366f1'
+            alert={tempAlert(turbine.tempSwCabNacelle, 45, 55)}
+          />
+          <MiniParam
+            label='Hub Cabinet'
+            value={fmt(turbine.tempSwCabHub, 0)}
+            unit='°C'
+            icon={<SensorsIcon />}
+            accent='#6366f1'
+            alert={tempAlert(turbine.tempSwCabHub, 45, 55)}
+          />
+        </SectionCard>
 
         {/* ── Legend ── */}
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 3,
-            justifyContent: 'center',
-            pt: 2,
-            pb: 4,
-            borderTop: '1px solid',
-            borderColor: 'divider',
-          }}
-        >
+        <Box className={classes.legendRow}>
           {(['normal', 'warn', 'alert'] as Alert[]).map((a) => (
-            <Box key={a} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Box key={a} className={classes.legendItem}>
               <Box
+                className={classes.legendDot}
                 sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
                   background: ALERT_COLOR[a],
-                  boxShadow: a !== 'normal' ? `0 0 8px ${ALERT_COLOR[a]}` : 'none',
+                  boxShadow: a !== 'normal' ? `0 0 12px ${ALERT_COLOR[a]}` : 'none',
+                  animation: a !== 'normal' ? 'pulse 2s ease-in-out infinite' : 'none',
                 }}
               />
-              <Typography
-                sx={{ fontSize: '0.72rem', color: 'text.secondary', textTransform: 'capitalize' }}
-              >
+              <Typography className={classes.legendText}>
                 {a === 'warn' ? 'Warning' : a.charAt(0).toUpperCase() + a.slice(1)}
               </Typography>
             </Box>

@@ -8,7 +8,7 @@ export interface PageHeaderProps {
   title: string;
   description?: string;
   icon?: SvgIconComponent;
-  chip?: string;
+  chip?: React.ReactNode;
   variant?: PageHeaderVariant;
   className?: string;
   children?: React.ReactNode;
@@ -46,12 +46,29 @@ const PageHeader: React.FC<PageHeaderProps> = ({
               {description && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
                   <Typography className={classes.description}>{description}</Typography>
-                  {chip && <Chip label={chip} size='small' className={chipClass} />}
+                  {chip &&
+                    (typeof chip === 'string' ? (
+                      <Chip label={chip} size='small' className={chipClass} />
+                    ) : (
+                      <Box
+                        className={chipClass}
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
+                        {chip}
+                      </Box>
+                    ))}
                 </Box>
               )}
             </Box>
           </Box>
-          {chip && <Chip label={chip} size='small' className={chipClass} />}
+          {chip &&
+            (typeof chip === 'string' ? (
+              <Chip label={chip} size='small' className={chipClass} />
+            ) : (
+              <Box className={chipClass} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {chip}
+              </Box>
+            ))}
         </Box>
       )}
       {children}
