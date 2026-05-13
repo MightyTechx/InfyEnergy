@@ -518,4 +518,198 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       width: '100%',
     },
   },
+
+  // ─── Receive Dialog Styles ─────────────────────────────────────────────────
+  modalHeroReceive: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #064e3b 0%, #065f46 40%, #059669 70%, #10b981 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative' as const,
+    flexShrink: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(167,243,208,0.4) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBoxReceive: {
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, #059669, #10b981)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 16px rgba(5,150,105,0.5)',
+    flexShrink: 0,
+  },
+
+  submitButtonReceive: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
+    background: 'linear-gradient(135deg, #059669, #10b981) !important',
+    boxShadow: '0 4px 14px rgba(5,150,105,0.4) !important',
+    color: '#fff !important',
+    minWidth: 'auto',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(5,150,105,0.5) !important',
+    },
+    '&:disabled': {
+      background: 'rgba(0,0,0,0.12) !important',
+      boxShadow: 'none !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+
+  // ─── Issue Dialog Styles ──────────────────────────────────────────────────
+  modalHeroIssue: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #78350f 0%, #92400e 40%, #b45309 70%, #f59e0b 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative' as const,
+    flexShrink: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(252,211,77,0.4) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBoxIssue: {
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, #d97706, #f59e0b)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 16px rgba(217,119,6,0.5)',
+    flexShrink: 0,
+  },
+
+  submitButtonIssue: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
+    background: 'linear-gradient(135deg, #d97706, #f59e0b) !important',
+    boxShadow: '0 4px 14px rgba(217,119,6,0.4) !important',
+    color: '#fff !important',
+    minWidth: 'auto',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(217,119,6,0.5) !important',
+    },
+    '&:disabled': {
+      background: 'rgba(0,0,0,0.12) !important',
+      boxShadow: 'none !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+
+  // ─── Adjust Dialog Styles ─────────────────────────────────────────────────
+  modalHeroAdjust: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #1e3a5f 0%, #1e40af 40%, #3b82f6 70%, #6366f1 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative' as const,
+    flexShrink: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(199,210,254,0.4) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBoxAdjust: {
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 16px rgba(59,130,246,0.5)',
+    flexShrink: 0,
+  },
+
+  submitButtonAdjust: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
+    background: 'linear-gradient(135deg, #3b82f6, #6366f1) !important',
+    boxShadow: '0 4px 14px rgba(59,130,246,0.4) !important',
+    color: '#fff !important',
+    minWidth: 'auto',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(59,130,246,0.5) !important',
+    },
+    '&:disabled': {
+      background: 'rgba(0,0,0,0.12) !important',
+      boxShadow: 'none !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+
+  // Form field helpers
+  formField: {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '10px',
+      '&:hover fieldset': { borderColor: 'rgba(13,148,136,0.4)' },
+      '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
+  },
+
+  formFieldFull: {
+    width: '100%',
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '10px',
+      '&:hover fieldset': { borderColor: 'rgba(13,148,136,0.4)' },
+      '&.Mui-focused fieldset': { borderColor: '#0d9488', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#0d9488' },
+  },
 });

@@ -13,4 +13,5 @@ export enum ADMIN_PATHS {
   TICKETS = 'tickets',
   CONFIGURATION = 'configuration',
   FEATURE_FLAGS = 'feature-flags',
+  TURBINE_CONFIG = 'turbine-config',
 }

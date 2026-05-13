@@ -13,7 +13,9 @@ export const LazyMenuItems = {
   AdminInventoryPage: lazy(() => import('@infygen/pages/admin/Inventory')),
   AdminTechnicalDocumentsPage: lazy(() => import('@infygen/pages/admin/TechnicalDocuments')),
   AdminFeatureFlagsPage: lazy(() => import('@infygen/pages/admin/FeatureFlags')),
+  AdminTurbineConfigPage: lazy(() => import('@infygen/pages/admin/TurbineConfig')),
   SettingsPage: lazy(() => import('@infygen/pages/shared/Settings')),
+  HelpSupportPage: lazy(() => import('@infygen/pages/shared/HelpSupport')),
   AdminConfigurationPage: lazy(() => import('@infygen/pages/admin/Configuration')),
 
   // Auth pages (shared/public)

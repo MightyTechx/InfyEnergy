@@ -35,15 +35,19 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Filter Autocompletes (Flexible Width) ──────────────────────────────────────
   filterAutocomplete: {
-    flex: '1 1 160px',
-    minWidth: 150,
-    maxWidth: 220,
+    flex: '1 1 180px',
+    minWidth: 170,
+    maxWidth: 280,
     '& .MuiOutlinedInput-root': {
       borderRadius: '8px',
       '&:hover fieldset': { borderColor: '#6366f1' },
       '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
     },
     '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 160px',
+      maxWidth: 240,
+    },
     [theme.breakpoints.down('sm')]: {
       flex: 'none',
       width: '100%',
@@ -52,15 +56,19 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   filterAutocompleteSmall: {
-    flex: '1 1 150px',
-    minWidth: 140,
-    maxWidth: 200,
+    flex: '1 1 160px',
+    minWidth: 150,
+    maxWidth: 260,
     '& .MuiOutlinedInput-root': {
       borderRadius: '8px',
       '&:hover fieldset': { borderColor: '#6366f1' },
       '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
     },
     '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 140px',
+      maxWidth: 220,
+    },
     [theme.breakpoints.down('sm')]: {
       flex: 'none',
       width: '100%',
@@ -70,9 +78,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Date Picker Input (Flexible Width) ─────────────────────────────────────────
   datePickerInput: {
-    flex: '1 1 150px',
-    minWidth: 140,
-    maxWidth: 200,
+    flex: '1 1 160px',
+    minWidth: 150,
+    maxWidth: 260,
     '& .MuiOutlinedInput-root': {
       borderRadius: '8px',
       height: '40px',
@@ -80,6 +88,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
     },
     '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 140px',
+      maxWidth: 220,
+    },
     [theme.breakpoints.down('sm')]: {
       flex: 'none',
       width: '100%',
@@ -107,7 +119,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   actionButtonAdd: {
-    flex: '0 0 auto',
+    flex: '1 1 180px',
+    minWidth: 170,
+    maxWidth: 280,
     background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
     '&:hover': {
       background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
@@ -117,6 +131,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '&:disabled': {
       background: 'linear-gradient(135deg, #e2e8f0, #cbd5e1)',
       color: '#94a3b8',
+    },
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 160px',
+      maxWidth: 240,
     },
     [theme.breakpoints.down('sm')]: {
       flex: 'none',
@@ -143,6 +161,17 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     marginBottom: theme.spacing(3),
   },
 
+  tableSectionTitle: {
+    fontSize: '14px',
+    fontWeight: 600,
+  },
+
+  tableSectionDate: {
+    fontSize: '12px',
+    color: '#64748b',
+    fontWeight: 400,
+  },
+
   tableSectionHeader: {
     display: 'flex',
     alignItems: 'center',
@@ -159,7 +188,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   searchField: {
     marginLeft: 'auto',
-    width: 240,
+    width: 200,
     flexShrink: 0,
     '& .MuiOutlinedInput-root': {
       height: '36px',
@@ -190,6 +219,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '& .MuiInputAdornment-root .MuiSvgIcon-root': {
       fontSize: '1.1rem',
       color: 'rgba(99,102,241,0.6)',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: 180,
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',

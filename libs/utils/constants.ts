@@ -12,8 +12,10 @@ const AdminPath = {
   INVENTORY: `${ADMIN_BASE}/inventory`,
   TECHNICAL_DOCUMENTS: `${ADMIN_BASE}/technical-documents`,
   SETTINGS: `${ADMIN_BASE}/settings`,
+  HELP_SUPPORT: `${ADMIN_BASE}/help-support`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
+  TURBINE_CONFIG: `${ADMIN_BASE}/turbine-config`,
   CONFIGURATION: `${ADMIN_BASE}/configuration`,
 };
 
@@ -31,6 +33,7 @@ const ConsultantPath = {
   TECHNICAL_DOCUMENTS: `${CONSULTANT_BASE}/technical-documents`,
   ANALYTICS: `${CONSULTANT_BASE}/analytics`,
   SETTINGS: `${CONSULTANT_BASE}/settings`,
+  HELP_SUPPORT: `${CONSULTANT_BASE}/help-support`,
   FEATURE_FLAGS: `${CONSULTANT_BASE}/feature-flags`,
 };
 

@@ -1478,12 +1478,6 @@ const Configuration = () => {
   const { classes } = useStyles();
   const [tabValue, setTabValue] = useState(0);
 
-  const tabStats = [
-    { label: 'Connected', value: '10/10', color: '#10b981' },
-    { label: 'Active Alerts', value: '7', color: '#ef4444' },
-    { label: 'Thresholds', value: '24', color: '#f59e0b' },
-  ];
-
   return (
     <Box className={classes.container}>
       {/* ── Page Header ── */}
@@ -1492,21 +1486,7 @@ const Configuration = () => {
         description='Configure SCADA monitoring, operational thresholds, alert preferences and system settings for your wind farm'
         icon={SettingsIcon}
         variant='admin'
-      >
-        <Box className={classes.pageHeaderStats}>
-          {tabStats.map((stat) => (
-            <Box key={stat.label} className={classes.pageHeaderStat}>
-              <Box
-                className={classes.pageHeaderStatDot}
-                sx={{ background: stat.color, boxShadow: `0 0 6px ${stat.color}` }}
-              />
-              <Typography className={classes.pageHeaderStatText}>
-                <strong style={{ color: '#fff' }}>{stat.value}</strong> {stat.label}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-      </PageHeader>
+      />
 
       {/* ── Tab Bar ── */}
       <Box className={classes.tabBar}>

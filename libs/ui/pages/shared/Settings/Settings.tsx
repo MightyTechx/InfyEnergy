@@ -9,17 +9,57 @@ import {
   MenuItem,
   FormControl,
   Chip,
-} from '@infygen/component';
+  TextField,
+  Button,
+} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import SecurityIcon from '@mui/icons-material/Security';
 import TuneIcon from '@mui/icons-material/Tune';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useThemeContext } from '@infygen/theme';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import PaletteIcon from '@mui/icons-material/Palette';
+import PreviewIcon from '@mui/icons-material/Preview';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { PageHeader } from '@infygen/component';
 import { useStyles } from './styles/Settings.styles';
+
+// ── Tab Config ────────────────────────────────────────────────────────────────
+interface TabConfig {
+  label: string;
+  icon: React.ReactElement;
+  description: string;
+}
+
+const TABS: TabConfig[] = [
+  {
+    label: 'General',
+    icon: <SettingsIcon fontSize='small' />,
+    description: 'Platform preferences & settings',
+  },
+  {
+    label: 'Security',
+    icon: <SecurityIcon fontSize='small' />,
+    description: 'Authentication & access control',
+  },
+  {
+    label: 'Admin Controls',
+    icon: <TuneIcon fontSize='small' />,
+    description: 'System configuration & preferences',
+  },
+  {
+    label: 'Notifications',
+    icon: <NotificationsActiveIcon fontSize='small' />,
+    description: 'Alert & notification preferences',
+  },
+];
 
 // ── Theme Configs ─────────────────────────────────────────────────────────────
 interface ThemeConfig {
+  id: string;
   name: string;
   swatch: string;
   accent: string;
@@ -32,89 +72,43 @@ interface ThemeConfig {
 
 const THEMES: ThemeConfig[] = [
   {
-    name: 'System',
-    swatch: 'linear-gradient(135deg,#2d5ebb,#e2e8f0)',
-    accent: '#2d5ebb',
+    id: 'ocean',
+    name: 'Ocean Blue',
+    swatch: 'linear-gradient(135deg, #2d5ebb, #0ea5e9)',
+    accent: '#4f46e5',
     light: '#e2e8f0',
     sidebar: '#1e3a8a',
     header: '#2d5ebb',
-    button: '#2d5ebb',
-    buttonText: '#fff',
-  },
-  {
-    name: 'Black and White',
-    swatch: 'linear-gradient(135deg,#111827,#f9fafb)',
-    accent: '#111827',
-    light: '#f3f4f6',
-    sidebar: '#0f172a',
-    header: '#111827',
-    button: '#374151',
-    buttonText: '#fff',
-  },
-  {
-    name: 'Blimey',
-    swatch: 'linear-gradient(135deg,#92400e,#f59e0b)',
-    accent: '#92400e',
-    light: '#fef3c7',
-    sidebar: '#78350f',
-    header: '#92400e',
-    button: '#f59e0b',
-    buttonText: '#451a03',
-  },
-  {
-    name: 'Blues',
-    swatch: 'linear-gradient(135deg,#0369a1,#38bdf8)',
-    accent: '#0369a1',
-    light: '#e0f2fe',
-    sidebar: '#075985',
-    header: '#0369a1',
-    button: '#0369a1',
-    buttonText: '#fff',
-  },
-  {
-    name: 'Clean',
-    swatch: 'linear-gradient(135deg,#0284c7,#0ea5e9)',
-    accent: '#0284c7',
-    light: '#bae6fd',
-    sidebar: '#0369a1',
-    header: '#0284c7',
-    button: '#0ea5e9',
-    buttonText: '#fff',
-  },
-  {
-    name: 'Cobalt',
-    swatch: 'linear-gradient(135deg,#312e81,#a5b4fc)',
-    accent: '#312e81',
-    light: '#ede9fe',
-    sidebar: '#1e1b4b',
-    header: '#312e81',
     button: '#4f46e5',
     buttonText: '#fff',
   },
   {
-    name: 'Cobalt Contrast UI',
-    swatch: 'linear-gradient(135deg,#0f2463,#60a5fa)',
-    accent: '#0f2463',
-    light: '#dbeafe',
-    sidebar: '#0a1642',
-    header: '#0f2463',
-    button: '#3b82f6',
+    id: 'sunset',
+    name: 'Sunset Orange',
+    swatch: 'linear-gradient(135deg, #92400e, #f59e0b)',
+    accent: '#f97316',
+    light: '#fef3c7',
+    sidebar: '#78350f',
+    header: '#92400e',
+    button: '#f97316',
     buttonText: '#fff',
   },
   {
-    name: 'Contrast UI',
-    swatch: 'linear-gradient(135deg,#1c1c1c,#facc15)',
-    accent: '#1c1c1c',
-    light: '#fef9c3',
-    sidebar: '#0a0a0a',
-    header: '#1c1c1c',
-    button: '#facc15',
-    buttonText: '#1c1c1c',
+    id: 'forest',
+    name: 'Forest Green',
+    swatch: 'linear-gradient(135deg, #064e3b, #34d399)',
+    accent: '#059669',
+    light: '#d1fae5',
+    sidebar: '#033d2e',
+    header: '#064e3b',
+    button: '#34d399',
+    buttonText: '#064e3b',
   },
   {
-    name: 'Midnight',
-    swatch: 'linear-gradient(135deg,#1e1b4b,#7c3aed)',
-    accent: '#1e1b4b',
+    id: 'midnight',
+    name: 'Midnight Purple',
+    swatch: 'linear-gradient(135deg, #1e1b4b, #7c3aed)',
+    accent: '#7c3aed',
     light: '#ede9fe',
     sidebar: '#13104a',
     header: '#1e1b4b',
@@ -122,9 +116,10 @@ const THEMES: ThemeConfig[] = [
     buttonText: '#fff',
   },
   {
-    name: 'Rose',
-    swatch: 'linear-gradient(135deg,#881337,#f43f5e)',
-    accent: '#881337',
+    id: 'rose',
+    name: 'Rose Pink',
+    swatch: 'linear-gradient(135deg, #881337, #f43f5e)',
+    accent: '#e11d48',
     light: '#ffe4e6',
     sidebar: '#6b0f2d',
     header: '#881337',
@@ -132,18 +127,41 @@ const THEMES: ThemeConfig[] = [
     buttonText: '#fff',
   },
   {
-    name: 'Forest',
-    swatch: 'linear-gradient(135deg,#064e3b,#34d399)',
-    accent: '#064e3b',
-    light: '#d1fae5',
-    sidebar: '#033d2e',
-    header: '#064e3b',
-    button: '#34d399',
-    buttonText: '#064e3b',
+    id: 'dark',
+    name: 'Midnight Dark',
+    swatch: 'linear-gradient(135deg, #111827, #6b7280)',
+    accent: '#374151',
+    light: '#f3f4f6',
+    sidebar: '#0f172a',
+    header: '#111827',
+    button: '#374151',
+    buttonText: '#fff',
+  },
+  {
+    id: 'blues',
+    name: 'Sky Blues',
+    swatch: 'linear-gradient(135deg, #0369a1, #38bdf8)',
+    accent: '#0ea5e9',
+    light: '#e0f2fe',
+    sidebar: '#075985',
+    header: '#0369a1',
+    button: '#0ea5e9',
+    buttonText: '#fff',
+  },
+  {
+    id: 'cobalt',
+    name: 'Royal Cobalt',
+    swatch: 'linear-gradient(135deg, #312e81, #a5b4fc)',
+    accent: '#6366f1',
+    light: '#ede9fe',
+    sidebar: '#1e1b4b',
+    header: '#312e81',
+    button: '#6366f1',
+    buttonText: '#fff',
   },
 ];
 
-// ── Mini App Preview Mockup ───────────────────────────────────────────────────
+// ── Mini App Preview ─────────────────────────────────────────────────────────
 const AppPreview = ({
   theme,
   classes,
@@ -152,17 +170,13 @@ const AppPreview = ({
   classes: Record<string, string>;
 }) => (
   <Box className={classes.appPreviewWrapper}>
-    {/* Browser chrome */}
     <Box className={classes.browserChrome}>
       {['#ef4444', '#f59e0b', '#22c55e'].map((c) => (
         <Box key={c} sx={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
       ))}
       <Box className={classes.browserUrlBar} />
     </Box>
-
-    {/* App layout */}
     <Box className={classes.appLayout}>
-      {/* Sidebar */}
       <Box
         sx={{
           width: 82,
@@ -217,10 +231,7 @@ const AppPreview = ({
           </Box>
         ))}
       </Box>
-
-      {/* Main content */}
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Header */}
         <Box
           sx={{
             height: 38,
@@ -246,8 +257,6 @@ const AppPreview = ({
             />
           ))}
         </Box>
-
-        {/* Content area */}
         <Box
           sx={{
             flex: 1,
@@ -258,7 +267,6 @@ const AppPreview = ({
             gap: 0.85,
           }}
         >
-          {/* Stat cards */}
           <Box sx={{ display: 'flex', gap: 0.75 }}>
             {[
               { bg: theme.accent, bar1: 'rgba(255,255,255,0.75)', bar2: 'rgba(255,255,255,0.4)' },
@@ -285,8 +293,6 @@ const AppPreview = ({
               </Box>
             ))}
           </Box>
-
-          {/* Table rows */}
           {[0.85, 0.65, 0.45].map((op, i) => (
             <Box
               key={i}
@@ -298,10 +304,7 @@ const AppPreview = ({
               }}
             />
           ))}
-
-          {/* Buttons row */}
           <Box sx={{ display: 'flex', gap: 0.75, mt: 'auto', pt: 0.25 }}>
-            {/* Primary button */}
             <Box
               sx={{
                 height: 22,
@@ -323,7 +326,6 @@ const AppPreview = ({
                 }}
               />
             </Box>
-            {/* Outlined button */}
             <Box
               sx={{
                 height: 22,
@@ -338,21 +340,6 @@ const AppPreview = ({
                 sx={{ width: 22, height: 5, borderRadius: 0.5, background: `${theme.accent}70` }}
               />
             </Box>
-            {/* Chip */}
-            <Box
-              sx={{
-                height: 18,
-                px: 0.85,
-                borderRadius: 10,
-                background: `${theme.accent}15`,
-                border: `1px solid ${theme.accent}30`,
-                display: 'flex',
-                alignItems: 'center',
-                alignSelf: 'center',
-              }}
-            >
-              <Box sx={{ width: 18, height: 4.5, borderRadius: 0.5, background: theme.accent }} />
-            </Box>
           </Box>
         </Box>
       </Box>
@@ -362,41 +349,140 @@ const AppPreview = ({
 
 // ── General Tab ───────────────────────────────────────────────────────────────
 const GeneralTab = ({ classes }: { classes: Record<string, string> }) => (
-  <Box className={classes.settingRowList}>
-    {[
-      {
-        title: 'Platform Name',
-        desc: 'The name displayed across the admin panel and emails.',
-        value: 'InfyGen Admin',
-      },
-      {
-        title: 'Support Email',
-        desc: 'Contact email shown to users for support queries.',
-        value: 'support@infygen.in',
-      },
-      {
-        title: 'Default Timezone',
-        desc: 'Timezone applied to all timestamps in the system.',
-        value: 'Asia/Kolkata (IST)',
-      },
-      {
-        title: 'Default Language',
-        desc: 'Primary language for the admin interface.',
-        value: 'English (en-IN)',
-      },
-    ].map((item, i) => (
-      <Box key={i} className={classes.settingRow}>
-        <Box flex={1}>
-          <Typography fontWeight={600} fontSize='0.9rem'>
-            {item.title}
-          </Typography>
-          <Typography fontSize='0.8rem' color='text.secondary' mt={0.3}>
-            {item.desc}
-          </Typography>
+  <Box>
+    <Box className={classes.sectionPanel}>
+      <Box className={classes.sectionPanelHeader}>
+        <Box className={classes.sectionPanelTitle}>
+          <Box
+            className={classes.sectionPanelIcon}
+            sx={{
+              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+              boxShadow: '0 4px 14px rgba(79,70,229,0.4)',
+            }}
+          >
+            <SettingsIcon sx={{ fontSize: 18, color: '#fff' }} />
+          </Box>
+          <Box>
+            <Typography className={classes.sectionPanelTitleText}>Platform Settings</Typography>
+            <Typography className={classes.sectionPanelSubtitle}>
+              Basic platform configuration
+            </Typography>
+          </Box>
         </Box>
-        <Typography className={classes.settingValue}>{item.value}</Typography>
       </Box>
-    ))}
+      <Box className={classes.sectionPanelBody}>
+        <Box className={classes.settingRowList}>
+          {[
+            {
+              title: 'Platform Name',
+              desc: 'The name displayed across the admin panel and emails.',
+              value: 'InfyGen Admin',
+            },
+            {
+              title: 'Support Email',
+              desc: 'Contact email shown to users for support queries.',
+              value: 'support@infygen.in',
+            },
+            {
+              title: 'Default Timezone',
+              desc: 'Timezone applied to all timestamps in the system.',
+              value: 'Asia/Kolkata (IST)',
+            },
+            {
+              title: 'Default Language',
+              desc: 'Primary language for the admin interface.',
+              value: 'English (en-IN)',
+            },
+          ].map((item, i) => (
+            <Box key={i} className={classes.settingRow}>
+              <Box flex={1}>
+                <Typography fontWeight={600} fontSize='0.9rem'>
+                  {item.title}
+                </Typography>
+                <Typography fontSize='0.8rem' color='text.secondary' mt={0.3}>
+                  {item.desc}
+                </Typography>
+              </Box>
+              <Typography className={classes.settingValue}>{item.value}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Box>
+
+    <Box className={classes.sectionPanel} sx={{ mt: 3 }}>
+      <Box className={classes.sectionPanelHeader}>
+        <Box className={classes.sectionPanelTitle}>
+          <Box
+            className={classes.sectionPanelIcon}
+            sx={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.2)' }}
+          >
+            <VisibilityIcon sx={{ fontSize: 18, color: '#06b6d4' }} />
+          </Box>
+          <Box>
+            <Typography className={classes.sectionPanelTitleText}>Display Preferences</Typography>
+            <Typography className={classes.sectionPanelSubtitle}>
+              UI display and navigation settings
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      <Box className={classes.sectionPanelBody}>
+        <Box className={classes.settingRowList}>
+          {[
+            {
+              icon: <DarkModeIcon sx={{ color: '#6366f1' }} />,
+              title: 'Compact View Mode',
+              desc: 'Show more data in less space',
+              color: '#6366f1',
+            },
+            {
+              icon: <LightModeIcon sx={{ color: '#f59e0b' }} />,
+              title: 'Show Animations',
+              desc: 'Enable smooth transitions and effects',
+              color: '#f59e0b',
+            },
+          ].map((item, i) => {
+            return (
+              <Box key={i} className={classes.configItem}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 2,
+                      background: `${item.color}15`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                      {item.title}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                      {item.desc}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Switch
+                  onChange={() => {}}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#4f46e5',
+                    },
+                  }}
+                />
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+    </Box>
   </Box>
 );
 
@@ -407,95 +493,775 @@ const SecurityTab = ({ classes }: { classes: Record<string, string> }) => {
   const [loginAttempts, setLoginAttempts] = useState('5');
   const [pwExpiry, setPwExpiry] = useState('90');
 
-  const rows = [
-    {
-      title: 'Two-Factor Authentication',
-      desc: 'Require all admin accounts to use 2FA for additional security.',
-      control: (
-        <Switch
-          checked={twoFactor}
-          onChange={(e) => setTwoFactor(e.target.checked)}
-          sx={{
-            '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
-            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-              backgroundColor: '#4f46e5',
-            },
-          }}
-        />
-      ),
-    },
-    {
-      title: 'Session Timeout',
-      desc: 'Automatically sign out inactive sessions after the chosen period.',
-      control: (
-        <FormControl size='small' sx={{ minWidth: 150 }}>
-          <Select
-            value={sessionTimeout}
-            onChange={(e) => setSessionTimeout(e.target.value as string)}
-            sx={{ borderRadius: 2 }}
-          >
-            <MenuItem value='15'>15 minutes</MenuItem>
-            <MenuItem value='30'>30 minutes</MenuItem>
-            <MenuItem value='60'>1 hour</MenuItem>
-            <MenuItem value='120'>2 hours</MenuItem>
-            <MenuItem value='480'>8 hours</MenuItem>
-          </Select>
-        </FormControl>
-      ),
-    },
-    {
-      title: 'Max Login Attempts',
-      desc: 'Lock the account after this many consecutive failed sign-in attempts.',
-      control: (
-        <FormControl size='small' sx={{ minWidth: 140 }}>
-          <Select
-            value={loginAttempts}
-            onChange={(e) => setLoginAttempts(e.target.value as string)}
-            sx={{ borderRadius: 2 }}
-          >
-            <MenuItem value='3'>3 attempts</MenuItem>
-            <MenuItem value='5'>5 attempts</MenuItem>
-            <MenuItem value='10'>10 attempts</MenuItem>
-          </Select>
-        </FormControl>
-      ),
-    },
-    {
-      title: 'Password Expiry',
-      desc: 'Force users to reset their password after this period.',
-      control: (
-        <FormControl size='small' sx={{ minWidth: 150 }}>
-          <Select
-            value={pwExpiry}
-            onChange={(e) => setPwExpiry(e.target.value as string)}
-            sx={{ borderRadius: 2 }}
-          >
-            <MenuItem value='30'>30 days</MenuItem>
-            <MenuItem value='60'>60 days</MenuItem>
-            <MenuItem value='90'>90 days</MenuItem>
-            <MenuItem value='180'>180 days</MenuItem>
-            <MenuItem value='never'>Never</MenuItem>
-          </Select>
-        </FormControl>
-      ),
-    },
-  ];
+  return (
+    <Box>
+      <Box className={classes.sectionPanel}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{
+                background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+                boxShadow: '0 4px 14px rgba(16,185,129,0.4)',
+              }}
+            >
+              <SecurityIcon sx={{ fontSize: 18, color: '#fff' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>Authentication</Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                Security and access settings
+              </Typography>
+            </Box>
+          </Box>
+          <Box className={classes.statusIndicator}>
+            <Box
+              className={classes.statusDot}
+              sx={{ background: '#10b981', boxShadow: '0 0 8px #10b981' }}
+            />
+            <Typography className={classes.statusText}>Protected</Typography>
+          </Box>
+        </Box>
+        <Box className={classes.sectionPanelBody}>
+          <Box className={classes.settingRowList}>
+            <Box className={`${classes.configItem} ${twoFactor ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: twoFactor ? 'rgba(16,185,129,0.15)' : 'rgba(139,92,246,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <SecurityIcon sx={{ color: twoFactor ? '#10b981' : '#8b5cf6', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Two-Factor Authentication
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Require 2FA for all admin accounts
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={twoFactor}
+                onChange={(e) => setTwoFactor(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+            <Box className={classes.configItem}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: 'rgba(6,182,212,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <SecurityIcon sx={{ color: '#06b6d4', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Session Timeout
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Auto logout after inactivity
+                  </Typography>
+                </Box>
+              </Box>
+              <FormControl size='small' sx={{ minWidth: 140 }}>
+                <Select
+                  value={sessionTimeout}
+                  onChange={(e) => setSessionTimeout(e.target.value as string)}
+                  sx={{ borderRadius: 2 }}
+                >
+                  <MenuItem value='15'>15 min</MenuItem>
+                  <MenuItem value='30'>30 min</MenuItem>
+                  <MenuItem value='60'>1 hour</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box className={classes.infoBox} sx={{ mt: 3 }}>
+        <Box className={classes.infoBoxIcon}>
+          <InfoOutlinedIcon sx={{ fontSize: 18, color: '#3b82f6' }} />
+        </Box>
+        <Box className={classes.infoBoxContent}>
+          <Typography className={classes.infoBoxTitle}>Security Best Practices</Typography>
+          <Typography className={classes.infoBoxText}>
+            Enable Two-Factor Authentication for enhanced security. Review audit logs regularly to
+            track system changes.
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+// ── Admin Controls Tab (Theme Selection + Live Preview) ─────────────────────
+const AdminControlsTab = ({ classes }: { classes: Record<string, string> }) => {
+  const [selectedTheme, setSelectedTheme] = useState('ocean');
+  const [livePreview, setLivePreview] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [compactView, setCompactView] = useState(false);
+
+  const currentTheme = THEMES.find((t) => t.id === selectedTheme) || THEMES[0];
 
   return (
-    <Box className={classes.settingRowList}>
-      {rows.map((row, i) => (
-        <Box key={i} className={classes.settingRow}>
-          <Box flex={1}>
-            <Typography fontWeight={600} fontSize='0.9rem'>
-              {row.title}
-            </Typography>
-            <Typography fontSize='0.8rem' color='text.secondary' mt={0.3}>
-              {row.desc}
-            </Typography>
+    <Box>
+      {/* Preview Controls */}
+      <Box className={classes.sectionPanel}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{
+                background: 'linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%)',
+                boxShadow: '0 4px 14px rgba(79,70,229,0.4)',
+              }}
+            >
+              <PreviewIcon sx={{ fontSize: 18, color: '#fff' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>Live Preview</Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                See how your dashboard looks in real-time
+              </Typography>
+            </Box>
           </Box>
-          {row.control}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Chip
+              label={currentTheme.name}
+              size='small'
+              sx={{
+                background: `${currentTheme.accent}15`,
+                color: currentTheme.accent,
+                border: `1px solid ${currentTheme.accent}30`,
+                fontWeight: 700,
+                fontSize: '0.72rem',
+              }}
+            />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                Enable Preview
+              </Typography>
+              <Switch
+                checked={livePreview}
+                onChange={(e) => setLivePreview(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+          </Box>
         </Box>
-      ))}
+        <Box className={classes.sectionPanelBody}>
+          {livePreview ? (
+            <Box
+              sx={{
+                border: '2px solid rgba(79,70,229,0.2)',
+                borderRadius: 3,
+                overflow: 'hidden',
+                boxShadow: '0 8px 30px rgba(79,70,229,0.15)',
+              }}
+            >
+              <AppPreview theme={currentTheme} classes={classes} />
+            </Box>
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 4, background: '#f8fafc', borderRadius: 2 }}>
+              <Typography sx={{ color: 'text.secondary' }}>
+                Enable preview to see theme changes
+              </Typography>
+            </Box>
+          )}
+
+          {/* Color Palette */}
+          <Typography className={classes.colorPaletteLabel}>Color Palette</Typography>
+          <Box className={classes.colorPaletteRow}>
+            {[
+              { label: 'Primary', color: currentTheme.accent },
+              { label: 'Button', color: currentTheme.button },
+              { label: 'Sidebar', color: currentTheme.sidebar },
+              { label: 'Header', color: currentTheme.header },
+            ].map(({ label, color }) => (
+              <Box key={label} className={classes.colorSwatch}>
+                <Box
+                  className={classes.colorSwatchDot}
+                  sx={{ background: color, boxShadow: `0 2px 8px ${color}45` }}
+                />
+                <Box>
+                  <Typography className={classes.colorSwatchLabel}>{label}</Typography>
+                  <Typography className={classes.colorSwatchHex}>{color}</Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Theme Selection Grid */}
+      <Box className={classes.sectionPanel} sx={{ mt: 3 }}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)' }}
+            >
+              <PaletteIcon sx={{ fontSize: 18, color: '#8b5cf6' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>Theme Selection</Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                Choose a color scheme for the dashboard
+              </Typography>
+            </Box>
+          </Box>
+          {autoSave && (
+            <Box className={classes.panelAutoSave}>
+              <CloudDoneIcon sx={{ fontSize: '0.9rem', color: '#10b981' }} />
+              <Typography fontSize='0.68rem' color='text.secondary'>
+                Auto-saved
+              </Typography>
+            </Box>
+          )}
+        </Box>
+        <Box className={classes.sectionPanelBody}>
+          <Box className={classes.themeGrid}>
+            {THEMES.map((theme) => {
+              const isSelected = selectedTheme === theme.id;
+              return (
+                <Box
+                  key={theme.id}
+                  onClick={() => setSelectedTheme(theme.id)}
+                  className={`${classes.themeOption} ${isSelected ? classes.themeOptionSelected : ''}`}
+                >
+                  <Box className={classes.themePreview} sx={{ background: theme.light }}>
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '40%',
+                        background: `linear-gradient(135deg, ${theme.sidebar}, ${theme.accent})`,
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: 8,
+                        right: 8,
+                        height: 16,
+                        borderRadius: 1,
+                        background: '#fff',
+                        border: '1px solid rgba(0,0,0,0.08)',
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        height: 12,
+                        borderRadius: 1,
+                        background: '#fff',
+                        border: '1px solid rgba(0,0,0,0.05)',
+                      }}
+                    />
+                    {isSelected && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          width: 20,
+                          height: 20,
+                          borderRadius: '50%',
+                          background: theme.accent,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <CheckCircleIcon sx={{ color: '#fff', fontSize: 12 }} />
+                      </Box>
+                    )}
+                  </Box>
+                  <Box className={classes.themeInfo}>
+                    <Typography className={classes.themeName}>{theme.name}</Typography>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <Box
+                        sx={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: '50%',
+                          background: theme.accent,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: '50%',
+                          background: theme.button,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: '50%',
+                          background: theme.sidebar,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Display Options */}
+      <Box className={classes.sectionPanel} sx={{ mt: 3 }}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.2)' }}
+            >
+              <TuneIcon sx={{ fontSize: 18, color: '#6366f1' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>Display Options</Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                Customize your viewing experience
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box className={classes.sectionPanelBody}>
+          <Box className={classes.settingRowList}>
+            <Box className={`${classes.configItem} ${darkMode ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: darkMode ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <DarkModeIcon sx={{ color: '#6366f1', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>Dark Mode</Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Use dark theme for the interface
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={darkMode}
+                onChange={(e) => setDarkMode(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+            <Box className={`${classes.configItem} ${compactView ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: compactView ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <VisibilityIcon sx={{ color: '#10b981', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Compact View
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Show more data in less space
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={compactView}
+                onChange={(e) => setCompactView(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+            <Box className={`${classes.configItem} ${autoSave ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: autoSave ? 'rgba(245,158,11,0.15)' : 'rgba(245,158,11,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CloudDoneIcon sx={{ color: '#f59e0b', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Auto-save Theme
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Automatically save theme changes
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={autoSave}
+                onChange={(e) => setAutoSave(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+// ── Notifications Tab ─────────────────────────────────────────────────────────
+const NotificationsTab = ({ classes }: { classes: Record<string, string> }) => {
+  const [emailNotif, setEmailNotif] = useState(true);
+  const [pushNotif, setPushNotif] = useState(true);
+  const [smsNotif, setSmsNotif] = useState(false);
+  const [criticalOnly, setCriticalOnly] = useState(false);
+  const [dailyDigest, setDailyDigest] = useState(true);
+  const [weeklyReport, setWeeklyReport] = useState(true);
+
+  return (
+    <Box>
+      <Box className={classes.sectionPanel}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
+              }}
+            >
+              <NotificationsActiveIcon sx={{ fontSize: 18, color: '#fff' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>
+                Notification Channels
+              </Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                Configure how you receive alerts
+              </Typography>
+            </Box>
+          </Box>
+          <Box className={classes.statusIndicator}>
+            <Box
+              className={classes.statusDot}
+              sx={{ background: '#10b981', boxShadow: '0 0 8px #10b981' }}
+            />
+            <Typography className={classes.statusText}>Enabled</Typography>
+          </Box>
+        </Box>
+        <Box className={classes.sectionPanelBody}>
+          <Box className={classes.settingRowList}>
+            <Box className={`${classes.configItem} ${emailNotif ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: emailNotif ? 'rgba(239,68,68,0.15)' : 'rgba(239,68,68,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#ef4444', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Email Notifications
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Receive alerts via email
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={emailNotif}
+                onChange={(e) => setEmailNotif(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+
+            <Box className={`${classes.configItem} ${pushNotif ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: pushNotif ? 'rgba(6,182,212,0.15)' : 'rgba(6,182,212,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#06b6d4', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Push Notifications
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Browser and mobile app alerts
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={pushNotif}
+                onChange={(e) => setPushNotif(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+
+            <Box className={`${classes.configItem} ${smsNotif ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: smsNotif ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#10b981', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    SMS Notifications
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Text message alerts
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={smsNotif}
+                onChange={(e) => setSmsNotif(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+
+            <Box
+              className={`${classes.configItem} ${criticalOnly ? classes.configItemActive : ''}`}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: criticalOnly ? 'rgba(245,158,11,0.15)' : 'rgba(245,158,11,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#f59e0b', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Critical Alerts Only
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Only notify for critical events
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={criticalOnly}
+                onChange={(e) => setCriticalOnly(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box className={classes.sectionPanel} sx={{ mt: 3 }}>
+        <Box className={classes.sectionPanelHeader}>
+          <Box className={classes.sectionPanelTitle}>
+            <Box
+              className={classes.sectionPanelIcon}
+              sx={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)' }}
+            >
+              <SettingsIcon sx={{ fontSize: 18, color: '#8b5cf6' }} />
+            </Box>
+            <Box>
+              <Typography className={classes.sectionPanelTitleText}>Report Scheduling</Typography>
+              <Typography className={classes.sectionPanelSubtitle}>
+                Automated performance reports
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box className={classes.sectionPanelBody}>
+          <Box className={classes.settingRowList}>
+            <Box className={`${classes.configItem} ${dailyDigest ? classes.configItemActive : ''}`}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: dailyDigest ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#6366f1', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Daily Digest
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Daily summary at 8:00 AM
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={dailyDigest}
+                onChange={(e) => setDailyDigest(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+
+            <Box
+              className={`${classes.configItem} ${weeklyReport ? classes.configItemActive : ''}`}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: weeklyReport ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsActiveIcon sx={{ color: '#10b981', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
+                    Weekly Report
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Monday morning analysis
+                  </Typography>
+                </Box>
+              </Box>
+              <Switch
+                checked={weeklyReport}
+                onChange={(e) => setWeeklyReport(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4f46e5' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#4f46e5',
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };
@@ -504,37 +1270,48 @@ const SecurityTab = ({ classes }: { classes: Record<string, string> }) => {
 const Settings = () => {
   const { classes } = useStyles();
   const [tabValue, setTabValue] = useState(0);
-  const { themeName: selectedTheme, setThemeName } = useThemeContext();
 
-  const handleThemeSelect = (name: string) => {
-    setThemeName(name);
-  };
-
-  const selectedThemeConfig = THEMES.find((t) => t.name === selectedTheme) ?? THEMES[0];
-
-  const TABS = [
-    { label: 'General', icon: <SettingsIcon fontSize='small' /> },
-    { label: 'Security', icon: <SecurityIcon fontSize='small' /> },
-    { label: 'Admin Controls', icon: <TuneIcon fontSize='small' /> },
+  const tabStats = [
+    { label: 'Themes', value: '8', color: '#6366f1' },
+    { label: 'Notifications', value: '4', color: '#10b981' },
+    { label: 'Security', value: 'Active', color: '#06b6d4' },
   ];
 
   return (
     <Box className={classes.container}>
-      {/* ── Hero Header ── */}
-      <Box className={classes.pageHeader}>
-        <Typography variant='h5' className={classes.pageHeaderTitle}>
-          Settings
-        </Typography>
-        <Typography className={classes.pageHeaderSubtitle}>
-          Configure platform preferences, security policies and application appearance.
-        </Typography>
-      </Box>
+      {/* ── Page Header ── */}
+      <PageHeader
+        title='Settings & Preferences'
+        description='Configure system settings, themes, notifications and security preferences for your dashboard'
+        icon={SettingsIcon}
+        variant='admin'
+      >
+        <Box className={classes.pageHeaderStats}>
+          {tabStats.map((stat) => (
+            <Box key={stat.label} className={classes.pageHeaderStat}>
+              <Box
+                className={classes.pageHeaderStatDot}
+                sx={{ background: stat.color, boxShadow: `0 0 6px ${stat.color}` }}
+              />
+              <Typography className={classes.pageHeaderStatText}>
+                <strong style={{ color: '#fff' }}>{stat.value}</strong> {stat.label}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </PageHeader>
 
       {/* ── Tab Bar ── */}
       <Box className={classes.tabBar}>
         <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)} className={classes.tabs}>
           {TABS.map((tab) => (
-            <Tab key={tab.label} icon={tab.icon} iconPosition='start' label={tab.label} />
+            <Tab
+              key={tab.label}
+              icon={tab.icon}
+              iconPosition='start'
+              label={tab.label}
+              sx={{ minWidth: { md: 'auto' }, px: { md: 2.5 } }}
+            />
           ))}
         </Tabs>
       </Box>
@@ -542,155 +1319,38 @@ const Settings = () => {
       {/* ── Tab Content ── */}
       {tabValue === 0 && <GeneralTab classes={classes} />}
       {tabValue === 1 && <SecurityTab classes={classes} />}
-      {tabValue === 2 && (
-        <Box className={classes.adminControlsGrid}>
-          {/* ── Left: Theme List ── */}
-          <Box className={classes.panel}>
-            {/* Panel header */}
-            <Box className={classes.panelHeader}>
-              <Box className={classes.panelHeaderRow}>
-                <Box>
-                  <Typography className={classes.panelTitle}>Theme Selection</Typography>
-                  <Typography className={classes.panelSubtitle}>
-                    Click any theme to preview &amp; apply
-                  </Typography>
-                </Box>
-                <Box className={classes.panelAutoSave}>
-                  <CloudDoneIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
-                  <Typography fontSize='0.68rem' color='text.secondary'>
-                    Auto-saved
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
+      {tabValue === 2 && <AdminControlsTab classes={classes} />}
+      {tabValue === 3 && <NotificationsTab classes={classes} />}
 
-            {/* Theme list */}
-            <Box className={classes.themeList}>
-              {THEMES.map((theme) => {
-                const isSelected = selectedTheme === theme.name;
-                return (
-                  <Box
-                    key={theme.name}
-                    onClick={() => handleThemeSelect(theme.name)}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      p: 1.5,
-                      borderRadius: 2.5,
-                      cursor: 'pointer',
-                      background: isSelected ? `${theme.accent}0f` : 'transparent',
-                      border: isSelected
-                        ? `1.5px solid ${theme.accent}`
-                        : '1.5px solid transparent',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        background: isSelected ? `${theme.accent}0f` : 'rgba(0,0,0,0.025)',
-                        border: isSelected
-                          ? `1.5px solid ${theme.accent}`
-                          : '1.5px solid rgba(0,0,0,0.07)',
-                      },
-                    }}
-                  >
-                    {/* Color swatch */}
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        background: theme.swatch,
-                        flexShrink: 0,
-                        boxShadow: isSelected
-                          ? `0 0 0 2px #fff, 0 0 0 4px ${theme.accent}`
-                          : '0 2px 8px rgba(0,0,0,0.15)',
-                        transition: 'box-shadow 0.25s ease',
-                      }}
-                    />
-                    <Box flex={1} minWidth={0}>
-                      <Typography
-                        fontWeight={isSelected ? 700 : 500}
-                        fontSize='0.875rem'
-                        color={isSelected ? theme.accent : 'text.primary'}
-                      >
-                        {theme.name}
-                      </Typography>
-                      <Typography fontSize='0.68rem' color='text.disabled' fontFamily='monospace'>
-                        {theme.accent}
-                      </Typography>
-                    </Box>
-                    {isSelected && (
-                      <CheckCircleIcon sx={{ color: theme.accent, fontSize: 20, flexShrink: 0 }} />
-                    )}
-                  </Box>
-                );
-              })}
-            </Box>
-          </Box>
-
-          {/* ── Right: Preview ── */}
-          <Box className={classes.panel}>
-            {/* Panel header */}
-            <Box className={classes.previewPanelHeaderRow}>
-              <Box>
-                <Typography className={classes.panelTitle}>Live Preview</Typography>
-                <Typography className={classes.panelSubtitle}>
-                  How <strong>{selectedTheme}</strong> looks across the application
-                </Typography>
-              </Box>
-              <Chip
-                label={selectedTheme}
-                size='small'
-                sx={{
-                  background: `${selectedThemeConfig.accent}15`,
-                  color: selectedThemeConfig.accent,
-                  border: `1px solid ${selectedThemeConfig.accent}30`,
-                  fontWeight: 700,
-                  fontSize: '0.72rem',
-                }}
-              />
-            </Box>
-
-            <Box className={classes.previewContent}>
-              {/* Mini browser + app mockup */}
-              <AppPreview theme={selectedThemeConfig} classes={classes} />
-
-              {/* Color palette */}
-              <Typography className={classes.colorPaletteLabel}>Color Palette</Typography>
-              <Box className={classes.colorPaletteRow}>
-                {[
-                  { label: 'Primary', color: selectedThemeConfig.accent },
-                  { label: 'Button', color: selectedThemeConfig.button },
-                  { label: 'Sidebar', color: selectedThemeConfig.sidebar },
-                  { label: 'Header', color: selectedThemeConfig.header },
-                ].map(({ label, color }) => (
-                  <Box
-                    key={label}
-                    className={classes.colorSwatch}
-                    sx={{
-                      '&:hover': {
-                        boxShadow: `0 4px 14px ${color}25`,
-                        transform: 'translateY(-2px)',
-                      },
-                    }}
-                  >
-                    <Box
-                      className={classes.colorSwatchDot}
-                      sx={{
-                        background: color,
-                        boxShadow: `0 2px 8px ${color}45`,
-                      }}
-                    />
-                    <Box>
-                      <Typography className={classes.colorSwatchLabel}>{label}</Typography>
-                      <Typography className={classes.colorSwatchHex}>{color}</Typography>
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      )}
+      {/* ── Save Button (Floating) ── */}
+      <Box
+        sx={{ position: 'fixed', bottom: 24, right: 24, display: 'flex', gap: 1.5, zIndex: 1000 }}
+      >
+        <Button
+          variant='outlined'
+          sx={{
+            borderRadius: 3,
+            textTransform: 'none',
+            fontWeight: 600,
+            px: 3,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          variant='contained'
+          sx={{
+            borderRadius: 3,
+            textTransform: 'none',
+            fontWeight: 600,
+            px: 3,
+            boxShadow: '0 4px 20px rgba(79,70,229,0.4)',
+          }}
+        >
+          Save Changes
+        </Button>
+      </Box>
     </Box>
   );
 };

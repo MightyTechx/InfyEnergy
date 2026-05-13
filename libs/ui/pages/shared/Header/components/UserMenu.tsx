@@ -37,6 +37,11 @@ const UserMenu = ({
     navigate(consultantMode ? ConsultantPath.SETTINGS : AdminPath.SETTINGS);
   };
 
+  const handleHelpSupport = () => {
+    onClose();
+    navigate(consultantMode ? ConsultantPath.HELP_SUPPORT : AdminPath.HELP_SUPPORT);
+  };
+
   return (
     <Menu
       anchorEl={anchorEl}
@@ -83,7 +88,7 @@ const UserMenu = ({
         <ListItemText>Settings</ListItemText>
       </MenuItem>
       <Divider />
-      <MenuItem onClick={onClose}>
+      <MenuItem onClick={handleHelpSupport}>
         <ListItemIcon>
           <HelpOutlineIcon fontSize='small' />
         </ListItemIcon>

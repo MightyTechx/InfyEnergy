@@ -198,12 +198,99 @@ const Dashboard = () => {
   const { hours, minutes, seconds, dateStr, tzAbbr, tzRegion, utcOffset } = useLiveDateTime();
 
   const [turbineData, setTurbineData] = useState<TurbineData[]>(MOCK_TURBINE_DATA);
-  const [view, setView] = useState<'table' | 'chart'>('table');
+  const [view, setView] = useState<'table' | 'chart' | 'incentive'>('table');
   const [chartType, setChartType] = useState<ChartType>('bar');
   const [fromDate, setFromDate] = useState<Dayjs>(MIN_DATE);
   const [toDate, setToDate] = useState<Dayjs>(MAX_DATE);
   const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TURBINES);
   const [search, setSearch] = useState('');
+
+  // Incentive data
+  const INCENTIVE_DATA = [
+    { dateRange: '2026-05-13', actual: 4.2, forecast: 4.8, delta: 0.6, fer: '--', incentive: 0.0 },
+    {
+      dateRange: '2026-05-12',
+      actual: 40.9,
+      forecast: 6.7,
+      delta: 34.2,
+      fer: '27.7',
+      incentive: 0.0,
+    },
+    {
+      dateRange: 'This Month',
+      actual: 882.3,
+      forecast: 687.9,
+      delta: 194.4,
+      fer: '9.9',
+      incentive: 1.12,
+    },
+    {
+      dateRange: '2026-04',
+      actual: 1620.1,
+      forecast: 1629.0,
+      delta: 8.9,
+      fer: '15.0',
+      incentive: 1.49,
+    },
+    {
+      dateRange: '2026-03',
+      actual: 2180.7,
+      forecast: 2293.7,
+      delta: 113.0,
+      fer: '11.8',
+      incentive: 3.02,
+    },
+    {
+      dateRange: '2026-02',
+      actual: 3229.8,
+      forecast: 3504.1,
+      delta: 274.4,
+      fer: '10.7',
+      incentive: 6.69,
+    },
+  ];
+
+  // Separate search state for incentive table
+  const [incentiveSearch, setIncentiveSearch] = useState('');
+
+  const filteredIncentiveData = INCENTIVE_DATA.filter((row) => {
+    // Filter based on date range
+    if (row.dateRange === 'This Month') {
+      return fromDate.isSame(toDate, 'month') || true; // Always show this month summary
+    }
+    const rowDate = row.dateRange;
+    if (rowDate.includes('-')) {
+      const parts = rowDate.split('-');
+      if (parts.length === 3) {
+        const year = parseInt(parts[0]);
+        const month = parseInt(parts[1]);
+        const day = parseInt(parts[2]);
+        const rowDateObj = toDate
+          .year(year)
+          .month(month - 1)
+          .date(day);
+        if (
+          !rowDateObj.isAfter(fromDate.subtract(1, 'day')) ||
+          !rowDateObj.isBefore(toDate.add(1, 'day'))
+        ) {
+          return false;
+        }
+      }
+    }
+    // Search filter
+    if (incentiveSearch) {
+      const q = incentiveSearch.toLowerCase();
+      return (
+        row.dateRange.toLowerCase().includes(q) ||
+        String(row.actual).includes(q) ||
+        String(row.forecast).includes(q) ||
+        String(row.delta).includes(q) ||
+        row.fer.includes(q) ||
+        String(row.incentive).includes(q)
+      );
+    }
+    return true;
+  });
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -751,6 +838,17 @@ const Dashboard = () => {
             >
               Power Analytics
             </Button>
+
+            <Button
+              variant={view === 'incentive' ? 'contained' : 'outlined'}
+              startIcon={<ShowChartIcon sx={{ fontSize: 18 }} />}
+              onClick={() => setView('incentive')}
+              className={
+                view === 'incentive' ? classes.toggleBtnActiveIncentive : classes.toggleBtnInactive
+              }
+            >
+              Incentive Report
+            </Button>
           </Box>
 
           {view === 'table' && (
@@ -773,7 +871,7 @@ const Dashboard = () => {
           )}
         </Box>
 
-        {/* ── Analytics Filter Panel ── */}
+        {/* ── Analytics Filter Panel - Power Analytics ── */}
         {view === 'chart' && (
           <Box
             sx={{
@@ -858,7 +956,12 @@ const Dashboard = () => {
                     <li
                       {...props}
                       key={SELECT_ALL}
-                      style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px' }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '4px 8px',
+                      }}
                     >
                       <Checkbox
                         icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 14 }} />}
@@ -992,7 +1095,7 @@ const Dashboard = () => {
               navigate(AdminPath.TURBINE_DETAIL.replace(':id', String(t.id)));
             }}
           />
-        ) : (
+        ) : view === 'chart' ? (
           /* ── Power Analytics Card ── */
           <Card cardVariant='default'>
             {/* Card Header */}
@@ -1202,6 +1305,142 @@ const Dashboard = () => {
                 options={chartType === 'bar' ? barOptions : lineOptions}
                 series={chartData.series}
                 height={380}
+              />
+            </Box>
+          </Card>
+        ) : (
+          /* ── Incentive Report Card ── */
+          <Card cardVariant='default'>
+            {/* Table Section Header - Same style as Technical Documents */}
+            <Box className={classes.statsRowIncentive}>
+              {/* From Date */}
+              <DatePicker
+                label='From Date'
+                value={fromDate}
+                onChange={(v) => {
+                  if (v && v.isValid()) setFromDate(v);
+                }}
+                minDate={MIN_DATE}
+                maxDate={toDate}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    sx: { minWidth: 140 },
+                  },
+                }}
+              />
+
+              {/* To Date */}
+              <DatePicker
+                label='To Date'
+                value={toDate}
+                onChange={(v) => {
+                  if (v && v.isValid()) setToDate(v);
+                }}
+                minDate={fromDate}
+                maxDate={MAX_DATE}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    sx: { minWidth: 140 },
+                  },
+                }}
+              />
+
+              {/* Range info chip */}
+              <Chip
+                label={`Incentive Report · ${fromDate.format('DD MMM')} – ${toDate.format('DD MMM YYYY')}`}
+                size='small'
+                sx={{
+                  height: 36,
+                  fontSize: '0.7rem',
+                  background: 'rgba(16,185,129,0.1)',
+                  color: '#10b981',
+                  fontWeight: 600,
+                  border: '1px solid rgba(16,185,129,0.3)',
+                }}
+              />
+
+              {/* Search field */}
+              <TextField
+                placeholder='Search report…'
+                value={incentiveSearch}
+                onChange={(e) => setIncentiveSearch(e.target.value)}
+                size='small'
+                sx={{
+                  minWidth: 200,
+                  ml: 'auto',
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '20px',
+                    background: 'rgba(255,255,255,0.92)',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid rgba(16,185,129,0.18)',
+                      borderRadius: '20px',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid rgba(16,185,129,0.4)',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #10b981',
+                    },
+                  },
+                }}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <SearchIcon sx={{ color: 'rgba(16,185,129,0.6)', fontSize: '1.1rem' }} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Incentive Table */}
+            <Box sx={{ p: 2.5 }}>
+              <DataTable
+                columns={[
+                  {
+                    id: 'dateRange',
+                    label: 'Date Range',
+                    minWidth: 120,
+                  },
+                  {
+                    id: 'actual',
+                    label: 'Actual MWh',
+                    minWidth: 100,
+                    align: 'right' as const,
+                  },
+                  {
+                    id: 'forecast',
+                    label: 'Forecast MWh',
+                    minWidth: 100,
+                    align: 'right' as const,
+                  },
+                  {
+                    id: 'delta',
+                    label: '|Δ| MWh',
+                    minWidth: 90,
+                    align: 'right' as const,
+                  },
+                  {
+                    id: 'fer',
+                    label: 'FER %',
+                    minWidth: 80,
+                    align: 'right' as const,
+                  },
+                  {
+                    id: 'incentive',
+                    label: 'Incentive M.KRW',
+                    minWidth: 120,
+                    align: 'right' as const,
+                  },
+                ]}
+                data={filteredIncentiveData}
+                rowKey='dateRange'
+                searchable={false}
+                initialRowsPerPage={10}
               />
             </Box>
           </Card>

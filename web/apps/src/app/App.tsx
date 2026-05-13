@@ -21,8 +21,10 @@ const {
   AdminInventoryPage,
   AdminTechnicalDocumentsPage,
   AdminFeatureFlagsPage,
+  AdminTurbineConfigPage,
   AdminConfigurationPage,
   SettingsPage,
+  HelpSupportPage,
 
   // Auth pages
   SignInPage,
@@ -87,8 +89,10 @@ const AppRoutes = () => {
             <Route path={AdminPath.INVENTORY} element={<AdminInventoryPage />} />
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
             <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
+            <Route path={AdminPath.TURBINE_CONFIG} element={<AdminTurbineConfigPage />} />
             <Route path={AdminPath.CONFIGURATION} element={<AdminConfigurationPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
+            <Route path={AdminPath.HELP_SUPPORT} element={<HelpSupportPage />} />
 
             {/* User routes */}
             <Route path={UserPath.DASHBOARD} element={<AdminDashboardPage />} />
@@ -96,6 +100,7 @@ const AppRoutes = () => {
             {/* Consultant routes */}
             <Route path={ConsultantPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={ConsultantPath.SETTINGS} element={<SettingsPage />} />
+            <Route path={ConsultantPath.HELP_SUPPORT} element={<HelpSupportPage />} />
             <Route
               path={ConsultantPath.ACCESS_MANAGEMENT}
               element={<AdminPeopleManagementPage />}

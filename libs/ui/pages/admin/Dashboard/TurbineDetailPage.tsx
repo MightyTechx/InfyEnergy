@@ -145,6 +145,12 @@ const MiniParam: React.FC<MiniParamProps> = ({
 }) => {
   const { classes } = useTurbineDetailStyles();
 
+  const bg = alert !== 'normal' ? `${ALERT_COLOR[alert]}08` : `${accent}10`;
+
+  const border = alert !== 'normal' ? `${ALERT_COLOR[alert]}30` : `${accent}30`;
+
+  const valueColor = alert !== 'normal' ? ALERT_COLOR[alert] : undefined;
+
   return (
     <Paper
       elevation={0}
@@ -160,24 +166,29 @@ const MiniParam: React.FC<MiniParamProps> = ({
       }}
     >
       <Box
-        className={classes.miniParamIcon}
-        sx={{ background: `${accent}15`, '& svg': { color: accent } }}
+        className={classes.statCardIconWrap}
+        sx={{
+          background: bg,
+          border: `1px solid ${border}`,
+          '& svg': {
+            color: alert !== 'normal' ? ALERT_COLOR[alert] : accent,
+          },
+        }}
       >
         {icon}
       </Box>
+
       <Box>
-        <Typography
-          className={classes.miniParamValue}
-          sx={{ color: alert !== 'normal' ? ALERT_COLOR[alert] : 'text.primary' }}
-        >
+        <Typography className={classes.statCardValue} sx={valueColor ? { color: valueColor } : {}}>
           {value}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
-          <Typography className={classes.miniParamLabel}>
-            {label} {unit}
-          </Typography>
-        </Box>
+
+        <Typography className={classes.statCardLabel}>
+          {label}
+          {unit && ` (${unit})`}
+        </Typography>
       </Box>
+
       {alert !== 'normal' && (
         <Box
           className={classes.miniParamAlertDot}
@@ -331,17 +342,6 @@ const TurbineDetailPage: React.FC = () => {
       label: 'Gearbox (°C)',
       valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
     },
-    {
-      icon: <SettingsIcon sx={{ color: '#6366f1', fontSize: 20 }} />,
-      bg: 'rgba(99,102,241,0.12)',
-      border: 'rgba(99,102,241,0.3)',
-      value:
-        turbine.operatingMode.length > 12
-          ? `${turbine.operatingMode.substring(0, 10)}..`
-          : turbine.operatingMode,
-      label: 'Mode',
-      valueColor: '#6366f1',
-    },
   ];
 
   return (
@@ -430,26 +430,28 @@ const TurbineDetailPage: React.FC = () => {
         </Box>
 
         {/* ── Stat Cards Row (Dashboard Pattern) ── */}
-        <Box className={classes.statsRow}>
-          {statsData.map(({ icon, bg, border, value, label, valueColor }, idx) => (
-            <Paper key={idx} className={classes.statCard} elevation={0}>
-              <Box
-                className={classes.statCardIconWrap}
-                sx={{ background: bg, border: `1px solid ${border}` }}
-              >
-                {icon}
-              </Box>
-              <Box>
-                <Typography
-                  className={classes.statCardValue}
-                  sx={valueColor ? { color: valueColor } : {}}
+        <Box className={classes.statsRowContainer}>
+          <Box className={classes.statsRow}>
+            {statsData.map(({ icon, bg, border, value, label, valueColor }, idx) => (
+              <Paper key={idx} className={classes.statCard} elevation={0}>
+                <Box
+                  className={classes.statCardIconWrap}
+                  sx={{ background: bg, border: `1px solid ${border}` }}
                 >
-                  {value}
-                </Typography>
-                <Typography className={classes.statCardLabel}>{label}</Typography>
-              </Box>
-            </Paper>
-          ))}
+                  {icon}
+                </Box>
+                <Box>
+                  <Typography
+                    className={classes.statCardValue}
+                    sx={valueColor ? { color: valueColor } : {}}
+                  >
+                    {value}
+                  </Typography>
+                  <Typography className={classes.statCardLabel}>{label}</Typography>
+                </Box>
+              </Paper>
+            ))}
+          </Box>
         </Box>
 
         {/* ── Key Performance Indicators ── */}

@@ -54,7 +54,9 @@ export const ModelName = {
   User: 'User',
   UserChangeLog: 'UserChangeLog',
   LoginLog: 'LoginLog',
-  FeatureFlag: 'FeatureFlag'
+  FeatureFlag: 'FeatureFlag',
+  TurbineType: 'TurbineType',
+  TurbineParameter: 'TurbineParameter'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -176,6 +178,48 @@ export const FeatureFlagScalarFieldEnum = {
 } as const
 
 export type FeatureFlagScalarFieldEnum = (typeof FeatureFlagScalarFieldEnum)[keyof typeof FeatureFlagScalarFieldEnum]
+
+
+export const TurbineTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  manufacturer: 'manufacturer',
+  ratedPower: 'ratedPower',
+  rotorDiameter: 'rotorDiameter',
+  hubHeight: 'hubHeight',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TurbineTypeScalarFieldEnum = (typeof TurbineTypeScalarFieldEnum)[keyof typeof TurbineTypeScalarFieldEnum]
+
+
+export const TurbineParameterScalarFieldEnum = {
+  id: 'id',
+  turbineTypeId: 'turbineTypeId',
+  key: 'key',
+  label: 'label',
+  category: 'category',
+  unit: 'unit',
+  dataType: 'dataType',
+  minValue: 'minValue',
+  maxValue: 'maxValue',
+  warningMin: 'warningMin',
+  warningMax: 'warningMax',
+  criticalMin: 'criticalMin',
+  criticalMax: 'criticalMax',
+  chartEnabled: 'chartEnabled',
+  dashboardVisible: 'dashboardVisible',
+  alertEnabled: 'alertEnabled',
+  alertSeverity: 'alertSeverity',
+  color: 'color',
+  scadaMapping: 'scadaMapping',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TurbineParameterScalarFieldEnum = (typeof TurbineParameterScalarFieldEnum)[keyof typeof TurbineParameterScalarFieldEnum]
 
 
 export const SortOrder = {

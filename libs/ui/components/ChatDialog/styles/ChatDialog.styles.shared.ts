@@ -376,4 +376,52 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       '50%': { transform: 'translate(15px, -15px)' },
     },
   },
+
+  suggestionsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing(0.75),
+    marginTop: theme.spacing(1.5),
+  },
+
+  suggestionChip: {
+    background: 'rgba(99, 102, 241, 0.15)',
+    border: '1px solid rgba(99, 102, 241, 0.3)',
+    color: '#a5b4fc',
+    fontSize: '0.7rem',
+    height: 28,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      background: 'rgba(99, 102, 241, 0.3)',
+      borderColor: 'rgba(99, 102, 241, 0.5)',
+      color: '#c7d2fe',
+      transform: 'scale(1.02)',
+    },
+    '& .MuiChip-icon': {
+      color: '#818cf8',
+    },
+  },
+
+  typingIndicator: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+    padding: theme.spacing(0.5, 1),
+  },
+
+  typingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: '50%',
+    background: '#818cf8',
+    animation: 'typingBounce 1.4s ease-in-out infinite',
+    '&:nth-of-type(1)': { animationDelay: '0s' },
+    '&:nth-of-type(2)': { animationDelay: '0.2s' },
+    '&:nth-of-type(3)': { animationDelay: '0.4s' },
+    '@keyframes typingBounce': {
+      '0%, 60%, 100%': { transform: 'translateY(0)', opacity: 0.4 },
+      '30%': { transform: 'translateY(-6px)', opacity: 1 },
+    },
+  },
 });

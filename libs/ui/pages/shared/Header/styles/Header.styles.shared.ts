@@ -435,6 +435,11 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       filter: 'drop-shadow(0 0 6px rgba(165,180,252,0.7))',
       transform: 'scale(1.15)',
     },
+
+    [theme.breakpoints.down('sm')]: {
+      width: '22px',
+      height: '22px',
+    },
   },
 
   loadingText: {

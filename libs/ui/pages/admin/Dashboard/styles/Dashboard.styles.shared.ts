@@ -6,6 +6,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     padding: theme.spacing(3),
     background: 'linear-gradient(160deg, #f0f4ff 0%, #fafbff 50%, #f0f4ff 100%)',
     minHeight: '100vh',
+    width: '100%',
+    boxSizing: 'border-box',
     [theme.breakpoints.down('sm')]: { padding: theme.spacing(1.25) },
     [theme.breakpoints.between('sm', 'md')]: { padding: theme.spacing(2) },
   },
@@ -294,6 +296,21 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
   },
 
+  // Stats Row Incentive - for Incentive Report table header
+  statsRowIncentive: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1.5, 2.5),
+    background: 'linear-gradient(135deg, rgba(74,222,128,0.04) 0%, rgba(16,185,129,0.02) 100%)',
+    borderBottom: '1px solid rgba(16,185,129,0.1)',
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1.5),
+      gap: theme.spacing(1),
+    },
+  },
+
   statCard: {
     display: 'flex',
     alignItems: 'center',
@@ -401,9 +418,11 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     border: '1px solid #e8eaf0',
     boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
     flexWrap: 'wrap' as const,
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
       gap: theme.spacing(1),
-      padding: theme.spacing(1.25, 1.5),
+      padding: theme.spacing(1, 1.25),
+      width: '100%',
     },
   },
 
@@ -411,7 +430,14 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     display: 'flex',
     gap: theme.spacing(1),
     flexShrink: 0,
-    [theme.breakpoints.down('sm')]: { width: '100%', flexDirection: 'column' },
+    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing(0.75),
+    },
   },
 
   chartDatePicker: {
@@ -456,7 +482,11 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       fontSize: '1.1rem',
       color: 'rgba(79,70,229,0.5)',
     },
-    [theme.breakpoints.down('sm')]: { width: '100%', marginLeft: 0 },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      marginLeft: 0,
+      marginTop: theme.spacing(0.75),
+    },
   },
 
   // ─── Chart Card ──────────────────────────────────────────────────────────────
@@ -886,6 +916,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       boxShadow: '0 4px 12px rgba(79,70,229,0.35)',
       transform: 'translateY(-1px)',
     },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 
   toggleBtnBase: {
@@ -897,6 +930,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     minWidth: 148,
     transition: 'all 0.18s ease',
     boxShadow: 'none',
+    flex: 1,
   },
 
   toggleBtnActiveChart: {
@@ -909,11 +943,24 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
   },
 
+  toggleBtnActiveIncentive: {
+    background: 'linear-gradient(135deg,#10b981 0%,#059669 100%)',
+    boxShadow: '0 4px 18px rgba(16,185,129,0.4)',
+    '&:hover': {
+      boxShadow: '0 6px 24px rgba(16,185,129,0.55)',
+      transform: 'translateY(-1px)',
+      background: 'linear-gradient(135deg,#059669 0%,#047857 100%)',
+    },
+  },
+
   toggleBtnInactive: {
     color: '#64748b',
     borderColor: '#e2e8f0',
     background: '#f8fafc',
     '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 
   // ─── Table Cell Styles ───────────────────────────────────────────────────────

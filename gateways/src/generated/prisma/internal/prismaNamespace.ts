@@ -387,7 +387,9 @@ export const ModelName = {
   User: 'User',
   UserChangeLog: 'UserChangeLog',
   LoginLog: 'LoginLog',
-  FeatureFlag: 'FeatureFlag'
+  FeatureFlag: 'FeatureFlag',
+  TurbineType: 'TurbineType',
+  TurbineParameter: 'TurbineParameter'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userChangeLog" | "loginLog" | "featureFlag"
+    modelProps: "user" | "userChangeLog" | "loginLog" | "featureFlag" | "turbineType" | "turbineParameter"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +705,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TurbineType: {
+      payload: Prisma.$TurbineTypePayload<ExtArgs>
+      fields: Prisma.TurbineTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TurbineTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TurbineTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        findFirst: {
+          args: Prisma.TurbineTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TurbineTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        findMany: {
+          args: Prisma.TurbineTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>[]
+        }
+        create: {
+          args: Prisma.TurbineTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        createMany: {
+          args: Prisma.TurbineTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TurbineTypeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>[]
+        }
+        delete: {
+          args: Prisma.TurbineTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        update: {
+          args: Prisma.TurbineTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.TurbineTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TurbineTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TurbineTypeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>[]
+        }
+        upsert: {
+          args: Prisma.TurbineTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineTypePayload>
+        }
+        aggregate: {
+          args: Prisma.TurbineTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTurbineType>
+        }
+        groupBy: {
+          args: Prisma.TurbineTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TurbineTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TurbineTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TurbineTypeCountAggregateOutputType> | number
+        }
+      }
+    }
+    TurbineParameter: {
+      payload: Prisma.$TurbineParameterPayload<ExtArgs>
+      fields: Prisma.TurbineParameterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TurbineParameterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TurbineParameterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        findFirst: {
+          args: Prisma.TurbineParameterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TurbineParameterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        findMany: {
+          args: Prisma.TurbineParameterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>[]
+        }
+        create: {
+          args: Prisma.TurbineParameterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        createMany: {
+          args: Prisma.TurbineParameterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TurbineParameterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>[]
+        }
+        delete: {
+          args: Prisma.TurbineParameterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        update: {
+          args: Prisma.TurbineParameterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        deleteMany: {
+          args: Prisma.TurbineParameterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TurbineParameterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TurbineParameterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>[]
+        }
+        upsert: {
+          args: Prisma.TurbineParameterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TurbineParameterPayload>
+        }
+        aggregate: {
+          args: Prisma.TurbineParameterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTurbineParameter>
+        }
+        groupBy: {
+          args: Prisma.TurbineParameterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TurbineParameterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TurbineParameterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TurbineParameterCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -845,6 +995,48 @@ export const FeatureFlagScalarFieldEnum = {
 } as const
 
 export type FeatureFlagScalarFieldEnum = (typeof FeatureFlagScalarFieldEnum)[keyof typeof FeatureFlagScalarFieldEnum]
+
+
+export const TurbineTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  manufacturer: 'manufacturer',
+  ratedPower: 'ratedPower',
+  rotorDiameter: 'rotorDiameter',
+  hubHeight: 'hubHeight',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TurbineTypeScalarFieldEnum = (typeof TurbineTypeScalarFieldEnum)[keyof typeof TurbineTypeScalarFieldEnum]
+
+
+export const TurbineParameterScalarFieldEnum = {
+  id: 'id',
+  turbineTypeId: 'turbineTypeId',
+  key: 'key',
+  label: 'label',
+  category: 'category',
+  unit: 'unit',
+  dataType: 'dataType',
+  minValue: 'minValue',
+  maxValue: 'maxValue',
+  warningMin: 'warningMin',
+  warningMax: 'warningMax',
+  criticalMin: 'criticalMin',
+  criticalMax: 'criticalMax',
+  chartEnabled: 'chartEnabled',
+  dashboardVisible: 'dashboardVisible',
+  alertEnabled: 'alertEnabled',
+  alertSeverity: 'alertSeverity',
+  color: 'color',
+  scadaMapping: 'scadaMapping',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TurbineParameterScalarFieldEnum = (typeof TurbineParameterScalarFieldEnum)[keyof typeof TurbineParameterScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1038,6 +1230,8 @@ export type GlobalOmitConfig = {
   userChangeLog?: Prisma.UserChangeLogOmit
   loginLog?: Prisma.LoginLogOmit
   featureFlag?: Prisma.FeatureFlagOmit
+  turbineType?: Prisma.TurbineTypeOmit
+  turbineParameter?: Prisma.TurbineParameterOmit
 }
 
 /* Types for Logging */

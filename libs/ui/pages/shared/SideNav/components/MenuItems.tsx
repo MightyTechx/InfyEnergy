@@ -6,6 +6,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import BuildIcon from '@mui/icons-material/Build';
 import { constants } from '@infygen/utils';
 import { useGetFeatureFlagsQuery } from '@infygen/services';
 
@@ -70,6 +71,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
         },
         // { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
         { label: 'Feature Flags', icon: <TuneIcon />, path: AdminPath.FEATURE_FLAGS },
+        { label: 'Turbine Config', icon: <BuildIcon />, path: AdminPath.TURBINE_CONFIG },
         { label: 'Configuration', icon: <ManageAccountsIcon />, path: AdminPath.CONFIGURATION },
       ],
     },

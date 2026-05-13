@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppBar, Badge, Box, Chip, IconButton, Toolbar, useTheme } from '@infygen/component';
 import { useMediaQuery } from '@infygen/hooks';
 import { Tooltip } from '../../../components';
@@ -68,6 +68,18 @@ const Header = () => {
   const handleChatClose = () => {
     setChatOpen(false);
   };
+
+  // Listen for external chat open events
+  useEffect(() => {
+    const handleOpenChatBot = () => {
+      setChatOpen(true);
+    };
+
+    window.addEventListener('openChatBot', handleOpenChatBot);
+    return () => {
+      window.removeEventListener('openChatBot', handleOpenChatBot);
+    };
+  }, []);
 
   return (
     <>

@@ -79,6 +79,39 @@ const Inventory = () => {
   const [form, setForm] = useState<ItemForm>(BLANK_FORM);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Receive Dialog State
+  const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
+  const [receiveForm, setReceiveForm] = useState({
+    item: null as InventoryRow | null,
+    contractor: '',
+    quantity: '1',
+    reference: '',
+    remarks: '',
+  });
+  const [receiveSaving, setReceiveSaving] = useState(false);
+
+  // Issue Dialog State
+  const [issueDialogOpen, setIssueDialogOpen] = useState(false);
+  const [issueForm, setIssueForm] = useState({
+    item: null as InventoryRow | null,
+    contractor: '',
+    quantity: '1',
+    reference: '',
+    remarks: '',
+  });
+  const [issueSaving, setIssueSaving] = useState(false);
+
+  // Adjust Dialog State
+  const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
+  const [adjustForm, setAdjustForm] = useState({
+    item: null as InventoryRow | null,
+    contractor: '',
+    quantity: '',
+    reference: '',
+    remarks: '',
+  });
+  const [adjustSaving, setAdjustSaving] = useState(false);
+
   const filtered = INVENTORY_DATA.filter((row) => {
     const matchCategory = !categoryFilter || row.category === categoryFilter;
     const matchLocation = !locationFilter || row.location === locationFilter;
@@ -116,6 +149,57 @@ const Inventory = () => {
 
   const isFormValid = form.itemCode.trim() && form.description.trim();
 
+  // Receive handlers
+  const openReceiveDialog = () => {
+    setReceiveForm({ item: null, contractor: '', quantity: '1', reference: '', remarks: '' });
+    setReceiveDialogOpen(true);
+  };
+  const closeReceiveDialog = () => {
+    setReceiveDialogOpen(false);
+    setReceiveForm({ item: null, contractor: '', quantity: '1', reference: '', remarks: '' });
+  };
+  const handleReceiveSave = async () => {
+    if (!receiveForm.item || !receiveForm.quantity) return;
+    setReceiveSaving(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setReceiveSaving(false);
+    closeReceiveDialog();
+  };
+
+  // Issue handlers
+  const openIssueDialog = () => {
+    setIssueForm({ item: null, contractor: '', quantity: '1', reference: '', remarks: '' });
+    setIssueDialogOpen(true);
+  };
+  const closeIssueDialog = () => {
+    setIssueDialogOpen(false);
+    setIssueForm({ item: null, contractor: '', quantity: '1', reference: '', remarks: '' });
+  };
+  const handleIssueSave = async () => {
+    if (!issueForm.item || !issueForm.quantity) return;
+    setIssueSaving(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setIssueSaving(false);
+    closeIssueDialog();
+  };
+
+  // Adjust handlers
+  const openAdjustDialog = () => {
+    setAdjustForm({ item: null, contractor: '', quantity: '', reference: '', remarks: '' });
+    setAdjustDialogOpen(true);
+  };
+  const closeAdjustDialog = () => {
+    setAdjustDialogOpen(false);
+    setAdjustForm({ item: null, contractor: '', quantity: '', reference: '', remarks: '' });
+  };
+  const handleAdjustSave = async () => {
+    if (!adjustForm.item || !adjustForm.quantity) return;
+    setAdjustSaving(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setAdjustSaving(false);
+    closeAdjustDialog();
+  };
+
   return (
     <>
       {keyframes}
@@ -142,6 +226,7 @@ const Inventory = () => {
             variant='contained'
             startIcon={<CallReceivedIcon />}
             className={`${classes.actionButtonBase} ${classes.actionButtonReceive}`}
+            onClick={openReceiveDialog}
           >
             Receive
           </Button>
@@ -149,6 +234,7 @@ const Inventory = () => {
             variant='contained'
             startIcon={<CallMadeIcon />}
             className={`${classes.actionButtonBase} ${classes.actionButtonIssue}`}
+            onClick={openIssueDialog}
           >
             Issue
           </Button>
@@ -156,6 +242,7 @@ const Inventory = () => {
             variant='contained'
             startIcon={<SyncIcon />}
             className={`${classes.actionButtonBase} ${classes.actionButtonAdjust}`}
+            onClick={openAdjustDialog}
           >
             Adjust
           </Button>
@@ -443,6 +530,372 @@ const Inventory = () => {
             }
           >
             {isSaving ? 'Saving…' : 'Add Item'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ── Receive Material Dialog ── */}
+      <Dialog
+        open={receiveDialogOpen}
+        onClose={closeReceiveDialog}
+        maxWidth='sm'
+        fullWidth
+        className={classes.dialog}
+      >
+        <Box className={classes.modalHeroReceive}>
+          <Box className={classes.modalIconBoxReceive}>
+            <CallReceivedIcon sx={{ fontSize: 26, color: '#fff' }} />
+          </Box>
+          <Box className={classes.modalTitleBox}>
+            <Typography className={classes.modalTitle}>Receive Material</Typography>
+            <Typography className={classes.modalSubtitle}>
+              Record incoming stock from supplier or contractor
+            </Typography>
+          </Box>
+          <IconButton onClick={closeReceiveDialog} className={classes.modalCloseBtn} size='small'>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </Box>
+
+        <DialogContent className={classes.dialogContent}>
+          <Grid container spacing={2.5}>
+            {/* Item */}
+            <Grid size={12}>
+              <Autocomplete
+                options={INVENTORY_DATA}
+                getOptionLabel={(opt) => `${opt.itemCode} — ${opt.description}`}
+                value={receiveForm.item}
+                onChange={(_, v) => setReceiveForm((p) => ({ ...p, item: v }))}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Item *'
+                    size='small'
+                    placeholder='Search or select item…'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Contractor */}
+            <Grid size={12}>
+              <TextField
+                label='Contractor / Supplier'
+                placeholder='Enter contractor or supplier name'
+                value={receiveForm.contractor}
+                onChange={(e) => setReceiveForm((p) => ({ ...p, contractor: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Quantity */}
+            <Grid size={6}>
+              <TextField
+                label='Quantity *'
+                type='number'
+                placeholder='1'
+                value={receiveForm.quantity}
+                onChange={(e) => setReceiveForm((p) => ({ ...p, quantity: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Reference */}
+            <Grid size={6}>
+              <TextField
+                label='Reference (GRN / PO / Work Order)'
+                placeholder='GRN-2026-001'
+                value={receiveForm.reference}
+                onChange={(e) => setReceiveForm((p) => ({ ...p, reference: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Remarks */}
+            <Grid size={12}>
+              <TextField
+                label='Remarks'
+                placeholder='Optional notes…'
+                value={receiveForm.remarks}
+                onChange={(e) => setReceiveForm((p) => ({ ...p, remarks: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+                multiline
+                rows={2}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button onClick={closeReceiveDialog} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleReceiveSave}
+            disabled={!receiveForm.item || !receiveForm.quantity}
+            className={classes.submitButtonReceive}
+            startIcon={
+              receiveSaving ? (
+                <CircularProgress size={16} color='inherit' />
+              ) : (
+                <CallReceivedIcon fontSize='small' />
+              )
+            }
+          >
+            {receiveSaving ? 'Saving…' : 'Receive'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ── Issue / Download Material Dialog ── */}
+      <Dialog
+        open={issueDialogOpen}
+        onClose={closeIssueDialog}
+        maxWidth='sm'
+        fullWidth
+        className={classes.dialog}
+      >
+        <Box className={classes.modalHeroIssue}>
+          <Box className={classes.modalIconBoxIssue}>
+            <CallMadeIcon sx={{ fontSize: 26, color: '#fff' }} />
+          </Box>
+          <Box className={classes.modalTitleBox}>
+            <Typography className={classes.modalTitle}>Issue / Download Material</Typography>
+            <Typography className={classes.modalSubtitle}>
+              Record material issued for maintenance or project use
+            </Typography>
+          </Box>
+          <IconButton onClick={closeIssueDialog} className={classes.modalCloseBtn} size='small'>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </Box>
+
+        <DialogContent className={classes.dialogContent}>
+          <Grid container spacing={2.5}>
+            {/* Item */}
+            <Grid size={12}>
+              <Autocomplete
+                options={INVENTORY_DATA}
+                getOptionLabel={(opt) => `${opt.itemCode} — ${opt.description}`}
+                value={issueForm.item}
+                onChange={(_, v) => setIssueForm((p) => ({ ...p, item: v }))}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Item *'
+                    size='small'
+                    placeholder='Search or select item…'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Contractor */}
+            <Grid size={12}>
+              <TextField
+                label='Contractor / Technician'
+                placeholder='Enter contractor or technician name'
+                value={issueForm.contractor}
+                onChange={(e) => setIssueForm((p) => ({ ...p, contractor: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Quantity */}
+            <Grid size={6}>
+              <TextField
+                label='Quantity *'
+                type='number'
+                placeholder='1'
+                value={issueForm.quantity}
+                onChange={(e) => setIssueForm((p) => ({ ...p, quantity: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Reference */}
+            <Grid size={6}>
+              <TextField
+                label='Reference (Work Order / Ticket)'
+                placeholder='WO-2026-045'
+                value={issueForm.reference}
+                onChange={(e) => setIssueForm((p) => ({ ...p, reference: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Remarks */}
+            <Grid size={12}>
+              <TextField
+                label='Remarks'
+                placeholder='Optional notes…'
+                value={issueForm.remarks}
+                onChange={(e) => setIssueForm((p) => ({ ...p, remarks: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+                multiline
+                rows={2}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button onClick={closeIssueDialog} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleIssueSave}
+            disabled={!issueForm.item || !issueForm.quantity}
+            className={classes.submitButtonIssue}
+            startIcon={
+              issueSaving ? (
+                <CircularProgress size={16} color='inherit' />
+              ) : (
+                <CallMadeIcon fontSize='small' />
+              )
+            }
+          >
+            {issueSaving ? 'Saving…' : 'Issue'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ── Adjust Stock Dialog ── */}
+      <Dialog
+        open={adjustDialogOpen}
+        onClose={closeAdjustDialog}
+        maxWidth='sm'
+        fullWidth
+        className={classes.dialog}
+      >
+        <Box className={classes.modalHeroAdjust}>
+          <Box className={classes.modalIconBoxAdjust}>
+            <SyncIcon sx={{ fontSize: 26, color: '#fff' }} />
+          </Box>
+          <Box className={classes.modalTitleBox}>
+            <Typography className={classes.modalTitle}>Adjust Stock</Typography>
+            <Typography className={classes.modalSubtitle}>
+              Correct inventory levels (damage, loss, audit correction)
+            </Typography>
+          </Box>
+          <IconButton onClick={closeAdjustDialog} className={classes.modalCloseBtn} size='small'>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </Box>
+
+        <DialogContent className={classes.dialogContent}>
+          <Grid container spacing={2.5}>
+            {/* Item */}
+            <Grid size={12}>
+              <Autocomplete
+                options={INVENTORY_DATA}
+                getOptionLabel={(opt) => `${opt.itemCode} — ${opt.description}`}
+                value={adjustForm.item}
+                onChange={(_, v) => setAdjustForm((p) => ({ ...p, item: v }))}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='Item *'
+                    size='small'
+                    placeholder='Search or select item…'
+                  />
+                )}
+                className={classes.formField}
+              />
+            </Grid>
+
+            {/* Contractor */}
+            <Grid size={12}>
+              <TextField
+                label='Recorded By'
+                placeholder='Enter staff or auditor name'
+                value={adjustForm.contractor}
+                onChange={(e) => setAdjustForm((p) => ({ ...p, contractor: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Quantity */}
+            <Grid size={6}>
+              <TextField
+                label='Adjusted Quantity *'
+                type='number'
+                placeholder='0'
+                value={adjustForm.quantity}
+                onChange={(e) => setAdjustForm((p) => ({ ...p, quantity: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Reference */}
+            <Grid size={6}>
+              <TextField
+                label='Reference (Audit / Adjustment Note)'
+                placeholder='ADJ-2026-012'
+                value={adjustForm.reference}
+                onChange={(e) => setAdjustForm((p) => ({ ...p, reference: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+              />
+            </Grid>
+
+            {/* Remarks */}
+            <Grid size={12}>
+              <TextField
+                label='Reason for Adjustment'
+                placeholder='Describe reason (damage, loss, audit, etc.)…'
+                value={adjustForm.remarks}
+                onChange={(e) => setAdjustForm((p) => ({ ...p, remarks: e.target.value }))}
+                className={classes.formField}
+                size='small'
+                fullWidth
+                multiline
+                rows={2}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button onClick={closeAdjustDialog} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleAdjustSave}
+            disabled={!adjustForm.item || !adjustForm.quantity}
+            className={classes.submitButtonAdjust}
+            startIcon={
+              adjustSaving ? (
+                <CircularProgress size={16} color='inherit' />
+              ) : (
+                <SyncIcon fontSize='small' />
+              )
+            }
+          >
+            {adjustSaving ? 'Saving…' : 'Adjust Stock'}
           </Button>
         </DialogActions>
       </Dialog>

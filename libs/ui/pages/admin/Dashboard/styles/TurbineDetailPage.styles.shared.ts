@@ -145,19 +145,31 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
   },
 
   // ─── Stats Row (Metric Cards - Dashboard Style) ─────────────────────────────
+  statsRowContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start',
+    },
+  },
+
   statsRow: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(7, 1fr)',
+    gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
     gap: theme.spacing(1.5),
-    marginBottom: theme.spacing(3),
+    width: '100%',
+    maxWidth: 1400,
     [theme.breakpoints.down('xl')]: {
-      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateColumns: 'repeat(7, 1fr)',
+      maxWidth: '100%',
     },
     [theme.breakpoints.down('lg')]: {
       gridTemplateColumns: 'repeat(3, 1fr)',
     },
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: 'repeat(3, 1fr)',
+      maxWidth: '100%',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -222,11 +234,8 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
     fontWeight: 500,
     color: '#64748b',
     lineHeight: 1.2,
-    [theme.breakpoints.only('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       fontSize: '8px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '7px',
     },
   },
 
@@ -296,14 +305,14 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
   sectionCardContent: {
     padding: theme.spacing(2, 2.5),
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1.5),
+      padding: '4px',
     },
   },
 
   // ─── Grid Layouts for Sections ───────────────────────────────────────────────
   sectionGrid4: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridTemplateColumns: 'repeat(8, 1fr)',
     gap: theme.spacing(1.5),
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -332,7 +341,7 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
 
   sectionGrid3: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(6, 1fr)',
     gap: theme.spacing(1.5),
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -345,7 +354,7 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
 
   sectionGrid2: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(6, 1fr)',
     gap: theme.spacing(1.5),
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -369,7 +378,7 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
       transform: 'translateY(-2px)',
     },
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(0.75, 1),
+      padding: theme.spacing(0.75),
       gap: theme.spacing(0.75),
       borderRadius: 8,
     },

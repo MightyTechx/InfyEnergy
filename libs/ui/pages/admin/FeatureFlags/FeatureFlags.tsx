@@ -109,6 +109,13 @@ const FeatureFlags = () => {
     );
   });
 
+  // Sort: Enabled flags first, then by name
+  const sortedFlags = [...visibleFlags].sort((a, b) => {
+    if (a.status === 'Enabled' && b.status !== 'Enabled') return -1;
+    if (a.status !== 'Enabled' && b.status === 'Enabled') return 1;
+    return a.name.localeCompare(b.name);
+  });
+
   return (
     <>
       {keyframes}
@@ -188,7 +195,7 @@ const FeatureFlags = () => {
 
           <DataTable
             columns={columns}
-            data={visibleFlags}
+            data={sortedFlags}
             rowKey='id'
             searchable={false}
             initialRowsPerPage={10}
@@ -295,10 +302,21 @@ const FeatureFlags = () => {
                 }}
               >
                 <Box>
-                  <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: form.status === 'Enabled' ? '#fff' : 'text.primary' }}>
+                  <Typography
+                    sx={{
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      color: form.status === 'Enabled' ? '#fff' : 'text.primary',
+                    }}
+                  >
                     {form.status}
                   </Typography>
-                  <Typography sx={{ fontSize: '0.72rem', color: form.status === 'Enabled' ? 'rgba(255,255,255,0.8)' : 'text.secondary' }}>
+                  <Typography
+                    sx={{
+                      fontSize: '0.72rem',
+                      color: form.status === 'Enabled' ? 'rgba(255,255,255,0.8)' : 'text.secondary',
+                    }}
+                  >
                     {form.status === 'Enabled' ? 'Feature is active' : 'Feature is inactive'}
                   </Typography>
                 </Box>
@@ -330,7 +348,9 @@ const FeatureFlags = () => {
 
             {/* Access Control */}
             <Grid size={12}>
-              <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', mb: 1, fontWeight: 600 }}>
+              <Typography
+                sx={{ fontSize: '0.8rem', color: 'text.secondary', mb: 1, fontWeight: 600 }}
+              >
                 Access Control
               </Typography>
               <Grid container spacing={1.5}>
@@ -367,14 +387,29 @@ const FeatureFlags = () => {
                       }}
                     >
                       {form.roles.includes('Admin') && (
-                        <Box sx={{ width: 10, height: 10, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+                        <Box
+                          sx={{ width: 10, height: 10, bgcolor: 'primary.main', borderRadius: 0.5 }}
+                        />
                       )}
                     </Box>
                     <Box>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: form.roles.includes('Admin') ? '#fff' : 'text.primary' }}>
+                      <Typography
+                        sx={{
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          color: form.roles.includes('Admin') ? '#fff' : 'text.primary',
+                        }}
+                      >
                         Admin
                       </Typography>
-                      <Typography sx={{ fontSize: '0.7rem', color: form.roles.includes('Admin') ? 'rgba(255,255,255,0.8)' : 'text.secondary' }}>
+                      <Typography
+                        sx={{
+                          fontSize: '0.7rem',
+                          color: form.roles.includes('Admin')
+                            ? 'rgba(255,255,255,0.8)'
+                            : 'text.secondary',
+                        }}
+                      >
                         System Administrators
                       </Typography>
                     </Box>
@@ -388,7 +423,9 @@ const FeatureFlags = () => {
                       borderRadius: 2,
                       border: '1px solid',
                       borderColor: form.roles.includes('Consultant') ? 'primary.main' : 'divider',
-                      bgcolor: form.roles.includes('Consultant') ? 'primary.main' : 'background.paper',
+                      bgcolor: form.roles.includes('Consultant')
+                        ? 'primary.main'
+                        : 'background.paper',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -413,14 +450,29 @@ const FeatureFlags = () => {
                       }}
                     >
                       {form.roles.includes('Consultant') && (
-                        <Box sx={{ width: 10, height: 10, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+                        <Box
+                          sx={{ width: 10, height: 10, bgcolor: 'primary.main', borderRadius: 0.5 }}
+                        />
                       )}
                     </Box>
                     <Box>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: form.roles.includes('Consultant') ? '#fff' : 'text.primary' }}>
+                      <Typography
+                        sx={{
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          color: form.roles.includes('Consultant') ? '#fff' : 'text.primary',
+                        }}
+                      >
                         Consultant
                       </Typography>
-                      <Typography sx={{ fontSize: '0.7rem', color: form.roles.includes('Consultant') ? 'rgba(255,255,255,0.8)' : 'text.secondary' }}>
+                      <Typography
+                        sx={{
+                          fontSize: '0.7rem',
+                          color: form.roles.includes('Consultant')
+                            ? 'rgba(255,255,255,0.8)'
+                            : 'text.secondary',
+                        }}
+                      >
                         Energy Consultants
                       </Typography>
                     </Box>
