@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Box,
   DataTable,
@@ -36,7 +36,7 @@ import {
   STATUSES,
   INVENTORY_DATA,
 } from './utils/inventory.utils';
-import { Utils } from './utils/Utils';
+import { useUtils } from './utils/Utils';
 
 const CATEGORY_OPTIONS = ['Hydraulic', 'Mechanical', 'Electrical', 'Tools'];
 const UOM_OPTIONS = ['PCS', 'SET', 'm', 'L', 'KG', 'BOX', 'ROLL'];
@@ -68,7 +68,7 @@ const BLANK_FORM: ItemForm = {
 const Inventory = () => {
   const { classes } = useStyles();
   const keyframes = useAdminKeyframes();
-  const { columns } = Utils();
+  const { columns } = useUtils();
 
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
@@ -112,18 +112,22 @@ const Inventory = () => {
   });
   const [adjustSaving, setAdjustSaving] = useState(false);
 
-  const filtered = INVENTORY_DATA.filter((row) => {
-    const matchCategory = !categoryFilter || row.category === categoryFilter;
-    const matchLocation = !locationFilter || row.location === locationFilter;
-    const matchStatus = !statusFilter || row.status === statusFilter;
-    const q = search.toLowerCase();
-    const matchSearch =
-      !q ||
-      row.itemCode.toLowerCase().includes(q) ||
-      row.description.toLowerCase().includes(q) ||
-      row.category.toLowerCase().includes(q);
-    return matchCategory && matchLocation && matchStatus && matchSearch;
-  });
+  const filtered = useMemo(
+    () =>
+      INVENTORY_DATA.filter((row) => {
+        const matchCategory = !categoryFilter || row.category === categoryFilter;
+        const matchLocation = !locationFilter || row.location === locationFilter;
+        const matchStatus = !statusFilter || row.status === statusFilter;
+        const q = search.toLowerCase();
+        const matchSearch =
+          !q ||
+          row.itemCode.toLowerCase().includes(q) ||
+          row.description.toLowerCase().includes(q) ||
+          row.category.toLowerCase().includes(q);
+        return matchCategory && matchLocation && matchStatus && matchSearch;
+      }),
+    [categoryFilter, locationFilter, statusFilter, search],
+  );
 
   const openAddDialog = () => {
     setForm(BLANK_FORM);

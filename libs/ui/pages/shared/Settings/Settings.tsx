@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -9,7 +9,6 @@ import {
   MenuItem,
   FormControl,
   Chip,
-  TextField,
   Button,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -26,6 +25,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { PageHeader } from '@infygen/component';
 import { useStyles } from './styles/Settings.styles';
+import { useThemeContext } from '@infygen/theme';
+import { getUserPreferences, updateUserTheme } from '../../../services/index';
 
 // ── Tab Config ────────────────────────────────────────────────────────────────
 interface TabConfig {
@@ -58,6 +59,7 @@ const TABS: TabConfig[] = [
 ];
 
 // ── Theme Configs ─────────────────────────────────────────────────────────────
+// These IDs must match the theme names in themePalettes.ts
 interface ThemeConfig {
   id: string;
   name: string;
@@ -70,93 +72,105 @@ interface ThemeConfig {
   buttonText: string;
 }
 
+// Theme IDs map to names in libs/theme/themePalettes.ts
 const THEMES: ThemeConfig[] = [
   {
-    id: 'ocean',
-    name: 'Ocean Blue',
-    swatch: 'linear-gradient(135deg, #2d5ebb, #0ea5e9)',
+    id: 'System',
+    name: 'Default Admin',
+    swatch: 'linear-gradient(135deg, #0d1b3e, #1a3a6b)',
+    accent: '#6366f1',
+    light: '#a5b4fc',
+    sidebar: '#0d1b3e',
+    header: '#0f2355',
+    button: '#6366f1',
+    buttonText: '#fff',
+  },
+  {
+    id: 'Cobalt',
+    name: 'Cobalt Blue',
+    swatch: 'linear-gradient(135deg, #312e81, #4f46e5)',
     accent: '#4f46e5',
-    light: '#e2e8f0',
-    sidebar: '#1e3a8a',
-    header: '#2d5ebb',
+    light: '#eef2ff',
+    sidebar: '#312e81',
+    header: '#3730a3',
     button: '#4f46e5',
     buttonText: '#fff',
   },
   {
-    id: 'sunset',
-    name: 'Sunset Orange',
-    swatch: 'linear-gradient(135deg, #92400e, #f59e0b)',
-    accent: '#f97316',
-    light: '#fef3c7',
-    sidebar: '#78350f',
-    header: '#92400e',
-    button: '#f97316',
-    buttonText: '#fff',
-  },
-  {
-    id: 'forest',
-    name: 'Forest Green',
-    swatch: 'linear-gradient(135deg, #064e3b, #34d399)',
-    accent: '#059669',
-    light: '#d1fae5',
-    sidebar: '#033d2e',
-    header: '#064e3b',
-    button: '#34d399',
-    buttonText: '#064e3b',
-  },
-  {
-    id: 'midnight',
+    id: 'Midnight',
     name: 'Midnight Purple',
     swatch: 'linear-gradient(135deg, #1e1b4b, #7c3aed)',
     accent: '#7c3aed',
     light: '#ede9fe',
-    sidebar: '#13104a',
-    header: '#1e1b4b',
+    sidebar: '#1e1b4b',
+    header: '#3730a3',
     button: '#7c3aed',
     buttonText: '#fff',
   },
   {
-    id: 'rose',
+    id: 'Rose',
     name: 'Rose Pink',
     swatch: 'linear-gradient(135deg, #881337, #f43f5e)',
-    accent: '#e11d48',
+    accent: '#f43f5e',
     light: '#ffe4e6',
-    sidebar: '#6b0f2d',
-    header: '#881337',
+    sidebar: '#881337',
+    header: '#be123c',
     button: '#f43f5e',
     buttonText: '#fff',
   },
   {
-    id: 'dark',
-    name: 'Midnight Dark',
-    swatch: 'linear-gradient(135deg, #111827, #6b7280)',
-    accent: '#374151',
-    light: '#f3f4f6',
-    sidebar: '#0f172a',
-    header: '#111827',
-    button: '#374151',
+    id: 'Forest',
+    name: 'Forest Green',
+    swatch: 'linear-gradient(135deg, #064e3b, #059669)',
+    accent: '#059669',
+    light: '#d1fae5',
+    sidebar: '#064e3b',
+    header: '#065f46',
+    button: '#059669',
     buttonText: '#fff',
   },
   {
-    id: 'blues',
+    id: 'Blues',
     name: 'Sky Blues',
     swatch: 'linear-gradient(135deg, #0369a1, #38bdf8)',
+    accent: '#0284c7',
+    light: '#e0f2fe',
+    sidebar: '#0369a1',
+    header: '#0284c7',
+    button: '#0284c7',
+    buttonText: '#fff',
+  },
+  {
+    id: 'Clean',
+    name: 'Clean Sky',
+    swatch: 'linear-gradient(135deg, #0369a1, #0ea5e9)',
     accent: '#0ea5e9',
     light: '#e0f2fe',
-    sidebar: '#075985',
-    header: '#0369a1',
+    sidebar: '#0369a1',
+    header: '#0284c7',
     button: '#0ea5e9',
     buttonText: '#fff',
   },
   {
-    id: 'cobalt',
-    name: 'Royal Cobalt',
-    swatch: 'linear-gradient(135deg, #312e81, #a5b4fc)',
-    accent: '#6366f1',
-    light: '#ede9fe',
-    sidebar: '#1e1b4b',
-    header: '#312e81',
-    button: '#6366f1',
+    id: 'Black and White',
+    name: 'Dark Charcoal',
+    swatch: 'linear-gradient(135deg, #111827, #374151)',
+    accent: '#374151',
+    light: '#f3f4f6',
+    sidebar: '#111827',
+    header: '#1f2937',
+    button: '#374151',
+    buttonText: '#fff',
+  },
+  {
+    id: 'Blimey',
+    name: 'Amber Gold',
+    swatch: 'linear-gradient(135deg, #92400e, #d97706)',
+    accent: '#d97706',
+    light: '#fef3c7',
+    sidebar: '#92400e',
+    header: '#b45309',
+    button: '#d97706',
     buttonText: '#fff',
   },
 ];
@@ -617,11 +631,58 @@ const SecurityTab = ({ classes }: { classes: Record<string, string> }) => {
 
 // ── Admin Controls Tab (Theme Selection + Live Preview) ─────────────────────
 const AdminControlsTab = ({ classes }: { classes: Record<string, string> }) => {
-  const [selectedTheme, setSelectedTheme] = useState('ocean');
+  const { themeName, setThemeName } = useThemeContext();
+  const [selectedTheme, setSelectedTheme] = useState(themeName || 'Cobalt');
   const [livePreview, setLivePreview] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [compactView, setCompactView] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load saved preferences on mount
+  useEffect(() => {
+    const loadPreferences = async () => {
+      try {
+        const prefs = await getUserPreferences();
+        if (prefs.theme) {
+          setSelectedTheme(prefs.theme);
+          setThemeName(prefs.theme);
+        }
+      } catch (error) {
+        // Use localStorage fallback if API fails
+        const savedTheme = localStorage.getItem('serivceops_selected_theme');
+        if (savedTheme) {
+          setSelectedTheme(savedTheme);
+        }
+      }
+    };
+    loadPreferences();
+  }, [setThemeName]);
+
+  // Sync with context
+  useEffect(() => {
+    setSelectedTheme(themeName || 'Cobalt');
+  }, [themeName]);
+
+  const handleThemeSelect = useCallback(
+    async (themeId: string) => {
+      setSelectedTheme(themeId);
+      setThemeName(themeId);
+
+      if (autoSave) {
+        setIsLoading(true);
+        try {
+          await updateUserTheme(themeId);
+        } catch (error) {
+          // Silently fail - localStorage already saved the theme
+          console.log('Theme saved locally');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    },
+    [autoSave, setThemeName],
+  );
 
   const currentTheme = THEMES.find((t) => t.id === selectedTheme) || THEMES[0];
 
@@ -753,7 +814,7 @@ const AdminControlsTab = ({ classes }: { classes: Record<string, string> }) => {
               return (
                 <Box
                   key={theme.id}
-                  onClick={() => setSelectedTheme(theme.id)}
+                  onClick={() => handleThemeSelect(theme.id)}
                   className={`${classes.themeOption} ${isSelected ? classes.themeOptionSelected : ''}`}
                 >
                   <Box className={classes.themePreview} sx={{ background: theme.light }}>
@@ -1271,12 +1332,6 @@ const Settings = () => {
   const { classes } = useStyles();
   const [tabValue, setTabValue] = useState(0);
 
-  const tabStats = [
-    { label: 'Themes', value: '8', color: '#6366f1' },
-    { label: 'Notifications', value: '4', color: '#10b981' },
-    { label: 'Security', value: 'Active', color: '#06b6d4' },
-  ];
-
   return (
     <Box className={classes.container}>
       {/* ── Page Header ── */}
@@ -1285,21 +1340,7 @@ const Settings = () => {
         description='Configure system settings, themes, notifications and security preferences for your dashboard'
         icon={SettingsIcon}
         variant='admin'
-      >
-        <Box className={classes.pageHeaderStats}>
-          {tabStats.map((stat) => (
-            <Box key={stat.label} className={classes.pageHeaderStat}>
-              <Box
-                className={classes.pageHeaderStatDot}
-                sx={{ background: stat.color, boxShadow: `0 0 6px ${stat.color}` }}
-              />
-              <Typography className={classes.pageHeaderStatText}>
-                <strong style={{ color: '#fff' }}>{stat.value}</strong> {stat.label}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-      </PageHeader>
+      />
 
       {/* ── Tab Bar ── */}
       <Box className={classes.tabBar}>

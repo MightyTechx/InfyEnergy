@@ -215,7 +215,7 @@ export const getDocumentsByType = (type: DocType): DocumentRow[] => {
 // ─── Style Constants ──────────────────────────────────────────────────────────
 
 export const FOLDER_SX = {
-  width: 160,
+  width: 240,
   flexShrink: 0,
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
@@ -230,7 +230,7 @@ export const FOLDER_SX = {
 } as const;
 
 export const TYPE_SX = {
-  width: 160,
+  width: 240,
   flexShrink: 0,
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
@@ -260,11 +260,13 @@ export const columns: Column<DocumentRow>[] = [
     label: 'File Name',
     minWidth: 240,
     sortable: true,
-    align: 'left',
+    align: 'center',
     format: (v) => (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center' }}>
         <InsertDriveFileIcon sx={{ fontSize: 16, color: '#0d9488', flexShrink: 0 }} />
-        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#1e293b' }}>
+        <Typography
+          sx={{ fontWeight: 600, fontSize: '0.85rem', color: '#1e293b', textAlign: 'left' }}
+        >
           {String(v)}
         </Typography>
       </Box>
@@ -275,9 +277,9 @@ export const columns: Column<DocumentRow>[] = [
     label: 'Folder',
     minWidth: 180,
     sortable: true,
-    align: 'left',
+    align: 'center',
     format: (v) => (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, justifyContent: 'center' }}>
         <FolderIcon sx={{ fontSize: 15, color: '#f59e0b', flexShrink: 0 }} />
         <Typography sx={{ fontSize: '0.83rem', color: '#475569' }}>{String(v)}</Typography>
       </Box>

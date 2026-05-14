@@ -14,6 +14,9 @@ import { errorHandler, notFoundHandler } from '@infygen/middleware';
 import authRoutes from '../api/auth/Auth.routes';
 import adminRoutes from '../api/admin/routes';
 
+// Prisma client
+import { prisma } from '@infygen/database';
+
 // Constants for route paths
 import { ADMIN_PATHS } from '@infygen/constants';
 

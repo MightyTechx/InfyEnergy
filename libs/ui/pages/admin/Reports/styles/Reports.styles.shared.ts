@@ -234,4 +234,167 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     overflowX: 'auto' as const,
     background: '#fff',
   },
+
+  // ─── Dialog Styles ───────────────────────────────────────────────────────────
+  dialog: {
+    '& .MuiDialog-paper': {
+      borderRadius: 16,
+      overflow: 'hidden',
+      maxHeight: '90vh',
+      display: 'flex',
+      flexDirection: 'column' as const,
+    },
+  },
+
+  modalHeroWhatsapp: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.5, 3),
+    background: 'linear-gradient(135deg, #064e3b 0%, #065f46 40%, #059669 70%, #25D366 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    position: 'relative' as const,
+    flexShrink: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: -60,
+      right: -60,
+      width: 200,
+      height: 200,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle at center, rgba(167,243,208,0.3) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+  },
+
+  modalIconBoxWhatsapp: {
+    width: 50,
+    height: 50,
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, #059669, #25D366)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 16px rgba(37,211,102,0.4)',
+    flexShrink: 0,
+  },
+
+  modalTitleBox: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  modalTitle: {
+    fontWeight: 700,
+    fontSize: '1.15rem',
+    color: '#fff',
+    letterSpacing: '-0.02em',
+  },
+
+  modalSubtitle: {
+    fontSize: '0.8rem',
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 4,
+  },
+
+  modalCloseBtn: {
+    color: 'rgba(255,255,255,0.7) !important',
+    '&:hover': { color: '#fff !important', background: 'rgba(255,255,255,0.1) !important' },
+  },
+
+  dialogContent: {
+    p: 3,
+    bgcolor: 'background.default',
+    maxHeight: '70vh',
+    overflow: 'auto',
+  },
+
+  dialogActions: {
+    padding: theme.spacing(2, 3),
+    borderTop: '1px solid',
+    borderColor: 'divider',
+    background: '#fafafa',
+    gap: theme.spacing(1.5),
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      padding: theme.spacing(2),
+      gap: theme.spacing(1),
+    },
+  },
+
+  cancelButton: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 600,
+    fontSize: '0.85rem',
+    color: 'text.secondary',
+    border: '1px solid',
+    borderColor: 'divider',
+    minWidth: 'auto',
+    '&:hover': {
+      background: 'rgba(0,0,0,0.04)',
+      borderColor: 'text.disabled',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+
+  submitButtonWhatsapp: {
+    borderRadius: '10px',
+    textTransform: 'none' as const,
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    padding: '10px 28px',
+    background: 'linear-gradient(135deg, #059669, #25D366) !important',
+    boxShadow: '0 4px 14px rgba(37,211,102,0.4) !important',
+    color: '#fff !important',
+    minWidth: 'auto',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 6px 20px rgba(37,211,102,0.5) !important',
+    },
+    '&:disabled': {
+      background: 'rgba(0,0,0,0.12) !important',
+      boxShadow: 'none !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+
+  formField: {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '10px',
+      '&:hover fieldset': { borderColor: 'rgba(99,102,241,0.4)' },
+      '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
+    },
+    '& .MuiInputLabel-root.Mui-focused': { color: '#6366f1' },
+  },
+
+  // ─── Schedule Section ────────────────────────────────────────────────────────
+  scheduleSection: {
+    backgroundColor: 'rgba(99, 102, 241, 0.05)',
+    borderRadius: 12,
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    border: '1px solid rgba(99, 102, 241, 0.1)',
+  },
+
+  schedulePreviewBox: {
+    mt: 1.5,
+    p: 1.5,
+    backgroundColor: 'rgba(37, 211, 102, 0.1)',
+    borderRadius: 1,
+    border: '1px solid rgba(37, 211, 102, 0.3)',
+  },
+
+  reportDetailsBox: {
+    backgroundColor: 'rgba(99, 102, 241, 0.05)',
+    p: 2,
+    borderRadius: 2,
+    marginTop: theme.spacing(1),
+  },
 });

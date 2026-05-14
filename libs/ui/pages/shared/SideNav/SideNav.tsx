@@ -15,113 +15,247 @@ import { useAdminMenuItems, useConsultantMenuItems } from './components/MenuItem
 import { Tooltip } from '../../../components';
 import { useCollapse, useAuth } from '@infygen/hooks';
 import { useStyles } from './styles';
+import { useThemeContext } from '@infygen/theme';
 
-// ── Group accent config ───────────────────────────────────────────────────────
-const ADMIN_GROUP_CONFIG: Record<
-  string,
-  { gradient: string; labelColor: string; border: string; glowColor: string; dotColor: string }
-> = {
-  Governance: {
-    gradient: 'linear-gradient(90deg, rgba(99,102,241,0.22) 0%, rgba(99,102,241,0.05) 100%)',
-    labelColor: '#a5b4fc',
-    border: 'rgba(99,102,241,0.55)',
-    glowColor: 'rgba(99,102,241,0.3)',
-    dotColor: '#6366f1',
-  },
-  Administration: {
-    gradient: 'linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.04) 100%)',
-    labelColor: '#6ee7b7',
-    border: 'rgba(16,185,129,0.55)',
-    glowColor: 'rgba(16,185,129,0.25)',
-    dotColor: '#10b981',
-  },
-  'People & Organizations': {
-    gradient: 'linear-gradient(90deg, rgba(14,165,233,0.18) 0%, rgba(14,165,233,0.04) 100%)',
-    labelColor: '#7dd3fc',
-    border: 'rgba(14,165,233,0.55)',
-    glowColor: 'rgba(14,165,233,0.25)',
-    dotColor: '#0ea5e9',
-  },
-  'Wind Operations': {
-    gradient: 'linear-gradient(90deg, rgba(139,92,246,0.22) 0%, rgba(139,92,246,0.05) 100%)',
-    labelColor: '#c4b5fd',
-    border: 'rgba(139,92,246,0.55)',
-    glowColor: 'rgba(139,92,246,0.3)',
-    dotColor: '#8b5cf6',
-  },
-  Overview: {
-    gradient: 'linear-gradient(90deg, rgba(99,102,241,0.22) 0%, rgba(99,102,241,0.05) 100%)',
-    labelColor: '#a5b4fc',
-    border: 'rgba(99,102,241,0.55)',
-    glowColor: 'rgba(99,102,241,0.3)',
-    dotColor: '#6366f1',
-  },
-  People: {
-    gradient: 'linear-gradient(90deg, rgba(168,85,247,0.2) 0%, rgba(168,85,247,0.04) 100%)',
-    labelColor: '#d8b4fe',
-    border: 'rgba(168,85,247,0.55)',
-    glowColor: 'rgba(168,85,247,0.28)',
-    dotColor: '#a855f7',
-  },
-  Customer: {
-    gradient: 'linear-gradient(90deg, rgba(14,165,233,0.2) 0%, rgba(14,165,233,0.04) 100%)',
-    labelColor: '#7dd3fc',
-    border: 'rgba(14,165,233,0.55)',
-    glowColor: 'rgba(14,165,233,0.28)',
-    dotColor: '#0ea5e9',
-  },
-  'Energy Finance': {
-    gradient: 'linear-gradient(90deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.04) 100%)',
-    labelColor: '#fcd34d',
-    border: 'rgba(245,158,11,0.55)',
-    glowColor: 'rgba(245,158,11,0.25)',
-    dotColor: '#f59e0b',
-  },
-  Reports: {
-    gradient: 'linear-gradient(90deg, rgba(239,68,68,0.18) 0%, rgba(239,68,68,0.04) 100%)',
-    labelColor: '#fca5a5',
-    border: 'rgba(239,68,68,0.5)',
-    glowColor: 'rgba(239,68,68,0.22)',
-    dotColor: '#ef4444',
-  },
-  Configuration: {
-    gradient: 'linear-gradient(90deg, rgba(107,114,128,0.2) 0%, rgba(107,114,128,0.04) 100%)',
-    labelColor: '#d1d5db',
-    border: 'rgba(107,114,128,0.5)',
-    glowColor: 'rgba(107,114,128,0.22)',
-    dotColor: '#6b7280',
-  },
+// Default admin colors (before theme selection)
+const ADMIN_DEFAULT_COLORS = {
+  primary: '#6366f1',
+  primaryLight: '#a5b4fc',
+  primaryDark: '#4f46e5',
+  primaryAlpha: 'rgba(99,102,241,',
+  sidebarBg: 'linear-gradient(180deg, #0d1b3e 0%, #0f2355 40%, #0a1a3a 100%)',
+  sidebarShadow: '4px 0 32px rgba(13,27,62,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
 };
 
-// Green accent for consultant Customer group
-const CONSULTANT_GROUP_CONFIG: Record<
-  string,
-  { gradient: string; labelColor: string; border: string; glowColor: string; dotColor: string }
-> = {
-  Customer: {
-    gradient: 'linear-gradient(90deg, rgba(16,185,129,0.22) 0%, rgba(16,185,129,0.05) 100%)',
-    labelColor: '#6ee7b7',
-    border: 'rgba(16,185,129,0.55)',
-    glowColor: 'rgba(16,185,129,0.3)',
-    dotColor: '#10b981',
-  },
+// Default consultant colors (before theme selection)
+const CONSULTANT_DEFAULT_COLORS = {
+  primary: '#10b981',
+  primaryLight: '#6ee7b7',
+  primaryDark: '#059669',
+  primaryAlpha: 'rgba(16,185,129,',
+  sidebarBg: 'linear-gradient(180deg, #052e16 0%, #064e3b 40%, #042f1f 100%)',
+  sidebarShadow: '4px 0 32px rgba(5,46,22,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
 };
 
-const ADMIN_DRAWER_BG = 'linear-gradient(180deg, #0d1b3e 0%, #0f2355 40%, #0a1a3a 100%)';
-const CONSULTANT_DRAWER_BG = 'linear-gradient(180deg, #052e16 0%, #064e3b 40%, #042f1f 100%)';
+// Theme-aware colors when a theme is selected
+const getThemeColors = (themeName: string, consultantMode: boolean) => {
+  const themeMap: Record<
+    string,
+    {
+      primary: string;
+      primaryLight: string;
+      primaryDark: string;
+      primaryAlpha: string;
+      sidebarBg: string;
+      sidebarShadow: string;
+    }
+  > = {
+    Cobalt: {
+      primary: '#4f46e5',
+      primaryLight: '#a5b4fc',
+      primaryDark: '#3730a3',
+      primaryAlpha: 'rgba(79,70,229,',
+      sidebarBg: 'linear-gradient(180deg, #312e81 0%, #3730a3 40%, #312e81 100%)',
+      sidebarShadow: '4px 0 32px rgba(49,46,129,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Midnight: {
+      primary: '#7c3aed',
+      primaryLight: '#c4b5fd',
+      primaryDark: '#5b21b6',
+      primaryAlpha: 'rgba(124,58,237,',
+      sidebarBg: 'linear-gradient(180deg, #1e1b4b 0%, #2e1b6e 40%, #1e1b4b 100%)',
+      sidebarShadow: '4px 0 32px rgba(30,27,75,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Rose: {
+      primary: '#f43f5e',
+      primaryLight: '#fda4af',
+      primaryDark: '#e11d48',
+      primaryAlpha: 'rgba(244,63,94,',
+      sidebarBg: 'linear-gradient(180deg, #881337 0%, #9f1239 40%, #881337 100%)',
+      sidebarShadow: '4px 0 32px rgba(136,19,55,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Forest: {
+      primary: '#059669',
+      primaryLight: '#6ee7b7',
+      primaryDark: '#065f46',
+      primaryAlpha: 'rgba(5,150,105,',
+      sidebarBg: 'linear-gradient(180deg, #064e3b 0%, #065f46 40%, #064e3b 100%)',
+      sidebarShadow: '4px 0 32px rgba(6,78,59,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Blues: {
+      primary: '#0284c7',
+      primaryLight: '#7dd3fc',
+      primaryDark: '#0369a1',
+      primaryAlpha: 'rgba(2,132,199,',
+      sidebarBg: 'linear-gradient(180deg, #0369a1 0%, #0284c7 40%, #0369a1 100%)',
+      sidebarShadow: '4px 0 32px rgba(3,105,161,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Clean: {
+      primary: '#0ea5e9',
+      primaryLight: '#7dd3fc',
+      primaryDark: '#0284c7',
+      primaryAlpha: 'rgba(14,165,233,',
+      sidebarBg: 'linear-gradient(180deg, #0369a1 0%, #0ea5e9 40%, #0369a1 100%)',
+      sidebarShadow: '4px 0 32px rgba(3,105,161,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    'Black and White': {
+      primary: '#374151',
+      primaryLight: '#d1d5db',
+      primaryDark: '#111827',
+      primaryAlpha: 'rgba(55,65,81,',
+      sidebarBg: 'linear-gradient(180deg, #111827 0%, #1f2937 40%, #111827 100%)',
+      sidebarShadow: '4px 0 32px rgba(17,24,39,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+    Blimey: {
+      primary: '#d97706',
+      primaryLight: '#fcd34d',
+      primaryDark: '#b45309',
+      primaryAlpha: 'rgba(217,119,6,',
+      sidebarBg: 'linear-gradient(180deg, #92400e 0%, #b45309 40%, #92400e 100%)',
+      sidebarShadow: '4px 0 32px rgba(146,64,14,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    },
+  };
+
+  if (consultantMode) {
+    // For consultant mode, always use green tones (even when theme is selected)
+    return {
+      primary: '#10b981',
+      primaryLight: '#6ee7b7',
+      primaryDark: '#059669',
+      primaryAlpha: 'rgba(16,185,129,',
+      sidebarBg: 'linear-gradient(180deg, #052e16 0%, #064e3b 40%, #042f1f 100%)',
+      sidebarShadow: '4px 0 32px rgba(5,46,22,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+    };
+  }
+
+  return themeMap[themeName] || ADMIN_DEFAULT_COLORS;
+};
+
+// Type for group config
+type GroupConfigType = Record<
+  string,
+  {
+    gradient: string;
+    labelColor: string;
+    border: string;
+    glowColor: string;
+    dotColor: string;
+  }
+>;
 
 const SideNav = () => {
   const { cx, classes } = useStyles();
+  const { themeName } = useThemeContext();
   const { isConsultantMode, isConsultant } = useAuth();
   const consultantMode = isConsultantMode || isConsultant;
 
   const adminMenuGroups = useAdminMenuItems();
   const consultantMenuGroups = useConsultantMenuItems();
   const menuGroups = consultantMode ? consultantMenuGroups : adminMenuGroups;
-  const groupConfig = consultantMode ? CONSULTANT_GROUP_CONFIG : ADMIN_GROUP_CONFIG;
 
   const { collapsed, toggleCollapse } = useCollapse();
   const location = useLocation();
+
+  // Determine if we should use theme colors (not System/Default for admin)
+  const useThemeColor = consultantMode || (themeName && themeName !== 'System');
+  const themeColors = useThemeColor
+    ? getThemeColors(themeName, consultantMode)
+    : consultantMode
+      ? CONSULTANT_DEFAULT_COLORS
+      : ADMIN_DEFAULT_COLORS;
+
+  // Theme-aware group configs - unified type
+  const groupConfig: GroupConfigType = consultantMode
+    ? {
+        Customer: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}40`,
+          dotColor: themeColors.primary,
+        },
+      }
+    : {
+        Governance: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}4d`,
+          dotColor: themeColors.primary,
+        },
+        Administration: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}2e 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}40`,
+          dotColor: themeColors.primary,
+        },
+        'People & Organizations': {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}2e 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}40`,
+          dotColor: themeColors.primary,
+        },
+        'Wind Operations': {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}4d`,
+          dotColor: themeColors.primary,
+        },
+        Overview: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}4d`,
+          dotColor: themeColors.primary,
+        },
+        People: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}47`,
+          dotColor: themeColors.primary,
+        },
+        Customer: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}47`,
+          dotColor: themeColors.primary,
+        },
+        'Energy Finance': {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}2e 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}8c`,
+          glowColor: `${themeColors.primaryAlpha}40`,
+          dotColor: themeColors.primary,
+        },
+        Reports: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}2e 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}80`,
+          glowColor: `${themeColors.primaryAlpha}38`,
+          dotColor: themeColors.primary,
+        },
+        Configuration: {
+          gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+          labelColor: themeColors.primaryLight,
+          border: `${themeColors.primaryAlpha}80`,
+          glowColor: `${themeColors.primaryAlpha}38`,
+          dotColor: themeColors.primary,
+        },
+      };
+
+  // Get default config for fallback
+  const defaultConfig = {
+    gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
+    labelColor: themeColors.primaryLight,
+    border: `${themeColors.primaryAlpha}8c`,
+    glowColor: `${themeColors.primaryAlpha}4d`,
+    dotColor: themeColors.primary,
+  };
 
   return (
     <Drawer
@@ -129,10 +263,8 @@ const SideNav = () => {
       className={cx(classes.drawer, collapsed ? classes.drawerCollapsed : '')}
       sx={{
         '& .MuiDrawer-paper': {
-          background: consultantMode ? CONSULTANT_DRAWER_BG : ADMIN_DRAWER_BG,
-          boxShadow: consultantMode
-            ? '4px 0 32px rgba(5,46,22,0.7), inset -1px 0 0 rgba(255,255,255,0.06)'
-            : '4px 0 32px rgba(13,27,62,0.7), inset -1px 0 0 rgba(255,255,255,0.06)',
+          background: themeColors.sidebarBg,
+          boxShadow: themeColors.sidebarShadow,
         },
       }}
     >
@@ -149,7 +281,7 @@ const SideNav = () => {
       <Box className={classes.navScrollArea}>
         <List className={classes.navList}>
           {menuGroups.map((group, groupIdx) => {
-            const cfg = groupConfig[group.group] ?? ADMIN_GROUP_CONFIG['Overview'];
+            const cfg = groupConfig[group.group] ?? defaultConfig;
 
             // Skip section header if group label is empty
             const showSectionHeader = group.group !== '';

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
@@ -43,9 +43,14 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
-import { TurbineData, MOCK_TURBINE_DATA, STATUS_CONFIG } from './types/turbineData.types';
+import { TurbineData, STATUS_CONFIG } from './types/turbineData.types';
+import { MOCK_TURBINE_DATA } from './utils/dashboard.utils';
 import { constants } from '@infygen/utils';
-import { Column, DataTable, Card } from '@infygen/component';
+import { Column, DataTable, Card, Loader } from '@infygen/component';
+import ComponentDetailDialog from './ComponentDetailDialog';
+
+// Lazy load the 3D component to avoid loading three.js on initial page load
+const TurbineFleetDialog3D = lazy(() => import('./TurbineFleetDialog3D'));
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -204,6 +209,12 @@ const Dashboard = () => {
   const [toDate, setToDate] = useState<Dayjs>(MAX_DATE);
   const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TURBINES);
   const [search, setSearch] = useState('');
+
+  // 3D View Dialog State
+  const [fleetDialogOpen, setFleetDialogOpen] = useState(false);
+  const [componentDialogOpen, setComponentDialogOpen] = useState(false);
+  const [selectedTurbine, setSelectedTurbine] = useState<TurbineData | null>(null);
+  const [selectedComponent, setSelectedComponent] = useState<string>('transformer');
 
   // Incentive data
   const INCENTIVE_DATA = [
@@ -467,218 +478,226 @@ const Dashboard = () => {
     dataLabels: { enabled: false },
   };
 
-  // ── Dynamic KPI cards ─────────────────────────────────────────────────────────
+  // ── Dynamic KPI cards (memoized to prevent recreation on every render) ─────────
   const aggLabel =
     chartData.aggregate === 'daily' ? 'day' : chartData.aggregate === 'weekly' ? 'week' : 'month';
 
-  const kpiCards = [
-    {
-      label: 'Total Energy',
-      value: fmtEnergy(chartData.totalEnergy),
-      sub: `${fromDate.format('DD MMM')} – ${toDate.format('DD MMM YYYY')}`,
-      color: '#6366f1',
-      Icon: BoltIcon,
-    },
-    {
-      label: 'Peak Output',
-      value: fmtEnergy(chartData.peakValue),
-      sub: `Highest single ${aggLabel}`,
-      color: '#10b981',
-      Icon: TrendingUpIcon,
-    },
-    {
-      label: `Avg / Day`,
-      value: fmtEnergy(chartData.avgPerDay),
-      sub: `Across ${chartData.totalDays} days`,
-      color: '#0891b2',
-      Icon: CalendarMonthIcon,
-    },
-    {
-      label: 'Turbines',
-      value: `${selectedTurbines.length || ALL_TURBINES.length}`,
-      sub: selectedTurbines.length === ALL_TURBINES.length ? 'All turbines' : 'Selected',
-      color: '#f59e0b',
-      Icon: RouterIcon,
-    },
-  ];
-
-  // ── Table columns ─────────────────────────────────────────────────────────────
-  const columns: Column<TurbineData>[] = [
-    {
-      id: 'turbineNo',
-      label: 'Turbine No',
-      minWidth: 70,
-      align: 'center',
-      format: (v, row) => (
-        <Typography
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(AdminPath.TURBINE_DETAIL.replace(':id', String((row as TurbineData).id)));
-          }}
-          className={classes.cellTurbineNo}
-        >
-          {String(v)}
-        </Typography>
-      ),
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      minWidth: 90,
-      align: 'center',
-      format: (v) => {
-        const cfg = STATUS_CONFIG[v as TurbineData['status']];
-        return (
-          <Chip
-            size='small'
-            icon={getStatusIcon(v as TurbineData['status'])}
-            label={cfg.label}
-            sx={{
-              background: cfg.bgColor,
-              border: `1px solid ${cfg.borderColor}`,
-              color: cfg.color,
-              fontWeight: 600,
-              fontSize: '0.65rem',
-              height: 22,
-              '& .MuiChip-icon': { color: cfg.color },
-            }}
-          />
-        );
+  const kpiCards = useMemo(
+    () => [
+      {
+        label: 'Total Energy',
+        value: fmtEnergy(chartData.totalEnergy),
+        sub: `${fromDate.format('DD MMM')} – ${toDate.format('DD MMM YYYY')}`,
+        color: '#6366f1',
+        Icon: BoltIcon,
       },
-    },
-    { id: 'time', label: 'Time', minWidth: 70, align: 'center' },
-    {
-      id: 'activePower',
-      label: 'AP (kW)',
-      minWidth: 85,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumericBold}>{fmtVal(v as number)}</Typography>
-      ),
-    },
-    {
-      id: 'windSpeed',
-      label: 'WS (m/s)',
-      minWidth: 85,
-      align: 'center',
-      format: (v) => <Typography className={classes.cellNumeric}>{fmtVal(v as number)}</Typography>,
-    },
-    {
-      id: 'windDirection',
-      label: 'Wdir (°)',
-      minWidth: 80,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°</Typography>
-      ),
-    },
-    {
-      id: 'nacellePosition',
-      label: 'Nac (°)',
-      minWidth: 75,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
-      ),
-    },
-    {
-      id: 'pitchAngle',
-      label: 'Pitch (°)',
-      minWidth: 75,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
-      ),
-    },
-    {
-      id: 'rotorRpm',
-      label: 'RRPM',
-      minWidth: 65,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}</Typography>
-      ),
-    },
-    {
-      id: 'generatorRpm',
-      label: 'GRPM',
-      minWidth: 65,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
-      ),
-    },
-    {
-      id: 'hydraulicPressure',
-      label: 'HydPre (bar)',
-      minWidth: 90,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
-      ),
-    },
-    {
-      id: 'todayGeneration',
-      label: 'TodayGen (kWh)',
-      minWidth: 100,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumericBold}>{(v as number).toFixed(0)}</Typography>
-      ),
-    },
-    {
-      id: 'outdoorTemp',
-      label: 'OutDoor (°C)',
-      minWidth: 90,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-      ),
-    },
-    {
-      id: 'gearboxTemp',
-      label: 'Gearbox (°C)',
-      minWidth: 90,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-      ),
-    },
-    {
-      id: 'generatorTemp',
-      label: 'Generator (°C)',
-      minWidth: 95,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-      ),
-    },
-    {
-      id: 'transformerTemp',
-      label: 'Trafo (°C)',
-      minWidth: 85,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-      ),
-    },
-    {
-      id: 'hubExhaustTemp',
-      label: 'H.Ex Out (°C)',
-      minWidth: 90,
-      align: 'center',
-      format: (v) => (
-        <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-      ),
-    },
-    {
-      id: 'operatingMode',
-      label: 'OP Mode',
-      minWidth: 110,
-      align: 'center',
-      format: (v) => <Typography className={classes.cellOpMode}>{String(v)}</Typography>,
-    },
-  ];
+      {
+        label: 'Peak Output',
+        value: fmtEnergy(chartData.peakValue),
+        sub: `Highest single ${aggLabel}`,
+        color: '#10b981',
+        Icon: TrendingUpIcon,
+      },
+      {
+        label: `Avg / Day`,
+        value: fmtEnergy(chartData.avgPerDay),
+        sub: `Across ${chartData.totalDays} days`,
+        color: '#0891b2',
+        Icon: CalendarMonthIcon,
+      },
+      {
+        label: 'Turbines',
+        value: `${selectedTurbines.length || ALL_TURBINES.length}`,
+        sub: selectedTurbines.length === ALL_TURBINES.length ? 'All turbines' : 'Selected',
+        color: '#f59e0b',
+        Icon: RouterIcon,
+      },
+    ],
+    [chartData, fromDate, toDate, selectedTurbines, aggLabel],
+  );
+
+  // ── Table columns (memoized to prevent recreation on every render) ─────────────
+  const columns: Column<TurbineData>[] = useMemo(
+    () => [
+      {
+        id: 'turbineNo',
+        label: 'Turbine No',
+        minWidth: 70,
+        align: 'center',
+        format: (v, row) => (
+          <Typography
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(AdminPath.TURBINE_DETAIL.replace(':id', String((row as TurbineData).id)));
+            }}
+            className={classes.cellTurbineNo}
+          >
+            {String(v)}
+          </Typography>
+        ),
+      },
+      {
+        id: 'status',
+        label: 'Status',
+        minWidth: 90,
+        align: 'center',
+        format: (v) => {
+          const cfg = STATUS_CONFIG[v as TurbineData['status']];
+          return (
+            <Chip
+              size='small'
+              icon={getStatusIcon(v as TurbineData['status'])}
+              label={cfg.label}
+              sx={{
+                background: cfg.bgColor,
+                border: `1px solid ${cfg.borderColor}`,
+                color: cfg.color,
+                fontWeight: 600,
+                fontSize: '0.65rem',
+                height: 22,
+                '& .MuiChip-icon': { color: cfg.color },
+              }}
+            />
+          );
+        },
+      },
+      { id: 'time', label: 'Time', minWidth: 70, align: 'center' },
+      {
+        id: 'activePower',
+        label: 'AP (kW)',
+        minWidth: 85,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumericBold}>{fmtVal(v as number)}</Typography>
+        ),
+      },
+      {
+        id: 'windSpeed',
+        label: 'WS (m/s)',
+        minWidth: 85,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{fmtVal(v as number)}</Typography>
+        ),
+      },
+      {
+        id: 'windDirection',
+        label: 'Wdir (°)',
+        minWidth: 80,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°</Typography>
+        ),
+      },
+      {
+        id: 'nacellePosition',
+        label: 'Nac (°)',
+        minWidth: 75,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
+        ),
+      },
+      {
+        id: 'pitchAngle',
+        label: 'Pitch (°)',
+        minWidth: 75,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
+        ),
+      },
+      {
+        id: 'rotorRpm',
+        label: 'RRPM',
+        minWidth: 65,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}</Typography>
+        ),
+      },
+      {
+        id: 'generatorRpm',
+        label: 'GRPM',
+        minWidth: 65,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
+        ),
+      },
+      {
+        id: 'hydraulicPressure',
+        label: 'HydPre (bar)',
+        minWidth: 90,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
+        ),
+      },
+      {
+        id: 'todayGeneration',
+        label: 'TodayGen (kWh)',
+        minWidth: 100,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumericBold}>{(v as number).toFixed(0)}</Typography>
+        ),
+      },
+      {
+        id: 'outdoorTemp',
+        label: 'OutDoor (°C)',
+        minWidth: 90,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
+        ),
+      },
+      {
+        id: 'gearboxTemp',
+        label: 'Gearbox (°C)',
+        minWidth: 90,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
+        ),
+      },
+      {
+        id: 'generatorTemp',
+        label: 'Generator (°C)',
+        minWidth: 95,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
+        ),
+      },
+      {
+        id: 'transformerTemp',
+        label: 'Trafo (°C)',
+        minWidth: 85,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
+        ),
+      },
+      {
+        id: 'hubExhaustTemp',
+        label: 'H.Ex Out (°C)',
+        minWidth: 90,
+        align: 'center',
+        format: (v) => (
+          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
+        ),
+      },
+      {
+        id: 'operatingMode',
+        label: 'OP Mode',
+        minWidth: 110,
+        align: 'center',
+        format: (v) => <Typography className={classes.cellOpMode}>{String(v)}</Typography>,
+      },
+    ],
+    [classes],
+  );
 
   return (
     <>
@@ -1446,6 +1465,38 @@ const Dashboard = () => {
           </Card>
         )}
       </Box>
+
+      {/* 3D View Dialogs */}
+      {fleetDialogOpen && (
+        <Suspense fallback={<Loader />}>
+          <TurbineFleetDialog3D
+            open={fleetDialogOpen}
+            turbines={turbineData}
+            onClose={() => setFleetDialogOpen(false)}
+            onSelectTurbine={(turbine) => {
+              setSelectedTurbine(turbine);
+              navigate(AdminPath.TURBINE_DETAIL.replace(':id', String(turbine.id)));
+            }}
+            onSelectComponent={(turbine, component) => {
+              setSelectedTurbine(turbine);
+              setSelectedComponent(component);
+              setFleetDialogOpen(false);
+              setComponentDialogOpen(true);
+            }}
+          />
+        </Suspense>
+      )}
+
+      <ComponentDetailDialog
+        open={componentDialogOpen}
+        turbine={selectedTurbine}
+        component={selectedComponent}
+        onClose={() => setComponentDialogOpen(false)}
+        onBack={() => {
+          setComponentDialogOpen(false);
+          setFleetDialogOpen(true);
+        }}
+      />
     </>
   );
 };

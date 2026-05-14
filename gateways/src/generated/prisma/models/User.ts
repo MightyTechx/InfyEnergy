@@ -80,6 +80,7 @@ export type UserMinAggregateOutputType = {
   firstActivationDate: Date | null
   lastDeactivationDate: Date | null
   lastActivityAt: Date | null
+  theme: string | null
   timezone: string | null
   dateFormat: string | null
   timeFormat: string | null
@@ -135,6 +136,7 @@ export type UserMaxAggregateOutputType = {
   firstActivationDate: Date | null
   lastDeactivationDate: Date | null
   lastActivityAt: Date | null
+  theme: string | null
   timezone: string | null
   dateFormat: string | null
   timeFormat: string | null
@@ -190,6 +192,7 @@ export type UserCountAggregateOutputType = {
   firstActivationDate: number
   lastDeactivationDate: number
   lastActivityAt: number
+  theme: number
   timezone: number
   dateFormat: number
   timeFormat: number
@@ -259,6 +262,7 @@ export type UserMinAggregateInputType = {
   firstActivationDate?: true
   lastDeactivationDate?: true
   lastActivityAt?: true
+  theme?: true
   timezone?: true
   dateFormat?: true
   timeFormat?: true
@@ -314,6 +318,7 @@ export type UserMaxAggregateInputType = {
   firstActivationDate?: true
   lastDeactivationDate?: true
   lastActivityAt?: true
+  theme?: true
   timezone?: true
   dateFormat?: true
   timeFormat?: true
@@ -369,6 +374,7 @@ export type UserCountAggregateInputType = {
   firstActivationDate?: true
   lastDeactivationDate?: true
   lastActivityAt?: true
+  theme?: true
   timezone?: true
   dateFormat?: true
   timeFormat?: true
@@ -511,6 +517,7 @@ export type UserGroupByOutputType = {
   firstActivationDate: Date | null
   lastDeactivationDate: Date | null
   lastActivityAt: Date | null
+  theme: string | null
   timezone: string | null
   dateFormat: string | null
   timeFormat: string | null
@@ -589,6 +596,7 @@ export type UserWhereInput = {
   firstActivationDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastDeactivationDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastActivityAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  theme?: Prisma.StringNullableFilter<"User"> | string | null
   timezone?: Prisma.StringNullableFilter<"User"> | string | null
   dateFormat?: Prisma.StringNullableFilter<"User"> | string | null
   timeFormat?: Prisma.StringNullableFilter<"User"> | string | null
@@ -644,6 +652,7 @@ export type UserOrderByWithRelationInput = {
   firstActivationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   lastDeactivationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActivityAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  theme?: Prisma.SortOrderInput | Prisma.SortOrder
   timezone?: Prisma.SortOrderInput | Prisma.SortOrder
   dateFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   timeFormat?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -702,6 +711,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   firstActivationDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastDeactivationDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastActivityAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  theme?: Prisma.StringNullableFilter<"User"> | string | null
   timezone?: Prisma.StringNullableFilter<"User"> | string | null
   dateFormat?: Prisma.StringNullableFilter<"User"> | string | null
   timeFormat?: Prisma.StringNullableFilter<"User"> | string | null
@@ -757,6 +767,7 @@ export type UserOrderByWithAggregationInput = {
   firstActivationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   lastDeactivationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActivityAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  theme?: Prisma.SortOrderInput | Prisma.SortOrder
   timezone?: Prisma.SortOrderInput | Prisma.SortOrder
   dateFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   timeFormat?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -820,6 +831,7 @@ export type UserScalarWhereWithAggregatesInput = {
   firstActivationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastDeactivationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastActivityAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  theme?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   timezone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   dateFormat?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   timeFormat?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -874,6 +886,7 @@ export type UserCreateInput = {
   firstActivationDate?: Date | string | null
   lastDeactivationDate?: Date | string | null
   lastActivityAt?: Date | string | null
+  theme?: string | null
   timezone?: string | null
   dateFormat?: string | null
   timeFormat?: string | null
@@ -929,6 +942,7 @@ export type UserUncheckedCreateInput = {
   firstActivationDate?: Date | string | null
   lastDeactivationDate?: Date | string | null
   lastActivityAt?: Date | string | null
+  theme?: string | null
   timezone?: string | null
   dateFormat?: string | null
   timeFormat?: string | null
@@ -983,6 +997,7 @@ export type UserUpdateInput = {
   firstActivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastDeactivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  theme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timeFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1038,6 +1053,7 @@ export type UserUncheckedUpdateInput = {
   firstActivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastDeactivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  theme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timeFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1093,6 +1109,7 @@ export type UserCreateManyInput = {
   firstActivationDate?: Date | string | null
   lastDeactivationDate?: Date | string | null
   lastActivityAt?: Date | string | null
+  theme?: string | null
   timezone?: string | null
   dateFormat?: string | null
   timeFormat?: string | null
@@ -1147,6 +1164,7 @@ export type UserUpdateManyMutationInput = {
   firstActivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastDeactivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  theme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timeFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1202,6 +1220,7 @@ export type UserUncheckedUpdateManyInput = {
   firstActivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastDeactivationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  theme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timeFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1257,6 +1276,7 @@ export type UserCountOrderByAggregateInput = {
   firstActivationDate?: Prisma.SortOrder
   lastDeactivationDate?: Prisma.SortOrder
   lastActivityAt?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timeFormat?: Prisma.SortOrder
@@ -1318,6 +1338,7 @@ export type UserMaxOrderByAggregateInput = {
   firstActivationDate?: Prisma.SortOrder
   lastDeactivationDate?: Prisma.SortOrder
   lastActivityAt?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timeFormat?: Prisma.SortOrder
@@ -1373,6 +1394,7 @@ export type UserMinOrderByAggregateInput = {
   firstActivationDate?: Prisma.SortOrder
   lastDeactivationDate?: Prisma.SortOrder
   lastActivityAt?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   timeFormat?: Prisma.SortOrder
@@ -1472,6 +1494,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   firstActivationDate?: boolean
   lastDeactivationDate?: boolean
   lastActivityAt?: boolean
+  theme?: boolean
   timezone?: boolean
   dateFormat?: boolean
   timeFormat?: boolean
@@ -1527,6 +1550,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   firstActivationDate?: boolean
   lastDeactivationDate?: boolean
   lastActivityAt?: boolean
+  theme?: boolean
   timezone?: boolean
   dateFormat?: boolean
   timeFormat?: boolean
@@ -1582,6 +1606,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   firstActivationDate?: boolean
   lastDeactivationDate?: boolean
   lastActivityAt?: boolean
+  theme?: boolean
   timezone?: boolean
   dateFormat?: boolean
   timeFormat?: boolean
@@ -1637,6 +1662,7 @@ export type UserSelectScalar = {
   firstActivationDate?: boolean
   lastDeactivationDate?: boolean
   lastActivityAt?: boolean
+  theme?: boolean
   timezone?: boolean
   dateFormat?: boolean
   timeFormat?: boolean
@@ -1650,7 +1676,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phone" | "workLocation" | "department" | "reasonForAccess" | "employeeId" | "businessUnit" | "managerName" | "cityZone" | "zipcode" | "dateOfBirth" | "gender" | "profilePicture" | "name" | "role" | "requestedRole" | "status" | "source" | "reviewedBy" | "reviewedAt" | "adminNotes" | "invitationToken" | "invitationExpiry" | "mustResetPassword" | "otp" | "otpExpiresAt" | "otpIsUsed" | "failedLoginAttempts" | "lockedUntil" | "lastLoginAt" | "passwordChangedAt" | "isActive" | "accessFromDate" | "accessToDate" | "firstActivationDate" | "lastDeactivationDate" | "lastActivityAt" | "timezone" | "dateFormat" | "timeFormat" | "language" | "consultantProfileUpdated" | "slaWorkingCalendar" | "slaExceptionGroup" | "application" | "applicationLead" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phone" | "workLocation" | "department" | "reasonForAccess" | "employeeId" | "businessUnit" | "managerName" | "cityZone" | "zipcode" | "dateOfBirth" | "gender" | "profilePicture" | "name" | "role" | "requestedRole" | "status" | "source" | "reviewedBy" | "reviewedAt" | "adminNotes" | "invitationToken" | "invitationExpiry" | "mustResetPassword" | "otp" | "otpExpiresAt" | "otpIsUsed" | "failedLoginAttempts" | "lockedUntil" | "lastLoginAt" | "passwordChangedAt" | "isActive" | "accessFromDate" | "accessToDate" | "firstActivationDate" | "lastDeactivationDate" | "lastActivityAt" | "theme" | "timezone" | "dateFormat" | "timeFormat" | "language" | "consultantProfileUpdated" | "slaWorkingCalendar" | "slaExceptionGroup" | "application" | "applicationLead" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -1697,6 +1723,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     firstActivationDate: Date | null
     lastDeactivationDate: Date | null
     lastActivityAt: Date | null
+    theme: string | null
     timezone: string | null
     dateFormat: string | null
     timeFormat: string | null
@@ -2172,6 +2199,7 @@ export interface UserFieldRefs {
   readonly firstActivationDate: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastDeactivationDate: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastActivityAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly theme: Prisma.FieldRef<"User", 'String'>
   readonly timezone: Prisma.FieldRef<"User", 'String'>
   readonly dateFormat: Prisma.FieldRef<"User", 'String'>
   readonly timeFormat: Prisma.FieldRef<"User", 'String'>

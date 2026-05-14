@@ -72,7 +72,10 @@ const NotificationModal = () => {
           }}
         >
           <Box className={classes.iconPill}>
-            <Icon className={classes.icon} />
+            {severity === 'success' && <CheckCircleIcon style={{ fontSize: 26, color: '#fff' }} />}
+            {severity === 'error' && <ErrorIcon style={{ fontSize: 26, color: '#fff' }} />}
+            {severity === 'warning' && <WarningIcon style={{ fontSize: 26, color: '#fff' }} />}
+            {severity === 'info' && <InfoIcon style={{ fontSize: 26, color: '#fff' }} />}
           </Box>
           <Box className={classes.textBlock}>
             <Typography className={classes.label}>{label}</Typography>

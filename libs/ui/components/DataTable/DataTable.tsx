@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   Box,
   Table as MuiTable,
@@ -24,6 +24,8 @@ import {
   Search as SearchIcon,
 } from '@mui/icons-material';
 import { useStyles } from './styles';
+
+// ─── Types ─────────────────────────────────────────────────────────────────────
 
 export interface Column<T> {
   id: keyof T | string;
@@ -53,6 +55,36 @@ export interface DataTableProps<T> {
 
 type Order = 'asc' | 'desc';
 
+// ─── Memoized Table Row ────────────────────────────────────────────────────────
+
+interface TableRowCellProps<T> {
+  column: Column<T>;
+  value: unknown;
+  row: T;
+}
+
+const TableRowCell = <T extends object>({ column, value, row }: TableRowCellProps<T>) => {
+  return (
+    <TableCell
+      align='center'
+      sx={{
+        py: 1,
+        px: 0.75,
+        textAlign: 'center',
+        '& p': { fontSize: '13px', textAlign: 'center' },
+      }}
+    >
+      {column.format
+        ? (column.format as (value: unknown, row: T) => React.ReactNode)(value, row)
+        : String(value ?? '')}
+    </TableCell>
+  );
+};
+
+TableRowCell.displayName = 'TableRowCell';
+
+// ─── Main DataTable Component ──────────────────────────────────────────────────
+
 export function DataTable<T extends object>({
   columns,
   data,
@@ -74,73 +106,94 @@ export function DataTable<T extends object>({
   const [selected, setSelected] = useState<Set<T[keyof T]>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleRequestSort = (property: keyof T | string) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  // Reset to first page when data changes
+  useEffect(() => {
+    setPage(0);
+  }, [data]);
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = new Set(data.map((row) => row[rowKey]));
-      setSelected(newSelected);
-      return;
-    }
-    setSelected(new Set());
-  };
+  // Memoized callbacks with stable references
+  const handleRequestSort = useCallback((property: keyof T | string) => {
+    setOrderBy((prev) => {
+      const isAsc = prev === property;
+      setOrder(isAsc ? 'desc' : 'asc');
+      return property;
+    });
+  }, []);
 
-  const handleClick = (row: T) => {
-    if (selectable) {
-      const id = row[rowKey];
-      const newSelected = new Set(selected);
-      if (newSelected.has(id)) {
-        newSelected.delete(id);
-      } else {
-        newSelected.add(id);
+  const handleSelectAllClick = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
+        const newSelected = new Set(data.map((row) => row[rowKey]));
+        setSelected(newSelected);
+        return;
       }
-      setSelected(newSelected);
-    }
-    if (onRowClick) {
-      onRowClick(row);
-    }
-  };
+      setSelected(new Set());
+    },
+    [data, rowKey],
+  );
 
-  const handleChangePage = (
-    _event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
-    setPage(newPage);
-  };
+  const handleClick = useCallback(
+    (row: T) => {
+      if (selectable) {
+        const id = row[rowKey];
+        setSelected((prev) => {
+          const newSelected = new Set(prev);
+          if (newSelected.has(id)) {
+            newSelected.delete(id);
+          } else {
+            newSelected.add(id);
+          }
+          return newSelected;
+        });
+      }
+      if (onRowClick) {
+        onRowClick(row);
+      }
+    },
+    [selectable, rowKey, onRowClick],
+  );
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangePage = useCallback(
+    (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+      setPage(newPage);
+    },
+    [],
+  );
+
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+  }, []);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     if (onDelete) {
       const selectedRows = data.filter((row) => selected.has(row[rowKey]));
       onDelete(selectedRows);
       setSelected(new Set());
     }
-  };
+  }, [onDelete, data, selected, rowKey]);
 
-  const isSelected = (id: T[keyof T]) => selected.has(id);
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setPage(0);
+  }, []);
 
-  // Filter data based on search query
+  // Memoized derived state
+  const isSelected = useCallback((id: T[keyof T]) => selected.has(id), [selected]);
+
   const filteredData = useMemo(() => {
     if (!searchQuery) return data;
 
+    const query = searchQuery.toLowerCase();
     return data.filter((row) =>
       columns.some((column) => {
         const value = row[column.id as keyof T];
         if (value === null || value === undefined) return false;
-        return String(value).toLowerCase().includes(searchQuery.toLowerCase());
+        return String(value).toLowerCase().includes(query);
       }),
     );
   }, [data, searchQuery, columns]);
 
-  // Sort data
   const sortedData = useMemo(() => {
     if (!orderBy) return filteredData;
 
@@ -155,10 +208,46 @@ export function DataTable<T extends object>({
     });
   }, [filteredData, order, orderBy]);
 
-  // Paginate data
   const paginatedData = useMemo(() => {
     return sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [sortedData, page, rowsPerPage]);
+
+  // Memoized header cells
+  const headerCells = useMemo(
+    () =>
+      columns.map((column) => (
+        <TableCell
+          key={String(column.id)}
+          align='center'
+          className={classes.tableCell}
+          style={column.minWidth ? { minWidth: column.minWidth } : undefined}
+        >
+          {column.sortable !== false ? (
+            <TableSortLabel
+              active={orderBy === column.id}
+              direction={orderBy === column.id ? order : 'asc'}
+              onClick={() => handleRequestSort(column.id)}
+              sx={{
+                justifyContent: 'center',
+                '& .MuiTableSortLabel-icon': {
+                  ml: 0.5,
+                },
+              }}
+            >
+              {column.label}
+            </TableSortLabel>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              {column.label}
+            </Box>
+          )}
+        </TableCell>
+      )),
+    [columns, classes.tableCell, orderBy, order, handleRequestSort],
+  );
+
+  // Memoized row data for rendering
+  const rowKeys = useMemo(() => new Set(data.map((row) => String(row[rowKey]))), [data, rowKey]);
 
   return (
     <Paper elevation={elevation} sx={{ borderRadius: 2, overflow: 'hidden' }}>
@@ -184,7 +273,7 @@ export function DataTable<T extends object>({
               size='small'
               placeholder='Search...'
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position='start'>
@@ -221,7 +310,10 @@ export function DataTable<T extends object>({
           <TableHead>
             <TableRow>
               {selectable && (
-                <TableCell padding='checkbox'>
+                <TableCell
+                  padding='checkbox'
+                  sx={{ textAlign: 'center', justifyContent: 'center' }}
+                >
                   <Checkbox
                     indeterminate={selected.size > 0 && selected.size < data.length}
                     checked={data.length > 0 && selected.size === data.length}
@@ -229,34 +321,14 @@ export function DataTable<T extends object>({
                   />
                 </TableCell>
               )}
-              {columns.map((column) => (
-                <TableCell
-                  key={String(column.id)}
-                  align='center'
-                  className={classes.tableCell}
-                  style={column.minWidth ? { minWidth: column.minWidth } : undefined}
-                >
-                  {column.sortable !== false ? (
-                    <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={orderBy === column.id ? order : 'asc'}
-                      onClick={() => handleRequestSort(column.id)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  ) : (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                      {column.label}
-                    </Box>
-                  )}
-                </TableCell>
-              ))}
+              {headerCells}
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedData.map((row) => {
-              const isItemSelected = isSelected(row[rowKey]);
-              const isActive = activeRowKey !== undefined && row[rowKey] === activeRowKey;
+              const rowKeyValue = row[rowKey];
+              const isItemSelected = isSelected(rowKeyValue);
+              const isActive = activeRowKey !== undefined && rowKeyValue === activeRowKey;
 
               return (
                 <TableRow
@@ -265,17 +337,16 @@ export function DataTable<T extends object>({
                   role='checkbox'
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={String(row[rowKey])}
+                  key={String(rowKeyValue)}
                   selected={isItemSelected}
-                  className={
-                    isActive
-                      ? classes.highlightedRow
-                      : onRowClick || selectable
-                        ? classes.clickableRow
-                        : classes.defaultRow
-                  }
-                  sx={
-                    isActive
+                  sx={{
+                    cursor: onRowClick || selectable ? 'pointer' : 'default',
+                    transition: 'background 0.25s ease',
+                    '& td': {
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                    },
+                    ...(isActive
                       ? {
                           '@keyframes rowFlash': {
                             '0%': { backgroundColor: 'rgba(30,66,159,0.32)' },
@@ -284,24 +355,26 @@ export function DataTable<T extends object>({
                           },
                           animation: 'rowFlash 0.55s ease-out',
                         }
-                      : undefined
-                  }
+                      : {}),
+                  }}
                 >
                   {selectable && (
-                    <TableCell padding='checkbox'>
+                    <TableCell
+                      padding='checkbox'
+                      sx={{ textAlign: 'center', justifyContent: 'center' }}
+                    >
                       <Checkbox checked={isItemSelected} />
                     </TableCell>
                   )}
                   {columns.map((column) => {
                     const value = row[column.id as keyof T];
                     return (
-                      <TableCell
+                      <TableRowCell
                         key={String(column.id)}
-                        align='center'
-                        sx={{ py: 1, px: 0.75, '& p': { fontSize: '13px' } }}
-                      >
-                        {column.format ? column.format(value, row) : String(value ?? '')}
-                      </TableCell>
+                        column={column}
+                        value={value}
+                        row={row}
+                      />
                     );
                   })}
                 </TableRow>
@@ -310,9 +383,9 @@ export function DataTable<T extends object>({
             {paginatedData.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + (selectable ? 1 : 0)}
+                  colSpan={columns.length}
                   align='center'
-                  className={classes.emptyCell}
+                  sx={{ padding: 4, textAlign: 'center' }}
                 >
                   <Typography variant='body2' color='text.secondary'>
                     No data available

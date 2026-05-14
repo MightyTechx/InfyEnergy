@@ -13,6 +13,7 @@ import {
 import { BadRequestException, HttpException, UnauthorizedException } from '@infygen/middleware';
 import { prisma } from '@infygen/database';
 import { sendEmail, generateOtp } from '@infygen/config';
+import { PrismaClient } from '@infygen/prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'serivceops-jwt-secret-key';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h') as jwt.SignOptions['expiresIn'];
@@ -73,7 +74,9 @@ type AuthAction =
   | 'create-consultant-role'
   | 'update-consultant-role'
   | 'delete-consultant-role'
-  | 'get-login-logs';
+  | 'get-login-logs'
+  | 'get-my-settings'
+  | 'update-my-settings';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -167,6 +170,8 @@ export class AuthController {
         case 'change-password':
         case 'get-my-profile':
         case 'update-my-profile':
+        case 'get-my-settings':
+        case 'update-my-settings':
           return await this.handleAuthenticatedAction(req, res, action, db);
         case 'get-role-requests':
         case 'get-pending-role-requests':
@@ -620,6 +625,91 @@ export class AuthController {
       res.json({
         message: 'Profile updated successfully',
         data: sanitizeUser(updated as unknown as Record<string, unknown>),
+      });
+    }
+
+    if (action === 'get-my-settings') {
+      const user = await db.user.findUnique({
+        where: { id: userId },
+        select: {
+          theme: true,
+          timezone: true,
+          language: true,
+          dateFormat: true,
+          timeFormat: true,
+          slaWorkingCalendar: true,
+          slaExceptionGroup: true,
+        },
+      });
+      if (!user) {
+        res.status(401).json({ message: 'Session expired. Please sign in again.' });
+        return;
+      }
+      res.json({
+        message: 'Settings retrieved',
+        data: {
+          theme: user.theme || 'light',
+          timezone: user.timezone,
+          language: user.language,
+          dateFormat: user.dateFormat,
+          timeFormat: user.timeFormat,
+          slaWorkingCalendar: user.slaWorkingCalendar,
+          slaExceptionGroup: user.slaExceptionGroup,
+        },
+      });
+    }
+
+    if (action === 'update-my-settings') {
+      const { data: settingsData } = req.body as {
+        data: Record<string, unknown>;
+      };
+      if (!settingsData || typeof settingsData !== 'object') {
+        res.status(400).json({ message: 'data object is required' });
+        return;
+      }
+
+      const existing = await db.user.findUnique({ where: { id: userId } });
+      if (!existing) {
+        res.status(401).json({ message: 'Session expired. Please sign in again.' });
+        return;
+      }
+
+      const allowedSettings = [
+        'theme',
+        'timezone',
+        'language',
+        'dateFormat',
+        'timeFormat',
+        'slaWorkingCalendar',
+        'slaExceptionGroup',
+      ];
+
+      const sanitizedUpdate: Record<string, unknown> = {};
+      for (const key of allowedSettings) {
+        if (key in settingsData) sanitizedUpdate[key] = settingsData[key];
+      }
+
+      if (Object.keys(sanitizedUpdate).length === 0) {
+        res.status(400).json({ message: 'No valid settings to update' });
+        return;
+      }
+
+      const updated = await db.user.update({
+        where: { id: userId },
+        data: sanitizedUpdate,
+      });
+
+      res.json({
+        message: 'Settings updated successfully',
+        data: {
+          theme: updated.theme || 'light',
+          timezone: updated.timezone,
+          language: updated.language,
+          dateFormat: updated.dateFormat,
+          timeFormat: updated.timeFormat,
+          slaWorkingCalendar: updated.slaWorkingCalendar,
+          slaExceptionGroup: updated.slaExceptionGroup,
+        },
       });
     }
   };

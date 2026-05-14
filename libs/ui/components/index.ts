@@ -35,7 +35,7 @@ export * from './ScrollSpy';
 export * from './Select';
 export * from './Stepper';
 export * from './Switch';
-export * from './Table';
+export * from './TabPanel';
 export * from './TextField';
 export * from './Toggle';
 export * from './Tooltip';

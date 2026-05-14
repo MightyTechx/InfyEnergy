@@ -56,7 +56,8 @@ export const ModelName = {
   LoginLog: 'LoginLog',
   FeatureFlag: 'FeatureFlag',
   TurbineType: 'TurbineType',
-  TurbineParameter: 'TurbineParameter'
+  TurbineParameter: 'TurbineParameter',
+  UserPreference: 'UserPreference'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -117,6 +118,7 @@ export const UserScalarFieldEnum = {
   firstActivationDate: 'firstActivationDate',
   lastDeactivationDate: 'lastDeactivationDate',
   lastActivityAt: 'lastActivityAt',
+  theme: 'theme',
   timezone: 'timezone',
   dateFormat: 'dateFormat',
   timeFormat: 'timeFormat',
@@ -220,6 +222,20 @@ export const TurbineParameterScalarFieldEnum = {
 } as const
 
 export type TurbineParameterScalarFieldEnum = (typeof TurbineParameterScalarFieldEnum)[keyof typeof TurbineParameterScalarFieldEnum]
+
+
+export const UserPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  themeName: 'themeName',
+  compactView: 'compactView',
+  darkMode: 'darkMode',
+  autoSave: 'autoSave',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
 
 
 export const SortOrder = {

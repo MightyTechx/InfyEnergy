@@ -61,10 +61,11 @@ model User {
   // tracking
   lastActivityAt          DateTime?
   // locale & preferences
-  timezone                String?
-  dateFormat              String?
-  timeFormat              String?
-  language                String?
+  theme                 String?   @default("Cobalt")
+  timezone              String?
+  dateFormat            String?
+  timeFormat            String?
+  language              String?
   // consultant fields
   consultantProfileUpdated Boolean  @default(false)
   slaWorkingCalendar       String?
@@ -172,5 +173,20 @@ model TurbineParameter {
   @@index([turbineTypeId])
   @@index([key])
   @@index([category])
+}
+
+// ─── User Preferences ──────────────────────────────────────────────────────────
+
+model UserPreference {
+  id          String   @id @default(cuid())
+  userId      Int      @unique
+  themeName   String   @default("System")
+  compactView Boolean  @default(false)
+  darkMode    Boolean  @default(false)
+  autoSave    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 

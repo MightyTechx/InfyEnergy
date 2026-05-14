@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
+import { TURBINE_IDS } from '../../../../utils/mockData';
 
 // ─── Types ──────────────────────────────────────────────────────────────────────────
 
@@ -37,21 +38,8 @@ export interface DowntimeColorConfig {
   border: string;
 }
 
-export const DOWNTIME_COLORS: Record<DowntimeType, DowntimeColorConfig> = {
-  Scheduled: { bg: 'rgba(16,185,129,0.1)', color: '#059669', border: 'rgba(16,185,129,0.35)' },
-  Unscheduled: { bg: 'rgba(239,68,68,0.1)', color: '#dc2626', border: 'rgba(239,68,68,0.35)' },
-  'Force Majeure': {
-    bg: 'rgba(245,158,11,0.1)',
-    color: '#d97706',
-    border: 'rgba(245,158,11,0.35)',
-  },
-  'Grid Fault': { bg: 'rgba(14,165,233,0.1)', color: '#0284c7', border: 'rgba(14,165,233,0.35)' },
-  'Communication Loss': {
-    bg: 'rgba(124,58,237,0.1)',
-    color: '#7c3aed',
-    border: 'rgba(124,58,237,0.35)',
-  },
-};
+// Re-export from mockData for convenience
+export { DOWNTIME_COLORS } from '../../../../utils/mockData';
 
 export type DocType = 'pdf' | 'xlsx' | 'svg';
 
@@ -83,42 +71,9 @@ export const REPORT_TYPES = [
   'Trace Files',
 ];
 
-// ─── Turbines ─────────────────────────────────────────────────────────────────
+// ─── Turbines (re-export from mockData) ─────────────────────────────────────────────────────
 
-export const TURBINE_LIST = [
-  'All Turbines',
-  'T-01',
-  'T-02',
-  'T-03',
-  'T-04',
-  'T-05',
-  'T-06',
-  'T-07',
-  'T-08',
-  'T-09',
-  'T-10',
-];
-
-export const TURBINE_IDS = [
-  't01',
-  't02',
-  't03',
-  't04',
-  't05',
-  't06',
-  't07',
-  't08',
-  't09',
-  't10',
-] as const;
-
-// ─── Document Types ─────────────────────────────────────────────────────────────
-
-export const DOC_TYPES: DocTypeOption[] = [
-  { value: 'pdf', label: 'PDF' },
-  { value: 'xlsx', label: 'Excel (XLSX)' },
-  { value: 'svg', label: 'SVG' },
-];
+export { TURBINE_LIST, TURBINE_IDS, SELECT_ALL_KEY, DOC_TYPES } from '../../../../utils/mockData';
 
 // ─── KPI Data ─────────────────────────────────────────────────────────────────
 
@@ -260,10 +215,12 @@ export const getDowntimeRows = (): DowntimeRow[] => [
   },
 ];
 
-// ─── Chart Data Helpers ────────────────────────────────────────────────────────
+// Re-export chart helpers from mockData
+export { MIN_DATE, MAX_DATE } from '../../../../utils/mockData';
 
-export const MIN_DATE = dayjs('2026-01-01');
-export const MAX_DATE = dayjs().startOf('day');
+// ─── Chart Data Helpers (local overrides for Reports-specific logic) ─────────────
+
+// Keep local generateDayData for Reports-specific turbineStatuses format
 
 export const generateDayData = (
   dateStr: string,
@@ -378,22 +335,8 @@ export const getChartData = (
   return { categories, series, aggregate, totalDays, totalEnergy, peakValue, avgPerDay };
 };
 
-// ─── Color Constants ─────────────────────────────────────────────────────────────
-
-export const TURBINE_COLORS = [
-  '#6366f1',
-  '#06b6d4',
-  '#10b981',
-  '#f59e0b',
-  '#ef4444',
-  '#8b5cf6',
-  '#f97316',
-  '#0d9488',
-  '#3b82f6',
-  '#ec4899',
-];
-
-export const SELECT_ALL_KEY = '__select_all__';
+// Re-export color constants from mockData
+export { TURBINE_COLORS } from '../../../../utils/mockData';
 
 // ─── Monthly Report Data ─────────────────────────────────────────────────────────
 

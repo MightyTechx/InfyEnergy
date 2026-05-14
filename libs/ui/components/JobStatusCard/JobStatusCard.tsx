@@ -116,7 +116,11 @@ export const JobStatusCard: React.FC<JobStatusCardProps> = ({
         <Box className={classes.footerRow}>
           {/* Status Badge */}
           <Box className={classes.statusBadge}>
-            <StatusIcon className={classes.statusIcon} />
+            {status === 'needs_attention' && <WarningIcon style={{ fontSize: 16 }} />}
+            {status === 'in_progress' && <AutorenewIcon style={{ fontSize: 16 }} />}
+            {status === 'completed' && <CheckCircleIcon style={{ fontSize: 16 }} />}
+            {status === 'failed' && <ErrorIcon style={{ fontSize: 16 }} />}
+            {status === 'pending' && <ScheduleIcon style={{ fontSize: 16 }} />}
             <Typography variant='caption' className={classes.statusLabel}>
               {config.label}
             </Typography>

@@ -13,7 +13,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAdminKeyframes } from '@infygen/hooks';
 import { useStyles } from './styles/AdminPageShell.styles';
-import TabPanel from './TabPanel';
+import TabPanel from '@infygen/component/TabPanel';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -91,6 +91,63 @@ export interface AdminPageShellProps {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+const HeroIconWrapper: React.FC<{ icon: React.ElementType }> = ({ icon: Icon }) => {
+  const IconComponent = Icon as React.ComponentType<{ sx?: object }>;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <IconComponent sx={{ fontSize: 24, color: '#fff' } as object} />
+    </Box>
+  );
+};
+
+const StatIconWrapper: React.FC<{ icon: React.ElementType; color: string }> = ({
+  icon: Icon,
+  color,
+}) => {
+  const IconComponent = Icon as React.ComponentType<{ sx?: object }>;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <IconComponent sx={{ fontSize: '1.2rem', color } as object} />
+    </Box>
+  );
+};
+
+const EmptyIconWrapper: React.FC<{ icon: React.ElementType; color: string }> = ({
+  icon: Icon,
+  color,
+}) => {
+  const IconComponent = Icon as React.ComponentType<{ sx?: object }>;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <IconComponent sx={{ fontSize: 48, color } as object} />
+    </Box>
+  );
+};
+
 const AdminPageShell = ({
   mode,
   isLoading = false,
@@ -123,7 +180,7 @@ const AdminPageShell = ({
   heroIconShadow = '0 8px 24px rgba(20,184,166,0.4)',
   children,
 }: AdminPageShellProps) => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
   const keyframes = useAdminKeyframes();
 
   if (isLoading) {
@@ -162,7 +219,7 @@ const AdminPageShell = ({
                 flexShrink: 0,
               }}
             >
-              <HeroIcon sx={{ fontSize: 24, color: '#fff' }} />
+              <HeroIconWrapper icon={HeroIcon} />
             </Box>
           )}
           <Box>
@@ -280,7 +337,7 @@ const AdminPageShell = ({
                         className={classes.statIconWrap}
                         sx={{ background: `${color}14`, border: `1.5px solid ${color}28` }}
                       >
-                        <Icon className={classes.statIcon} sx={{ color }} />
+                        <StatIconWrapper icon={Icon} color={color} />
                       </Box>
                     </Box>
                     <Divider className={classes.statDivider} />
@@ -434,10 +491,7 @@ const AdminPageShell = ({
                     '& .emptyIcon': { color: `${accentColor}4d` },
                   }}
                 >
-                  <PanelEmptyIcon
-                    className={classes.emptyIcon}
-                    sx={{ color: `${accentColor}4d !important` }}
-                  />
+                  <EmptyIconWrapper icon={PanelEmptyIcon} color={`${accentColor}4d`} />
                   <Typography variant='h6' color='text.secondary'>
                     {emptyText}
                   </Typography>

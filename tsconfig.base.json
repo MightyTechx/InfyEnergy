@@ -43,6 +43,8 @@
       "@infygen/store": ["./libs/ui/store/index.ts"],
       "@infygen/state": ["./libs/services/state/index.ts"],
       "@infygen/slices": ["./libs/ui/slices/index.ts"],
+      "@infygen/ui-services": ["./libs/ui/services/index.ts"],
+      "@infygen/services/*": ["./gateways/src/services/*"]
     }
   },
   "exclude": ["dist", "node_modules", "temp"]

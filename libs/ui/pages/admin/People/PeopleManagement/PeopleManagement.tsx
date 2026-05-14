@@ -13,7 +13,7 @@ import {
   Card,
   PageHeader,
 } from '@infygen/component';
-import { Card as MUICard, Divider, InputAdornment, Stack } from '@mui/material';
+import { Card as MUICard, InputAdornment, Stack } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -22,7 +22,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import TabPanel from './components/TabPanel';
 import usePeopleManagement from './hooks/useAccessManagement';
 import { AccessRequestRow } from '../PeopleRequests/types/accessRequests.types';
 import { IAuthUser } from '@infygen/interfaces';
@@ -30,7 +29,7 @@ import { UserDetailDialog } from '../UserDetail';
 import { CreateUserDialog } from './components/CreateUserDialog';
 import { useAdminKeyframes } from '@infygen/hooks';
 import { useStyles } from './styles';
-// UserRow / constants imports removed — openDetail uses plain number ids
+import TabPanel from '@infygen/component/TabPanel';
 
 const PeopleManagement = () => {
   const { classes } = useStyles();

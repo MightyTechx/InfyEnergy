@@ -302,8 +302,10 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   statusIndicator: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: theme.spacing(0.75),
-    padding: `${theme.spacing(0.75)}px ${theme.spacing(1.5)}px`,
+    padding: '5px',
+    width: 85,
     borderRadius: theme.spacing(2),
     background: 'rgba(16,185,129,0.1)',
     border: '1px solid rgba(16,185,129,0.2)',

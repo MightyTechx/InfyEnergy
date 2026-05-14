@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material';
 import { constants } from '@infygen/utils';
@@ -24,7 +24,8 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import WindPowerIcon from '@mui/icons-material/WindPower';
 import TuneIcon from '@mui/icons-material/Tune';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
-import { TurbineData, STATUS_CONFIG, getTurbineById } from './types/turbineData.types';
+import { TurbineData } from './types/turbineData.types';
+import { STATUS_CONFIG, getTurbineById } from '../../../utils/mockData';
 import { useAdminKeyframes } from '@infygen/hooks';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -279,70 +280,75 @@ const TurbineDetailPage: React.FC = () => {
 
   const cfg = STATUS_CONFIG[turbine.status];
   const isActive = turbine.status === 'running' || turbine.status === 'standby';
-  const isFaultOrMaintenance = turbine.status === 'fault' || turbine.status === 'maintenance';
 
-  // Stats data for metric cards - same pattern as Dashboard
-  const statsData = [
-    {
-      icon: getStatusIcon(turbine.status),
-      bg: cfg.bgColor,
-      border: cfg.borderColor,
-      value: cfg.label,
-      label: 'Status',
-      valueColor: cfg.color,
-    },
-    {
-      icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
-      bg: 'rgba(245,158,11,0.12)',
-      border: 'rgba(245,158,11,0.3)',
-      value: fmt(turbine.activePower, 0),
-      label: 'Active (kW)',
-      valueColor: '#f59e0b',
-    },
-    {
-      icon: <WindPowerIcon sx={{ color: '#0ea5e9', fontSize: 20 }} />,
-      bg: 'rgba(14,165,233,0.12)',
-      border: 'rgba(14,165,233,0.3)',
-      value: fmt(turbine.windSpeed),
-      label: 'Wind (m/s)',
-      valueColor: '#0ea5e9',
-    },
-    {
-      icon: <SpeedIcon sx={{ color: '#10b981', fontSize: 20 }} />,
-      bg: 'rgba(16,185,129,0.12)',
-      border: 'rgba(16,185,129,0.3)',
-      value: fmt(turbine.rotorRpm, 1),
-      label: 'Rotor RPM',
-      valueColor: '#10b981',
-    },
-    {
-      icon: <BoltIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
-      bg: 'rgba(139,92,246,0.12)',
-      border: 'rgba(139,92,246,0.3)',
-      value: fmt(turbine.todayGeneration, 0),
-      label: 'Today (kWh)',
-      valueColor: '#8b5cf6',
-    },
-    {
-      icon: (
-        <ThermostatIcon
-          sx={{
-            color: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#ef4444',
-            fontSize: 20,
-          }}
-        />
-      ),
-      bg:
-        tempAlert(turbine.gearboxTemp) !== 'normal'
-          ? 'rgba(239,68,68,0.12)'
-          : 'rgba(239,68,68,0.12)',
-      border:
-        tempAlert(turbine.gearboxTemp) !== 'normal' ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.3)',
-      value: fmt(turbine.gearboxTemp, 0),
-      label: 'Gearbox (°C)',
-      valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
-    },
-  ];
+  // Stats data for metric cards (memoized to prevent recreation on every render)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const statsData = useMemo(
+    () => [
+      {
+        icon: getStatusIcon(turbine.status),
+        bg: cfg.bgColor,
+        border: cfg.borderColor,
+        value: cfg.label,
+        label: 'Status',
+        valueColor: cfg.color,
+      },
+      {
+        icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
+        bg: 'rgba(245,158,11,0.12)',
+        border: 'rgba(245,158,11,0.3)',
+        value: fmt(turbine.activePower, 0),
+        label: 'Active (kW)',
+        valueColor: '#f59e0b',
+      },
+      {
+        icon: <WindPowerIcon sx={{ color: '#0ea5e9', fontSize: 20 }} />,
+        bg: 'rgba(14,165,233,0.12)',
+        border: 'rgba(14,165,233,0.3)',
+        value: fmt(turbine.windSpeed),
+        label: 'Wind (m/s)',
+        valueColor: '#0ea5e9',
+      },
+      {
+        icon: <SpeedIcon sx={{ color: '#10b981', fontSize: 20 }} />,
+        bg: 'rgba(16,185,129,0.12)',
+        border: 'rgba(16,185,129,0.3)',
+        value: fmt(turbine.rotorRpm, 1),
+        label: 'Rotor RPM',
+        valueColor: '#10b981',
+      },
+      {
+        icon: <BoltIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
+        bg: 'rgba(139,92,246,0.12)',
+        border: 'rgba(139,92,246,0.3)',
+        value: fmt(turbine.todayGeneration, 0),
+        label: 'Today (kWh)',
+        valueColor: '#8b5cf6',
+      },
+      {
+        icon: (
+          <ThermostatIcon
+            sx={{
+              color: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#ef4444',
+              fontSize: 20,
+            }}
+          />
+        ),
+        bg:
+          tempAlert(turbine.gearboxTemp) !== 'normal'
+            ? 'rgba(239,68,68,0.12)'
+            : 'rgba(239,68,68,0.12)',
+        border:
+          tempAlert(turbine.gearboxTemp) !== 'normal'
+            ? 'rgba(239,68,68,0.3)'
+            : 'rgba(239,68,68,0.3)',
+        value: fmt(turbine.gearboxTemp, 0),
+        label: 'Gearbox (°C)',
+        valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
+      },
+    ],
+    [turbine],
+  );
 
   return (
     <>

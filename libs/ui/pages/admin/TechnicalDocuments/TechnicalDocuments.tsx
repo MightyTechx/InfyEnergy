@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, DataTable, Typography, Grid, TextField, PageHeader } from '@infygen/component';
 import { InputAdornment, Autocomplete } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,17 +22,21 @@ const TechnicalDocuments = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [search, setSearch] = useState('');
 
-  const filtered = DOCUMENTS.filter((row) => {
-    const matchFolder = !folderFilter || row.folder === folderFilter;
-    const matchType = !typeFilter || row.type === typeFilter;
-    const q = search.toLowerCase();
-    const matchSearch =
-      !q ||
-      row.fileName.toLowerCase().includes(q) ||
-      row.folder.toLowerCase().includes(q) ||
-      row.type.toLowerCase().includes(q);
-    return matchFolder && matchType && matchSearch;
-  });
+  const filtered = useMemo(
+    () =>
+      DOCUMENTS.filter((row) => {
+        const matchFolder = !folderFilter || row.folder === folderFilter;
+        const matchType = !typeFilter || row.type === typeFilter;
+        const q = search.toLowerCase();
+        const matchSearch =
+          !q ||
+          row.fileName.toLowerCase().includes(q) ||
+          row.folder.toLowerCase().includes(q) ||
+          row.type.toLowerCase().includes(q);
+        return matchFolder && matchType && matchSearch;
+      }),
+    [folderFilter, typeFilter, search],
+  );
 
   return (
     <>

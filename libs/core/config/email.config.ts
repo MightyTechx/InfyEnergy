@@ -10,17 +10,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = async (options: {
+interface EmailOptions {
   to: string;
   subject: string;
   html: string;
-}): Promise<void> => {
+}
+
+export const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
   try {
     await transporter.sendMail({
       from: process.env.SMTP_FROM || 'noreply@infygen.tech',
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
+      to,
+      subject,
+      html,
     });
   } catch (error) {
     console.error('Failed to send email:', error);

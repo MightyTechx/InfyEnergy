@@ -14,6 +14,7 @@ const {
   // Admin pages
   AdminDashboardPage,
   AdminTurbineDetailPage,
+  AdminTurbine3DViewPage,
   AdminPeopleManagementPage,
   AdminUserDetailPage,
   AdminProfilePage,
@@ -82,6 +83,7 @@ const AppRoutes = () => {
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={AdminPath.TURBINE_DETAIL} element={<AdminTurbineDetailPage />} />
+            <Route path={AdminPath.TURBINE_3D_VIEW} element={<AdminTurbine3DViewPage />} />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />

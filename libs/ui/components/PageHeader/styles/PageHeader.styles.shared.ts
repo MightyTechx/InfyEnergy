@@ -12,7 +12,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     border: '1px solid #e8eaf0',
-    borderLeft: '4px solid #4f46e5',
+    borderLeft: '4px solid #6366f1',
     boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(99,102,241,0.07)',
     position: 'relative' as const,
     overflow: 'hidden' as const,
@@ -40,14 +40,14 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       alignItems: 'flex-start' as const,
       padding: theme.spacing(1.75, 2),
       borderRadius: 10,
-      borderLeft: '3px solid #4f46e5',
+      borderLeft: '3px solid #6366f1',
       gap: theme.spacing(1.5),
     },
   },
 
   // ─── Admin Header ────────────────────────────────────────────────────────────
   headerAdmin: {
-    borderLeft: '4px solid #4f46e5',
+    borderLeft: '4px solid #6366f1',
     '&:hover': {
       borderLeftColor: '#4338ca',
     },

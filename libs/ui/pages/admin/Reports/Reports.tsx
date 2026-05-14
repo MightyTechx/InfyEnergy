@@ -20,6 +20,27 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import ImageIcon from '@mui/icons-material/Image';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import SendIcon from '@mui/icons-material/Send';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -43,13 +64,10 @@ import {
   getMachineAvailabilityRows,
   getWeeklyKpiRows,
   WeeklyKpiRow,
-  TemperatureAlertRow,
   getKpiRows,
   getDowntimeRows,
-  KpiRow,
-  DowntimeRow,
 } from './utils/reports.utils';
-import { Utils } from './utils/Utils';
+import { useUtils } from './utils/Utils';
 import { useAdminKeyframes } from '@infygen/hooks';
 import { generatePdfReport } from '../../../utils/export/pdf/pdf.generator';
 import { generateExcelReport } from '../../../utils/export/excel/excel.generator';
@@ -161,7 +179,7 @@ const Reports = () => {
 
   const keyframes = useAdminKeyframes();
 
-  const { kpiRows, downtimeRows, downtimeColumns, formatDateTime } = Utils();
+  const { kpiRows, downtimeRows, downtimeColumns, formatDateTime } = useUtils();
 
   const [now, setNow] = useState(() => new Date());
 
@@ -188,6 +206,30 @@ const Reports = () => {
   const [eventLogSearch, setEventLogSearch] = useState('');
   const [downtimeAnalysisSearch, setDowntimeAnalysisSearch] = useState('');
   const [machineAvailSearch, setMachineAvailSearch] = useState('');
+
+  // WhatsApp related state
+  const [whatsAppDialogOpen, setWhatsAppDialogOpen] = useState(false);
+  const [whatsAppRecipient, setWhatsAppRecipient] = useState('');
+  const [whatsAppSending, setWhatsAppSending] = useState(false);
+  const [whatsAppSnackbar, setWhatsAppSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error' | 'info';
+  }>({ open: false, message: '', severity: 'success' });
+  const [scheduledJobs, setScheduledJobs] = useState<any[]>([]);
+  const [scheduledDialogOpen, setScheduledDialogOpen] = useState(false);
+  const [scheduledForm, setScheduledForm] = useState({
+    recipient: '',
+    frequency: 'hourly' as 'hourly' | 'daily',
+    enabled: true,
+  });
+  const [scheduledLoading, setScheduledLoading] = useState(false);
+
+  // WhatsApp dialog schedule state
+  const [scheduleViaWhatsApp, setScheduleViaWhatsApp] = useState(false);
+  const [whatsAppScheduleDate, setWhatsAppScheduleDate] = useState<Dayjs | null>(null);
+  const [whatsAppScheduleTime, setWhatsAppScheduleTime] = useState<Dayjs | null>(null);
+  const [whatsAppRepeatFrequency, setWhatsAppRepeatFrequency] = useState<string>('once');
 
   // Handle report type change - reset dates based on report type
   const handleReportTypeChange = (newType: ReportType | null) => {
@@ -290,7 +332,10 @@ const Reports = () => {
   }, [reportType, fromDate, toDate, selectedTurbines]);
 
   const downloadEnabled =
-    !!reportType && !!fromDate && !!toDate && !!docType && selectedTurbines.length > 0;
+    !!reportType && !!fromDate && !!toDate && selectedTurbines.length > 0 && docType !== 'WhatsApp';
+
+  const whatsappScheduleEnabled =
+    !!reportType && !!fromDate && !!toDate && selectedTurbines.length > 0;
 
   const filteredKpi = kpiSearch
     ? kpiRows.filter((r: any) => r.kpi.toLowerCase().includes(kpiSearch.toLowerCase()))
@@ -416,6 +461,204 @@ const Reports = () => {
   const isDowntimeAnalysis = reportType === 'Downtime Analysis (MTBF & MTTR)';
   const isMachineAvailability = reportType === 'Machine Availability';
 
+  // WhatsApp functions
+  const handleSendToWhatsApp = async () => {
+    if (!whatsAppRecipient.trim()) {
+      setWhatsAppSnackbar({
+        open: true,
+        message: 'Please enter recipient phone number',
+        severity: 'error',
+      });
+      return;
+    }
+
+    if (scheduleViaWhatsApp) {
+      if (!whatsAppScheduleDate || !whatsAppScheduleTime) {
+        setWhatsAppSnackbar({
+          open: true,
+          message: 'Please select date and time for scheduling',
+          severity: 'error',
+        });
+        return;
+      }
+    }
+
+    setWhatsAppSending(true);
+    try {
+      const API_BASE = '/api/admin/whatsapp';
+      const turbineIds =
+        selectedTurbineIds.length > 0 ? selectedTurbineIds : ['t01', 't02', 't03', 't04', 't05'];
+
+      const requestBody: any = {
+        recipient: whatsAppRecipient.replace(/\D/g, ''),
+        reportType: reportType || 'Daily Generation Report',
+        turbineIds,
+      };
+
+      if (scheduleViaWhatsApp && whatsAppScheduleDate && whatsAppScheduleTime) {
+        const scheduledDateTime = whatsAppScheduleDate
+          .hour(whatsAppScheduleTime.hour())
+          .minute(whatsAppScheduleTime.minute())
+          .second(0);
+        requestBody.scheduledAt = scheduledDateTime.toISOString();
+        requestBody.repeatFrequency = whatsAppRepeatFrequency;
+        requestBody.scheduleEnabled = true;
+      }
+
+      const endpoint = scheduleViaWhatsApp ? `${API_BASE}/schedule` : `${API_BASE}/send`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setWhatsAppSnackbar({
+          open: true,
+          message: scheduleViaWhatsApp
+            ? 'Report scheduled successfully!'
+            : 'Report sent to WhatsApp successfully!',
+          severity: 'success',
+        });
+        setWhatsAppDialogOpen(false);
+      } else {
+        setWhatsAppSnackbar({
+          open: true,
+          message: data.error || 'Failed to send report',
+          severity: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('WhatsApp send error:', error);
+      setWhatsAppSnackbar({
+        open: true,
+        message: scheduleViaWhatsApp ? 'Failed to schedule report' : 'Failed to send report',
+        severity: 'error',
+      });
+    } finally {
+      setWhatsAppSending(false);
+    }
+  };
+
+  const handleOpenWhatsAppDialog = () => {
+    setWhatsAppDialogOpen(true);
+    setWhatsAppRecipient('');
+    setScheduleViaWhatsApp(false);
+    setWhatsAppScheduleDate(null);
+    setWhatsAppScheduleTime(null);
+    setWhatsAppRepeatFrequency('once');
+  };
+
+  const handleFetchScheduledJobs = async () => {
+    try {
+      const response = await fetch('/api/admin/whatsapp/scheduled');
+      const data = await response.json();
+      if (data.success) {
+        setScheduledJobs(data.jobs || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch scheduled jobs:', error);
+    }
+  };
+
+  const handleOpenScheduledDialog = () => {
+    handleFetchScheduledJobs();
+    setScheduledDialogOpen(true);
+    setScheduledForm({ recipient: '', frequency: 'hourly', enabled: true });
+  };
+
+  const handleCreateScheduledReport = async () => {
+    if (!scheduledForm.recipient.trim()) {
+      setWhatsAppSnackbar({
+        open: true,
+        message: 'Please enter recipient phone number',
+        severity: 'error',
+      });
+      return;
+    }
+    setScheduledLoading(true);
+    try {
+      const API_BASE = '/api/admin/whatsapp/scheduled';
+      const turbineIds =
+        selectedTurbineIds.length > 0 ? selectedTurbineIds : ['t01', 't02', 't03', 't04', 't05'];
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipient: scheduledForm.recipient.replace(/\D/g, ''),
+          reportType: reportType || 'Daily Generation Report',
+          frequency: scheduledForm.frequency,
+          enabled: scheduledForm.enabled,
+          turbineIds,
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setWhatsAppSnackbar({
+          open: true,
+          message: 'Scheduled report created!',
+          severity: 'success',
+        });
+        handleFetchScheduledJobs();
+        setScheduledForm({ recipient: '', frequency: 'hourly', enabled: true });
+      } else {
+        setWhatsAppSnackbar({
+          open: true,
+          message: data.error || 'Failed to create schedule',
+          severity: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Create scheduled error:', error);
+      setWhatsAppSnackbar({ open: true, message: 'Failed to create schedule', severity: 'error' });
+    } finally {
+      setScheduledLoading(false);
+    }
+  };
+
+  const handleToggleScheduledJob = async (jobId: string, enabled: boolean) => {
+    try {
+      await fetch(`/api/admin/whatsapp/scheduled/${jobId}/toggle`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled }),
+      });
+      handleFetchScheduledJobs();
+    } catch (error) {
+      console.error('Toggle error:', error);
+    }
+  };
+
+  const handleDeleteScheduledJob = async (jobId: string) => {
+    try {
+      await fetch(`/api/admin/whatsapp/scheduled/${jobId}`, { method: 'DELETE' });
+      handleFetchScheduledJobs();
+      setWhatsAppSnackbar({ open: true, message: 'Scheduled report deleted', severity: 'success' });
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
+  const handleTriggerScheduledJob = async (jobId: string) => {
+    try {
+      const response = await fetch(`/api/admin/whatsapp/scheduled/${jobId}/trigger`, {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if (data.success) {
+        setWhatsAppSnackbar({
+          open: true,
+          message: 'Report sent immediately!',
+          severity: 'success',
+        });
+      } else {
+        setWhatsAppSnackbar({ open: true, message: 'Failed to trigger report', severity: 'error' });
+      }
+    } catch (error) {
+      console.error('Trigger error:', error);
+    }
+  };
+
   // Dynamic KPI columns based on selected turbines
   const dynamicKpiColumns = useMemo(() => {
     const cols: any[] = [
@@ -424,10 +667,16 @@ const Reports = () => {
         label: 'Key Performance Indicator (KPI)',
         minWidth: 270,
         sortable: false,
-        align: 'left',
+        align: 'center',
         format: (v: any) => (
           <Typography
-            sx={{ fontWeight: 600, fontSize: '13px', color: '#1e293b', whiteSpace: 'nowrap' }}
+            sx={{
+              fontWeight: 600,
+              fontSize: '13px',
+              color: '#1e293b',
+              whiteSpace: 'nowrap',
+              textAlign: 'center',
+            }}
           >
             {String(v)}
           </Typography>
@@ -472,9 +721,11 @@ const Reports = () => {
         label: 'Parameter',
         minWidth: 300,
         sortable: false,
-        align: 'left',
+        align: 'center',
         format: (v: any) => (
-          <Typography sx={{ fontWeight: 500, fontSize: '12px', color: '#1e293b' }}>
+          <Typography
+            sx={{ fontWeight: 500, fontSize: '12px', color: '#1e293b', textAlign: 'center' }}
+          >
             {String(v)}
           </Typography>
         ),
@@ -572,7 +823,7 @@ const Reports = () => {
         label: 'Status Description',
         minWidth: 200,
         sortable: false,
-        align: 'left' as const,
+        align: 'center' as const,
       },
       { id: 'opmode', label: 'OPMODE', minWidth: 80, sortable: false, align: 'center' as const },
       { id: 'type', label: 'Type', minWidth: 50, sortable: false, align: 'center' as const },
@@ -742,9 +993,11 @@ const Reports = () => {
         label: 'Status',
         minWidth: 220,
         sortable: false,
-        align: 'left' as const,
+        align: 'center' as const,
         format: (v: any) => (
-          <Typography sx={{ fontSize: '12px', color: '#dc2626' }}>{String(v)}</Typography>
+          <Typography sx={{ fontSize: '12px', color: '#dc2626', textAlign: 'center' }}>
+            {String(v)}
+          </Typography>
         ),
       },
       {
@@ -1104,8 +1357,10 @@ const Reports = () => {
                   <PictureAsPdfIcon sx={{ fontSize: 18, color: '#ef4444' }} />
                 ) : option === 'Excel (XLSX)' ? (
                   <TableChartIcon sx={{ fontSize: 18, color: '#10b981' }} />
-                ) : (
+                ) : option === 'SVG' ? (
                   <ImageIcon sx={{ fontSize: 18, color: '#8b5cf6' }} />
+                ) : (
+                  <WhatsAppIcon sx={{ fontSize: 18, color: '#25D366' }} />
                 );
               return (
                 <li {...props} key={option} className={classes.docOption}>
@@ -1116,16 +1371,35 @@ const Reports = () => {
             }}
           />
 
-          {/* Download Button */}
-          <Button
-            variant='contained'
-            startIcon={<DownloadIcon />}
-            className={`${classes.actionButtonBase} ${classes.actionButtonAdd}`}
-            disabled={!downloadEnabled || downloading}
-            onClick={handleDownload}
-          >
-            {downloading ? 'Generating...' : 'Download Report'}
-          </Button>
+          {/* Action Button - changes based on docType */}
+          {docType === 'WhatsApp' ? (
+            <Button
+              variant='contained'
+              startIcon={<WhatsAppIcon />}
+              className={`${classes.actionButtonBase} ${classes.actionButtonAdd}`}
+              disabled={!whatsappScheduleEnabled}
+              onClick={handleOpenWhatsAppDialog}
+              sx={{
+                backgroundColor: '#25D366',
+                '&:hover': {
+                  backgroundColor: '#128C7E',
+                  boxShadow: '0 4px 14px rgba(37,211,102,0.4)',
+                },
+              }}
+            >
+              Send via WhatsApp
+            </Button>
+          ) : (
+            <Button
+              variant='contained'
+              startIcon={<DownloadIcon />}
+              className={`${classes.actionButtonBase} ${classes.actionButtonAdd}`}
+              disabled={!downloadEnabled || downloading}
+              onClick={handleDownload}
+            >
+              {downloading ? 'Generating...' : 'Download Report'}
+            </Button>
+          )}
         </Box>
 
         {/* ═══════════════════════════════════════════════════════════════════════ */}
@@ -1812,6 +2086,333 @@ const Reports = () => {
             </Box>
           )}
       </Grid>
+
+      {/* WhatsApp Send Dialog */}
+      <Dialog
+        open={whatsAppDialogOpen}
+        onClose={() => setWhatsAppDialogOpen(false)}
+        maxWidth='sm'
+        fullWidth
+        className={classes.dialog}
+      >
+        {/* Modal Header */}
+        <Box className={classes.modalHeroWhatsapp}>
+          <Box className={classes.modalIconBoxWhatsapp}>
+            <WhatsAppIcon sx={{ fontSize: 26, color: '#fff' }} />
+          </Box>
+          <Box className={classes.modalTitleBox}>
+            <Typography className={classes.modalTitle}>
+              {scheduleViaWhatsApp ? 'Schedule Report via WhatsApp' : 'Send Report via WhatsApp'}
+            </Typography>
+            <Typography className={classes.modalSubtitle}>
+              {scheduleViaWhatsApp
+                ? 'Set a scheduled time to send the report automatically'
+                : 'Enter recipient details to send the report immediately'}
+            </Typography>
+          </Box>
+          <IconButton
+            onClick={() => setWhatsAppDialogOpen(false)}
+            className={classes.modalCloseBtn}
+            size='small'
+          >
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </Box>
+
+        <DialogContent className={classes.dialogContent}>
+          <Grid container spacing={2.5}>
+            {/* Phone Number */}
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                label='Phone Number *'
+                value={whatsAppRecipient}
+                onChange={(e) => setWhatsAppRecipient(e.target.value)}
+                placeholder='919876543210'
+                className={classes.formField}
+                size='small'
+                helperText='Enter with country code (e.g., 919876543210 for India)'
+              />
+            </Grid>
+
+            {/* Schedule Switch */}
+            <Grid size={12}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={scheduleViaWhatsApp}
+                    onChange={(e) => {
+                      setScheduleViaWhatsApp(e.target.checked);
+                      if (!e.target.checked) {
+                        setWhatsAppScheduleDate(null);
+                        setWhatsAppScheduleTime(null);
+                        setWhatsAppRepeatFrequency('once');
+                      }
+                    }}
+                  />
+                }
+                label='Schedule this message'
+                sx={{
+                  '& .MuiFormControlLabel-label': {
+                    fontWeight: 600,
+                    color: '#059669',
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Schedule Details - Show when switch is enabled */}
+            {scheduleViaWhatsApp && (
+              <>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <DatePicker
+                    label='Schedule Date'
+                    value={whatsAppScheduleDate}
+                    onChange={(v) => setWhatsAppScheduleDate(v)}
+                    minDate={dayjs()}
+                    slotProps={{
+                      textField: {
+                        size: 'small',
+                        fullWidth: true,
+                        className: classes.formField,
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label='Schedule Time'
+                    type='time'
+                    value={whatsAppScheduleTime ? whatsAppScheduleTime.format('HH:mm') : ''}
+                    onChange={(e) => {
+                      const [hours, minutes] = e.target.value.split(':');
+                      const time = dayjs().hour(Number(hours)).minute(Number(minutes)).second(0);
+                      setWhatsAppScheduleTime(time);
+                    }}
+                    className={classes.formField}
+                    size='small'
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{ step: 300 }}
+                  />
+                </Grid>
+
+                {/* Repeat Frequency */}
+                <Grid size={12}>
+                  <Autocomplete
+                    options={['once', 'daily', 'weekly', 'monthly']}
+                    value={whatsAppRepeatFrequency}
+                    onChange={(_, v) => v && setWhatsAppRepeatFrequency(v)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label='Repeat Frequency'
+                        size='small'
+                        className={classes.formField}
+                        helperText={
+                          whatsAppRepeatFrequency === 'once'
+                            ? 'Send once at the scheduled time'
+                            : whatsAppRepeatFrequency === 'daily'
+                              ? 'Repeat every day at the scheduled time'
+                              : whatsAppRepeatFrequency === 'weekly'
+                                ? 'Repeat every week on the same day'
+                                : 'Repeat every month on the same date'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+
+                {/* Show scheduled datetime preview */}
+                {whatsAppScheduleDate && whatsAppScheduleTime && (
+                  <Grid size={12}>
+                    <Box className={classes.schedulePreviewBox}>
+                      <Typography variant='body2' sx={{ color: '#059669', fontWeight: 600 }}>
+                        Scheduled: {whatsAppScheduleDate.format('DD MMM YYYY')} at{' '}
+                        {whatsAppScheduleTime.format('hh:mm A')}
+                        {whatsAppRepeatFrequency !== 'once' && (
+                          <Typography component='span' sx={{ ml: 1 }}>
+                            ({whatsAppRepeatFrequency})
+                          </Typography>
+                        )}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
+              </>
+            )}
+
+            {/* Report Details */}
+            <Grid size={12}>
+              <Box className={classes.reportDetailsBox}>
+                <Typography variant='body2' sx={{ fontWeight: 600, mb: 1, color: '#4f46e5' }}>
+                  Report Details:
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Typography variant='body2'>
+                    <strong>Report Type:</strong> {reportType}
+                  </Typography>
+                  <Typography variant='body2'>
+                    <strong>Turbines:</strong>{' '}
+                    {selectedTurbines.length > 0 ? selectedTurbines.join(', ') : 'All'}
+                  </Typography>
+                  <Typography variant='body2'>
+                    <strong>Date Range:</strong> {fromDate?.format('DD/MM/YYYY')} -{' '}
+                    {toDate?.format('DD/MM/YYYY')}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button onClick={() => setWhatsAppDialogOpen(false)} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            variant='contained'
+            onClick={handleSendToWhatsApp}
+            disabled={
+              whatsAppSending ||
+              !whatsAppRecipient.trim() ||
+              (scheduleViaWhatsApp && (!whatsAppScheduleDate || !whatsAppScheduleTime))
+            }
+            className={classes.submitButtonWhatsapp}
+            startIcon={
+              whatsAppSending ? (
+                <CircularProgress size={16} color='inherit' />
+              ) : scheduleViaWhatsApp ? (
+                <ScheduleIcon fontSize='small' />
+              ) : (
+                <SendIcon fontSize='small' />
+              )
+            }
+          >
+            {whatsAppSending
+              ? 'Processing...'
+              : scheduleViaWhatsApp
+                ? 'Schedule Report'
+                : 'Send Now'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Scheduled Reports Dialog */}
+      <Dialog
+        open={scheduledDialogOpen}
+        onClose={() => setScheduledDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            backgroundColor: '#4f46e5',
+            color: '#fff',
+          }}
+        >
+          <ScheduleIcon /> Schedule Reports
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 3 }}>
+            <TextField
+              fullWidth
+              label='Phone Number'
+              value={scheduledForm.recipient}
+              onChange={(e) => setScheduledForm({ ...scheduledForm, recipient: e.target.value })}
+              placeholder='919876543210'
+            />
+            <Autocomplete
+              options={['hourly', 'daily'] as const}
+              value={scheduledForm.frequency}
+              onChange={(_, v) => v && setScheduledForm({ ...scheduledForm, frequency: v })}
+              renderInput={(params) => <TextField {...params} label='Frequency' />}
+            />
+          </Box>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={scheduledForm.enabled}
+                onChange={(e) => setScheduledForm({ ...scheduledForm, enabled: e.target.checked })}
+              />
+            }
+            label='Enable immediately'
+          />
+          <Button
+            variant='contained'
+            onClick={handleCreateScheduledReport}
+            disabled={scheduledLoading}
+            sx={{ ml: 2 }}
+          >
+            {scheduledLoading ? 'Creating...' : 'Create Schedule'}
+          </Button>
+
+          <Divider sx={{ my: 2 }} />
+          <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 1 }}>
+            Active Schedules
+          </Typography>
+          {scheduledJobs.length === 0 ? (
+            <Typography variant='body2' color='text.secondary'>
+              No scheduled reports yet
+            </Typography>
+          ) : (
+            <List dense>
+              {scheduledJobs.map((job) => (
+                <ListItem key={job.id} divider>
+                  <ListItemIcon>
+                    <WhatsAppIcon sx={{ color: '#25D366' }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`${job.frequency === 'hourly' ? 'Hourly' : 'Daily'} Report - ${job.recipient}`}
+                    secondary={`Next: ${job.nextRun ? new Date(job.nextRun).toLocaleString() : 'N/A'}`}
+                  />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      checked={job.enabled}
+                      onChange={(e) => handleToggleScheduledJob(job.id, e.target.checked)}
+                    />
+                    <IconButton
+                      size='small'
+                      onClick={() => handleTriggerScheduledJob(job.id)}
+                      title='Send Now'
+                    >
+                      <SendIcon />
+                    </IconButton>
+                    <IconButton
+                      size='small'
+                      onClick={() => handleDeleteScheduledJob(job.id)}
+                      title='Delete'
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setScheduledDialogOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={whatsAppSnackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setWhatsAppSnackbar({ ...whatsAppSnackbar, open: false })}
+      >
+        <Alert
+          severity={whatsAppSnackbar.severity}
+          onClose={() => setWhatsAppSnackbar({ ...whatsAppSnackbar, open: false })}
+          sx={{ width: '100%' }}
+        >
+          {whatsAppSnackbar.message}
+        </Alert>
+      </Snackbar>
     </LocalizationProvider>
   );
 };

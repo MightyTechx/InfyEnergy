@@ -43,10 +43,15 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     fontWeight: 600,
     fontSize: '0.72rem',
     borderBottom: '2px solid rgba(255,255,255,0.1)',
+    textAlign: 'center',
+    justifyContent: 'center',
     '& .MuiTableSortLabel-root': {
       color: '#ffffff',
       fontSize: '0.72rem',
       fontWeight: 600,
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
     },
     '& .MuiTableSortLabel-root:hover': {
       color: '#e0e7ff',
@@ -57,14 +62,23 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     '& .MuiTableSortLabel-icon': {
       color: '#ffffff !important',
     },
+    '& .MuiTableCell-root': {
+      textAlign: 'center',
+    },
   },
   clickableRow: {
     cursor: 'pointer',
     transition: 'background 0.25s ease, border-left 0.25s ease',
+    '& .MuiTableCell-root': {
+      textAlign: 'center',
+    },
   },
   defaultRow: {
     cursor: 'default',
     transition: 'background 0.25s ease',
+    '& .MuiTableCell-root': {
+      textAlign: 'center',
+    },
   },
   highlightedRow: {
     cursor: 'pointer',
@@ -73,11 +87,13 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     borderLeft: '4px solid #1e429f',
     boxShadow: 'inset 5px 0 10px rgba(30,66,159,0.12)',
     '& .MuiTableCell-root': {
+      textAlign: 'center',
       fontWeight: 600,
     },
   },
   emptyCell: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    textAlign: 'center',
   },
 });

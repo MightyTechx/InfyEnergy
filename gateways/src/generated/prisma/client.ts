@@ -71,3 +71,8 @@ export type TurbineType = Prisma.TurbineTypeModel
  * 
  */
 export type TurbineParameter = Prisma.TurbineParameterModel
+/**
+ * Model UserPreference
+ * 
+ */
+export type UserPreference = Prisma.UserPreferenceModel
