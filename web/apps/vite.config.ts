@@ -60,14 +60,34 @@ export default defineConfig(({ mode }) => ({
     'process.env.REACT_APP_PARTNER_ID': 'undefined',
   },
 
+  optimizeDeps: {
+    include: [
+      '@mui/material',
+      '@mui/icons-material',
+      'react',
+      'react-dom',
+      'react-router-dom',
+    ],
+  },
+
   server: {
     port: 1600,
     open: false,
+    hmr: {
+      overlay: true,
+    },
   },
 
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'mui-vendor': ['@mui/material', '@mui/icons-material'],
+        },
+      },
+    },
   },
 }));

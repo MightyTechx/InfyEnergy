@@ -12,8 +12,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     border: '1px solid #e8eaf0',
-    borderLeft: '4px solid #6366f1',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(99,102,241,0.07)',
+    borderLeft: `4px solid ${theme.palette.primary.main}`,
+    boxShadow: `0 1px 3px rgba(0,0,0,0.05), 0 4px 16px ${theme.palette.primary.main}12`,
     position: 'relative' as const,
     overflow: 'hidden' as const,
     transition: 'all 0.25s ease',
@@ -24,12 +24,12 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       right: 0,
       width: '120px',
       height: '100%',
-      background: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.03) 100%)',
+      background: `linear-gradient(90deg, transparent 0%, ${theme.palette.primary.main}08 100%)`,
       pointerEvents: 'none' as const,
     },
     '&:hover': {
-      boxShadow: '0 4px 12px rgba(0,0,0,0.08), 0 8px 24px rgba(99,102,241,0.1)',
-      borderLeftColor: '#4338ca',
+      boxShadow: `0 4px 12px rgba(0,0,0,0.08), 0 8px 24px ${theme.palette.primary.main}1a`,
+      borderLeftColor: theme.palette.primary.dark,
     },
     [theme.breakpoints.down('md')]: {
       padding: theme.spacing(2, 2.5),
@@ -40,28 +40,28 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       alignItems: 'flex-start' as const,
       padding: theme.spacing(1.75, 2),
       borderRadius: 10,
-      borderLeft: '3px solid #6366f1',
+      borderLeft: `3px solid ${theme.palette.primary.main}`,
       gap: theme.spacing(1.5),
     },
   },
 
   // ─── Admin Header ────────────────────────────────────────────────────────────
   headerAdmin: {
-    borderLeft: '4px solid #6366f1',
+    borderLeft: `4px solid ${theme.palette.primary.main}`,
     '&:hover': {
-      borderLeftColor: '#4338ca',
+      borderLeftColor: theme.palette.primary.dark,
     },
   },
 
   // ─── Consultant Header ───────────────────────────────────────────────────────
   headerConsultant: {
-    borderLeft: '4px solid #10b981',
+    borderLeft: `4px solid ${theme.palette.primary.main}`,
     '&::before': {
-      background: 'linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.03) 100%)',
+      background: `linear-gradient(90deg, transparent 0%, ${theme.palette.primary.main}08 100%)`,
     },
     '&:hover': {
-      borderLeftColor: '#059669',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.08), 0 8px 24px rgba(16,185,129,0.1)',
+      borderLeftColor: theme.palette.primary.dark,
+      boxShadow: `0 4px 12px rgba(0,0,0,0.08), 0 8px 24px ${theme.palette.primary.main}1a`,
     },
   },
 
@@ -153,13 +153,13 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
     flexShrink: 0,
-    boxShadow: '0 4px 12px rgba(79,70,229,0.35)',
+    boxShadow: `0 4px 12px ${theme.palette.primary.main}5a`,
     transition: 'all 0.25s ease',
     '&:hover': {
       transform: 'scale(1.05)',
-      boxShadow: '0 6px 16px rgba(79,70,229,0.45)',
+      boxShadow: `0 6px 16px ${theme.palette.primary.main}73`,
     },
     [theme.breakpoints.down('sm')]: {
       width: 42,
@@ -169,8 +169,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   },
 
   pageHeaderIconWrapTurbine: {
-    background: 'linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%)',
-    boxShadow: '0 4px 12px rgba(14,165,233,0.35)',
+    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.info?.main ?? theme.palette.primary.light} 100%)`,
+    boxShadow: `0 4px 12px ${theme.palette.primary.main}5a`,
   },
 
   // ─── Title ───────────────────────────────────────────────────────────────────
@@ -229,21 +229,21 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Chip (Admin) ────────────────────────────────────────────────────────────
   pageHeaderChip: {
-    background: 'linear-gradient(135deg, rgba(79,70,229,0.1) 0%, rgba(124,58,237,0.08) 100%)',
-    color: '#4f46e5',
+    background: `linear-gradient(135deg, ${theme.palette.primary.main}1a 0%, ${theme.palette.primary.dark}14 100%)`,
+    color: theme.palette.primary.main,
     fontWeight: 600,
     fontSize: '0.68rem',
     letterSpacing: '0.04em',
-    border: '1px solid rgba(79,70,229,0.2)',
+    border: `1px solid ${theme.palette.primary.main}33`,
     alignSelf: 'center' as const,
     height: 26,
     px: 1.5,
     borderRadius: 20,
     transition: 'all 0.2s ease',
     '&:hover': {
-      background: 'linear-gradient(135deg, rgba(79,70,229,0.15) 0%, rgba(124,58,237,0.12) 100%)',
+      background: `linear-gradient(135deg, ${theme.palette.primary.main}26 0%, ${theme.palette.primary.dark}1f 100%)`,
       transform: 'translateY(-1px)',
-      boxShadow: '0 4px 12px rgba(79,70,229,0.2)',
+      boxShadow: `0 4px 12px ${theme.palette.primary.main}33`,
     },
     [theme.breakpoints.down('sm')]: {
       alignSelf: 'flex-start' as const,
@@ -252,21 +252,21 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // ─── Chip (Consultant) ────────────────────────────────────────────────────────
   pageHeaderChipConsultant: {
-    background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(5,150,105,0.08) 100%)',
-    color: '#059669',
+    background: `linear-gradient(135deg, ${theme.palette.primary.main}1a 0%, ${theme.palette.primary.dark}14 100%)`,
+    color: theme.palette.primary.main,
     fontWeight: 600,
     fontSize: '0.68rem',
     letterSpacing: '0.04em',
-    border: '1px solid rgba(16,185,129,0.2)',
+    border: `1px solid ${theme.palette.primary.main}33`,
     alignSelf: 'center' as const,
     height: 26,
     px: 1.5,
     borderRadius: 20,
     transition: 'all 0.2s ease',
     '&:hover': {
-      background: 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(5,150,105,0.12) 100%)',
+      background: `linear-gradient(135deg, ${theme.palette.primary.main}26 0%, ${theme.palette.primary.dark}1f 100%)`,
       transform: 'translateY(-1px)',
-      boxShadow: '0 4px 12px rgba(16,185,129,0.2)',
+      boxShadow: `0 4px 12px ${theme.palette.primary.main}33`,
     },
     [theme.breakpoints.down('sm')]: {
       alignSelf: 'flex-start' as const,

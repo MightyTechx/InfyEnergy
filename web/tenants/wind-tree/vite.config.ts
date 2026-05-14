@@ -61,11 +61,31 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 1700,
     open: false,
+    hmr: {
+      overlay: true,
+    },
+  },
+
+  optimizeDeps: {
+    include: [
+      '@mui/material',
+      '@mui/icons-material',
+      'react',
+      'react-dom',
+      'react-router-dom',
+    ],
   },
 
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'mui-vendor': ['@mui/material', '@mui/icons-material'],
+        },
+      },
+    },
   },
 }));
