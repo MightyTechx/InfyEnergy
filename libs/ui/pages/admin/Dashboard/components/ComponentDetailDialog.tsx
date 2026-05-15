@@ -10,14 +10,13 @@ import ThermostatIcon from '@mui/icons-material/Thermostat';
 import SpeedIcon from '@mui/icons-material/Speed';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import AirIcon from '@mui/icons-material/Air';
-import { TurbineData } from './types/turbineData.types';
+import { TurbineData } from '../types/turbineData.types';
 
 interface ComponentDetailDialogProps {
   open: boolean;
   turbine: TurbineData | null;
   component: string;
   onClose: () => void;
-  onBack: () => void;
 }
 
 interface TelemetryEvent {
@@ -375,7 +374,6 @@ const ComponentDetailDialog: React.FC<ComponentDetailDialogProps> = ({
   turbine,
   component,
   onClose,
-  onBack,
 }) => {
   const [activeTab, setActiveTab] = useState<'sensors' | 'parts' | 'alerts'>('sensors');
   const config =
@@ -429,18 +427,6 @@ const ComponentDetailDialog: React.FC<ComponentDetailDialogProps> = ({
             pointerEvents: 'none',
           }}
         />
-
-        <IconButton
-          onClick={onBack}
-          sx={{
-            color: 'rgba(255,255,255,0.7)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: 2,
-            '&:hover': { color: '#fff', borderColor: config.color },
-          }}
-        >
-          ←
-        </IconButton>
 
         <Box
           sx={{

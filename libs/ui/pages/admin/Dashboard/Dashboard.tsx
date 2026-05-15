@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
@@ -46,11 +46,8 @@ import { useStyles } from './styles';
 import { TurbineData, STATUS_CONFIG } from './types/turbineData.types';
 import { MOCK_TURBINE_DATA } from './utils/dashboard.utils';
 import { constants } from '@infygen/utils';
-import { Column, DataTable, Card, Loader } from '@infygen/component';
-import ComponentDetailDialog from './ComponentDetailDialog';
-
-// Lazy load the 3D component to avoid loading three.js on initial page load
-const TurbineFleetDialog3D = lazy(() => import('./TurbineFleetDialog3D'));
+import { Column, DataTable, Card } from '@infygen/component';
+import ComponentDetailDialog from './components/ComponentDetailDialog';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -211,7 +208,6 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
 
   // 3D View Dialog State
-  const [fleetDialogOpen, setFleetDialogOpen] = useState(false);
   const [componentDialogOpen, setComponentDialogOpen] = useState(false);
   const [selectedTurbine, setSelectedTurbine] = useState<TurbineData | null>(null);
   const [selectedComponent, setSelectedComponent] = useState<string>('transformer');
@@ -1466,36 +1462,11 @@ const Dashboard = () => {
         )}
       </Box>
 
-      {/* 3D View Dialogs */}
-      {fleetDialogOpen && (
-        <Suspense fallback={<Loader />}>
-          <TurbineFleetDialog3D
-            open={fleetDialogOpen}
-            turbines={turbineData}
-            onClose={() => setFleetDialogOpen(false)}
-            onSelectTurbine={(turbine) => {
-              setSelectedTurbine(turbine);
-              navigate(AdminPath.TURBINE_DETAIL.replace(':id', String(turbine.id)));
-            }}
-            onSelectComponent={(turbine, component) => {
-              setSelectedTurbine(turbine);
-              setSelectedComponent(component);
-              setFleetDialogOpen(false);
-              setComponentDialogOpen(true);
-            }}
-          />
-        </Suspense>
-      )}
-
       <ComponentDetailDialog
         open={componentDialogOpen}
         turbine={selectedTurbine}
         component={selectedComponent}
         onClose={() => setComponentDialogOpen(false)}
-        onBack={() => {
-          setComponentDialogOpen(false);
-          setFleetDialogOpen(true);
-        }}
       />
     </>
   );

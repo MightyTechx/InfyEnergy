@@ -190,13 +190,9 @@ const Header = () => {
 
           <Box className={classes.headerRightSpacer} />
 
-          {/* Wind Farm View */}
+          {/* Wind Farm View Icon */}
           <Tooltip title='Wind Farm View' placement='bottom' arrow>
-            <IconButton
-              size='small'
-              className={classes.iconBtnBase}
-              onClick={() => navigate(AdminPath.TURBINE_3D_VIEW)}
-            >
+            <IconButton size='small' className={classes.iconBtnBase}>
               <ViewInArIcon className={classes.icon} />
             </IconButton>
           </Tooltip>

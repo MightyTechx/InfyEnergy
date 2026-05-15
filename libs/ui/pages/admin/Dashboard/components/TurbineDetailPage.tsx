@@ -5,7 +5,7 @@ import { constants } from '@infygen/utils';
 import { Typography, Box, IconButton, Paper, Loader, Chip, Tooltip } from '@infygen/component';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import { useTurbineDetailStyles } from './styles';
+import { useTurbineDetailStyles } from '../styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import BuildIcon from '@mui/icons-material/Build';
@@ -24,8 +24,8 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import WindPowerIcon from '@mui/icons-material/WindPower';
 import TuneIcon from '@mui/icons-material/Tune';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
-import { TurbineData } from './types/turbineData.types';
-import { STATUS_CONFIG, getTurbineById } from '../../../utils/mockData';
+import { TurbineData } from '../types/turbineData.types';
+import { STATUS_CONFIG, getTurbineById } from '../../../../utils/mockData';
 import { useAdminKeyframes } from '@infygen/hooks';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -96,6 +96,7 @@ interface SectionCardProps {
   accent: { primary: string; secondary: string };
   children: React.ReactNode;
   gridClass: string;
+  classes: Record<string, string>;
 }
 
 const SectionCard: React.FC<SectionCardProps> = ({
@@ -105,8 +106,9 @@ const SectionCard: React.FC<SectionCardProps> = ({
   accent,
   children,
   gridClass,
+  classes,
 }) => {
-  const { classes, cx } = useTurbineDetailStyles();
+  const { cx } = useTurbineDetailStyles();
 
   return (
     <Paper elevation={0} className={classes.sectionCard}>
@@ -134,6 +136,7 @@ interface MiniParamProps {
   icon: React.ReactNode;
   accent: string;
   alert?: Alert;
+  classes: Record<string, string>;
 }
 
 const MiniParam: React.FC<MiniParamProps> = ({
@@ -143,9 +146,8 @@ const MiniParam: React.FC<MiniParamProps> = ({
   icon,
   accent,
   alert = 'normal',
+  classes,
 }) => {
-  const { classes } = useTurbineDetailStyles();
-
   const bg = alert !== 'normal' ? `${ALERT_COLOR[alert]}08` : `${accent}10`;
 
   const border = alert !== 'normal' ? `${ALERT_COLOR[alert]}30` : `${accent}30`;
@@ -211,7 +213,7 @@ const TurbineDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { AdminPath } = constants;
-  const { classes, cx } = useTurbineDetailStyles();
+  const { classes } = useTurbineDetailStyles();
   const keyframes = useAdminKeyframes();
 
   const [turbine, setTurbine] = useState<TurbineData | null>(null);
@@ -281,74 +283,67 @@ const TurbineDetailPage: React.FC = () => {
   const cfg = STATUS_CONFIG[turbine.status];
   const isActive = turbine.status === 'running' || turbine.status === 'standby';
 
-  // Stats data for metric cards (memoized to prevent recreation on every render)
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const statsData = useMemo(
-    () => [
-      {
-        icon: getStatusIcon(turbine.status),
-        bg: cfg.bgColor,
-        border: cfg.borderColor,
-        value: cfg.label,
-        label: 'Status',
-        valueColor: cfg.color,
-      },
-      {
-        icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
-        bg: 'rgba(245,158,11,0.12)',
-        border: 'rgba(245,158,11,0.3)',
-        value: fmt(turbine.activePower, 0),
-        label: 'Active (kW)',
-        valueColor: '#f59e0b',
-      },
-      {
-        icon: <WindPowerIcon sx={{ color: '#0ea5e9', fontSize: 20 }} />,
-        bg: 'rgba(14,165,233,0.12)',
-        border: 'rgba(14,165,233,0.3)',
-        value: fmt(turbine.windSpeed),
-        label: 'Wind (m/s)',
-        valueColor: '#0ea5e9',
-      },
-      {
-        icon: <SpeedIcon sx={{ color: '#10b981', fontSize: 20 }} />,
-        bg: 'rgba(16,185,129,0.12)',
-        border: 'rgba(16,185,129,0.3)',
-        value: fmt(turbine.rotorRpm, 1),
-        label: 'Rotor RPM',
-        valueColor: '#10b981',
-      },
-      {
-        icon: <BoltIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
-        bg: 'rgba(139,92,246,0.12)',
-        border: 'rgba(139,92,246,0.3)',
-        value: fmt(turbine.todayGeneration, 0),
-        label: 'Today (kWh)',
-        valueColor: '#8b5cf6',
-      },
-      {
-        icon: (
-          <ThermostatIcon
-            sx={{
-              color: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#ef4444',
-              fontSize: 20,
-            }}
-          />
-        ),
-        bg:
-          tempAlert(turbine.gearboxTemp) !== 'normal'
-            ? 'rgba(239,68,68,0.12)'
-            : 'rgba(239,68,68,0.12)',
-        border:
-          tempAlert(turbine.gearboxTemp) !== 'normal'
-            ? 'rgba(239,68,68,0.3)'
-            : 'rgba(239,68,68,0.3)',
-        value: fmt(turbine.gearboxTemp, 0),
-        label: 'Gearbox (°C)',
-        valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
-      },
-    ],
-    [turbine],
-  );
+  const statsData = [
+    {
+      icon: getStatusIcon(turbine.status),
+      bg: cfg.bgColor,
+      border: cfg.borderColor,
+      value: cfg.label,
+      label: 'Status',
+      valueColor: cfg.color,
+    },
+    {
+      icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
+      bg: 'rgba(245,158,11,0.12)',
+      border: 'rgba(245,158,11,0.3)',
+      value: fmt(turbine.activePower, 0),
+      label: 'Active (kW)',
+      valueColor: '#f59e0b',
+    },
+    {
+      icon: <WindPowerIcon sx={{ color: '#0ea5e9', fontSize: 20 }} />,
+      bg: 'rgba(14,165,233,0.12)',
+      border: 'rgba(14,165,233,0.3)',
+      value: fmt(turbine.windSpeed),
+      label: 'Wind (m/s)',
+      valueColor: '#0ea5e9',
+    },
+    {
+      icon: <SpeedIcon sx={{ color: '#10b981', fontSize: 20 }} />,
+      bg: 'rgba(16,185,129,0.12)',
+      border: 'rgba(16,185,129,0.3)',
+      value: fmt(turbine.rotorRpm, 1),
+      label: 'Rotor RPM',
+      valueColor: '#10b981',
+    },
+    {
+      icon: <BoltIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
+      bg: 'rgba(139,92,246,0.12)',
+      border: 'rgba(139,92,246,0.3)',
+      value: fmt(turbine.todayGeneration, 0),
+      label: 'Today (kWh)',
+      valueColor: '#8b5cf6',
+    },
+    {
+      icon: (
+        <ThermostatIcon
+          sx={{
+            color: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#ef4444',
+            fontSize: 20,
+          }}
+        />
+      ),
+      bg:
+        tempAlert(turbine.gearboxTemp) !== 'normal'
+          ? 'rgba(239,68,68,0.12)'
+          : 'rgba(239,68,68,0.12)',
+      border:
+        tempAlert(turbine.gearboxTemp) !== 'normal' ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.3)',
+      value: fmt(turbine.gearboxTemp, 0),
+      label: 'Gearbox (°C)',
+      valueColor: tempAlert(turbine.gearboxTemp) !== 'normal' ? '#ef4444' : '#1e293b',
+    },
+  ] as const;
 
   return (
     <>
@@ -467,6 +462,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Real-time operational metrics'
           accent={SECTION_ACCENT.performance}
           gridClass='sectionGrid4'
+          classes={classes}
         >
           <MiniParam
             label='Active Power'
@@ -474,6 +470,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='kW'
             icon={<FlashOnIcon />}
             accent='#4f46e5'
+            classes={classes}
           />
           <MiniParam
             label='Total Production'
@@ -481,6 +478,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='MWh'
             icon={<BoltIcon />}
             accent='#10b981'
+            classes={classes}
           />
           <MiniParam
             label='Total Op. Hours'
@@ -488,6 +486,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='h'
             icon={<SpeedIcon />}
             accent='#6366f1'
+            classes={classes}
           />
           <MiniParam
             label='Production Hours'
@@ -495,6 +494,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='h'
             icon={<BoltIcon />}
             accent='#14b8a6'
+            classes={classes}
           />
           <MiniParam
             label='Op. Hours Today'
@@ -502,6 +502,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='h'
             icon={<SpeedIcon />}
             accent='#ec4899'
+            classes={classes}
           />
           <MiniParam
             label='Today Generation'
@@ -509,6 +510,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='kWh'
             icon={<BoltIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
           <MiniParam
             label='Break Programme'
@@ -517,6 +519,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<StopIcon />}
             accent={turbine.breakProgramme === 'Released' ? '#10b981' : '#f59e0b'}
             alert={turbine.breakProgramme === 'Emergency' ? 'warn' : 'normal'}
+            classes={classes}
           />
           <MiniParam
             label='Operating Mode'
@@ -528,6 +531,7 @@ const TurbineDetailPage: React.FC = () => {
             unit=''
             icon={<SettingsIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
         </SectionCard>
 
@@ -538,6 +542,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Wind resource and meteorological parameters'
           accent={SECTION_ACCENT.wind}
           gridClass='sectionGrid4'
+          classes={classes}
         >
           <MiniParam
             label='Wind Speed'
@@ -545,6 +550,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='m/s'
             icon={<AirIcon />}
             accent='#0ea5e9'
+            classes={classes}
           />
           <MiniParam
             label='Wind Direction'
@@ -552,6 +558,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°'
             icon={<WindPowerIcon />}
             accent='#0ea5e9'
+            classes={classes}
           />
           <MiniParam
             label='Relative Wind'
@@ -560,6 +567,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<WindPowerIcon />}
             accent='#0ea5e9'
             alert={Math.abs(turbine.relativeWindDirection) > 15 ? 'warn' : 'normal'}
+            classes={classes}
           />
           <MiniParam
             label='Outdoor Temp'
@@ -568,6 +576,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#0ea5e9'
             alert={tempAlert(turbine.outdoorTemp, 40, 50)}
+            classes={classes}
           />
         </SectionCard>
 
@@ -578,6 +587,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Grid connection and power quality metrics'
           accent={SECTION_ACCENT.electrical}
           gridClass='sectionGrid5'
+          classes={classes}
         >
           <MiniParam
             label='Current L1'
@@ -585,6 +595,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='A'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Current L2'
@@ -592,6 +603,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='A'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Current L3'
@@ -599,6 +611,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='A'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Power Freq'
@@ -611,6 +624,7 @@ const TurbineDetailPage: React.FC = () => {
                 ? 'warn'
                 : 'normal'
             }
+            classes={classes}
           />
           <MiniParam
             label='Voltage L1'
@@ -618,6 +632,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='V'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Voltage L2'
@@ -625,6 +640,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='V'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Voltage L3'
@@ -632,6 +648,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='V'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Apparent Power'
@@ -639,6 +656,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='kVA'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Reactive Power'
@@ -646,6 +664,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='kVAR'
             icon={<ElectricMeterIcon />}
             accent='#8b5cf6'
+            classes={classes}
           />
           <MiniParam
             label='Power Factor'
@@ -654,6 +673,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<SensorsIcon />}
             accent='#8b5cf6'
             alert={isActive && turbine.powerFactor < 0.9 ? 'warn' : 'normal'}
+            classes={classes}
           />
         </SectionCard>
 
@@ -664,6 +684,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Mechanical rotation and transmission parameters'
           accent={SECTION_ACCENT.rotor}
           gridClass='sectionGrid4'
+          classes={classes}
         >
           <MiniParam
             label='Rotor Speed'
@@ -671,6 +692,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='rpm'
             icon={<SpeedIcon />}
             accent='#06b6d4'
+            classes={classes}
           />
           <MiniParam
             label='Gear Speed'
@@ -678,6 +700,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='rpm'
             icon={<TuneIcon />}
             accent='#06b6d4'
+            classes={classes}
           />
           <MiniParam
             label='Generator Speed'
@@ -685,6 +708,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='rpm'
             icon={<SpeedIcon />}
             accent='#06b6d4'
+            classes={classes}
           />
           <MiniParam
             label='Nacelle Position'
@@ -692,6 +716,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°'
             icon={<AcUnitIcon />}
             accent='#06b6d4'
+            classes={classes}
           />
         </SectionCard>
 
@@ -702,6 +727,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Blade pitch and nacelle orientation systems'
           accent={SECTION_ACCENT.nacelle}
           gridClass='sectionGrid3'
+          classes={classes}
         >
           <MiniParam
             label='Blade Angle'
@@ -709,6 +735,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°'
             icon={<SettingsIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
           <MiniParam
             label='Pitch Cyl 1'
@@ -716,6 +743,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='mm'
             icon={<TuneIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
           <MiniParam
             label='Pitch Cyl 2'
@@ -723,6 +751,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='mm'
             icon={<TuneIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
           <MiniParam
             label='Pitch Cyl 3'
@@ -730,6 +759,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='mm'
             icon={<TuneIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
           <MiniParam
             label='Cable Winding'
@@ -738,6 +768,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<AcUnitIcon />}
             accent='#f59e0b'
             alert={Math.abs(turbine.cableWinding) > 300 ? 'warn' : 'normal'}
+            classes={classes}
           />
           <MiniParam
             label='Nacelle Orient'
@@ -745,6 +776,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°'
             icon={<AcUnitIcon />}
             accent='#f59e0b'
+            classes={classes}
           />
         </SectionCard>
 
@@ -755,6 +787,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Tower oscillation and vibration analysis'
           accent={{ primary: '#f59e0b', secondary: '#f97316' }}
           gridClass='sectionGrid2'
+          classes={classes}
         >
           <MiniParam
             label='Tower Osc X'
@@ -763,6 +796,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ArchitectureIcon />}
             accent='#f59e0b'
             alert={oscAlert(turbine.towerOscillationX)}
+            classes={classes}
           />
           <MiniParam
             label='Tower Osc Y'
@@ -771,6 +805,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ArchitectureIcon />}
             accent='#f59e0b'
             alert={oscAlert(turbine.towerOscillationY)}
+            classes={classes}
           />
         </SectionCard>
 
@@ -781,6 +816,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Thermal status of major components'
           accent={SECTION_ACCENT.temperature}
           gridClass='sectionGrid4'
+          classes={classes}
         >
           <MiniParam
             label='Nacelle Temp'
@@ -789,6 +825,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.nacelleTemp, 50, 65)}
+            classes={classes}
           />
           <MiniParam
             label='Outdoor Temp'
@@ -796,6 +833,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°C'
             icon={<ThermostatIcon />}
             accent='#ef4444'
+            classes={classes}
           />
           <MiniParam
             label='Gear Oil Sump'
@@ -804,6 +842,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.gearOilSumpTemp, 70, 85)}
+            classes={classes}
           />
           <MiniParam
             label='Gearbox Temp'
@@ -812,6 +851,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.gearboxTemp, 70, 85)}
+            classes={classes}
           />
           <MiniParam
             label='Generator Temp'
@@ -820,6 +860,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.generatorTemp, 90, 110)}
+            classes={classes}
           />
           <MiniParam
             label='Transformer'
@@ -828,6 +869,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.transformerTemp, 50, 65)}
+            classes={classes}
           />
           <MiniParam
             label='Hub Exhaust'
@@ -835,6 +877,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°C'
             icon={<ThermostatIcon />}
             accent='#ef4444'
+            classes={classes}
           />
           <MiniParam
             label='CNV Heat In'
@@ -843,6 +886,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.coolCnvHeatExIn, 65, 80)}
+            classes={classes}
           />
           <MiniParam
             label='CNV Heat Out'
@@ -851,6 +895,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.coolCnvHeatExOut, 50, 65)}
+            classes={classes}
           />
           <MiniParam
             label='TRF Heat In'
@@ -859,6 +904,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.coolTrfHeatExIn, 60, 75)}
+            classes={classes}
           />
           <MiniParam
             label='Gen Winding U'
@@ -867,6 +913,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.generatorWindingTempU, 90, 110)}
+            classes={classes}
           />
           <MiniParam
             label='Gen Winding V'
@@ -875,6 +922,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.generatorWindingTempV, 90, 110)}
+            classes={classes}
           />
           <MiniParam
             label='Gen Winding W'
@@ -883,6 +931,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<ThermostatIcon />}
             accent='#ef4444'
             alert={tempAlert(turbine.generatorWindingTempW, 90, 110)}
+            classes={classes}
           />
           <MiniParam
             label='TRF Winding U'
@@ -890,6 +939,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°C'
             icon={<ThermostatIcon />}
             accent='#ef4444'
+            classes={classes}
           />
           <MiniParam
             label='TRF Winding V'
@@ -897,6 +947,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°C'
             icon={<ThermostatIcon />}
             accent='#ef4444'
+            classes={classes}
           />
           <MiniParam
             label='TRF Winding W'
@@ -904,6 +955,7 @@ const TurbineDetailPage: React.FC = () => {
             unit='°C'
             icon={<ThermostatIcon />}
             accent='#ef4444'
+            classes={classes}
           />
         </SectionCard>
 
@@ -914,6 +966,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Pressure and fluid management parameters'
           accent={SECTION_ACCENT.hydraulic}
           gridClass='sectionGrid4'
+          classes={classes}
         >
           <MiniParam
             label='Hydraulic Press'
@@ -922,6 +975,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<WaterDropIcon />}
             accent='#14b8a6'
             alert={pressAlert(turbine.hydraulicPressure, 160, 200)}
+            classes={classes}
           />
           <MiniParam
             label='Gear Oil Press'
@@ -930,6 +984,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<WaterDropIcon />}
             accent='#14b8a6'
             alert={pressAlert(turbine.gearOilPressure, 2.5, 3.8)}
+            classes={classes}
           />
           <MiniParam
             label='Coolant Inlet'
@@ -938,6 +993,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<WaterDropIcon />}
             accent='#14b8a6'
             alert={pressAlert(turbine.coolantInletPressure, 1.2, 2.2)}
+            classes={classes}
           />
           <MiniParam
             label='Coolant Outlet'
@@ -946,6 +1002,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<WaterDropIcon />}
             accent='#14b8a6'
             alert={pressAlert(turbine.coolantOutletPressure, 0.8, 1.8)}
+            classes={classes}
           />
         </SectionCard>
 
@@ -956,6 +1013,7 @@ const TurbineDetailPage: React.FC = () => {
           subtitle='Switchgear and electronics thermal monitoring'
           accent={SECTION_ACCENT.cabinet}
           gridClass='sectionGrid3'
+          classes={classes}
         >
           <MiniParam
             label='Tower Cabinet'
@@ -964,6 +1022,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<SensorsIcon />}
             accent='#6366f1'
             alert={tempAlert(turbine.tempSwCabTower, 45, 55)}
+            classes={classes}
           />
           <MiniParam
             label='Nacelle Cabinet'
@@ -972,6 +1031,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<SensorsIcon />}
             accent='#6366f1'
             alert={tempAlert(turbine.tempSwCabNacelle, 45, 55)}
+            classes={classes}
           />
           <MiniParam
             label='Hub Cabinet'
@@ -980,6 +1040,7 @@ const TurbineDetailPage: React.FC = () => {
             icon={<SensorsIcon />}
             accent='#6366f1'
             alert={tempAlert(turbine.tempSwCabHub, 45, 55)}
+            classes={classes}
           />
         </SectionCard>
 

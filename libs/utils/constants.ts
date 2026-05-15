@@ -6,7 +6,6 @@ const AdminPath = {
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
   TURBINE_DETAIL: `${ADMIN_BASE}/dashboard/turbine/:id`,
-  TURBINE_3D_VIEW: `${ADMIN_BASE}/dashboard/3d-view`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
   REPORTS: `${ADMIN_BASE}/reports`,

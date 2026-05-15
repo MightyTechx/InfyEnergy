@@ -6,9 +6,6 @@ export const LazyMenuItems = {
   AdminTurbineDetailPage: lazy(() =>
     import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.TurbineDetailPage })),
   ),
-  AdminTurbine3DViewPage: lazy(() =>
-    import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.Turbine3DViewPage })),
-  ),
   AdminPeopleManagementPage: lazy(() => import('@infygen/pages/admin/People/PeopleManagement')),
   AdminUserDetailPage: lazy(() => import('@infygen/pages/admin/People/UserDetail')),
   AdminProfilePage: lazy(() => import('@infygen/pages/shared/Profile')),
