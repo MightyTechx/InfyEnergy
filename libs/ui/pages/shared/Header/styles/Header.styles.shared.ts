@@ -134,7 +134,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
-      gap: theme.spacing(0.75),
+      gap: '2px',
       minHeight: '56px',
       height: '56px',
     },
@@ -424,8 +424,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
 
   // Icon buttons — glowing ring on hover
   icon: {
-    width: '1.3em',
-    height: '1.3em',
+    width: '1.1em',
+    height: '1.1em',
     cursor: 'pointer',
     color: 'rgba(255,255,255,0.65)',
     transition: 'all 0.2s ease',
@@ -437,8 +437,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      width: '22px',
-      height: '22px',
+      width: '18px',
+      height: '18px',
     },
   },
 

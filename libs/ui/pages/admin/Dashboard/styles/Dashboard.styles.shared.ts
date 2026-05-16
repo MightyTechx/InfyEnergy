@@ -8,7 +8,8 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     minHeight: '100vh',
     width: '100%',
     boxSizing: 'border-box',
-    [theme.breakpoints.down('sm')]: { padding: theme.spacing(1.25) },
+    overflowY: 'auto',
+    [theme.breakpoints.down('sm')]: { padding: theme.spacing(1.25), pb: 8 },
     [theme.breakpoints.between('sm', 'md')]: { padding: theme.spacing(2) },
   },
 
@@ -120,7 +121,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   heroCenterBadge: {
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(0.75),
     background: 'rgba(16,185,129,0.07)',
     border: '1px solid rgba(16,185,129,0.22)',
     borderRadius: '20px',
@@ -349,7 +350,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     lineHeight: 1.2,
     fontVariantNumeric: 'tabular-nums' as const,
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1rem',
+      fontSize: '13px',
     },
   },
 
@@ -941,6 +942,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       transform: 'translateY(-1px)',
       background: 'linear-gradient(135deg,#ea580c 0%,#db2777 55%,#7c3aed 100%)',
     },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 
   toggleBtnActiveIncentive: {
@@ -950,6 +954,9 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       boxShadow: '0 6px 24px rgba(16,185,129,0.55)',
       transform: 'translateY(-1px)',
       background: 'linear-gradient(135deg,#059669 0%,#047857 100%)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 
@@ -1001,5 +1008,19 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     alignItems: 'center',
     justifyContent: 'center',
     [theme.breakpoints.down('sm')]: { display: 'none' },
+  },
+
+  // ─── Fleet Status Matrix ────────────────────────────────────────────────────
+  toggleBtnActiveMatrix: {
+    background: 'linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%)',
+    boxShadow: '0 4px 18px rgba(99,102,241,0.4)',
+    '&:hover': {
+      boxShadow: '0 6px 24px rgba(99,102,241,0.55)',
+      transform: 'translateY(-1px)',
+      background: 'linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 });

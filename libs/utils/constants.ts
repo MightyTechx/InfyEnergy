@@ -6,6 +6,7 @@ const AdminPath = {
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
   TURBINE_DETAIL: `${ADMIN_BASE}/dashboard/turbine/:id`,
+  FLEET_STATUS_MATRIX: `${ADMIN_BASE}/fleet-status-matrix`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
   REPORTS: `${ADMIN_BASE}/reports`,
@@ -17,6 +18,9 @@ const AdminPath = {
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
   TURBINE_CONFIG: `${ADMIN_BASE}/turbine-config`,
   CONFIGURATION: `${ADMIN_BASE}/configuration`,
+  OPERATIONS: `${ADMIN_BASE}/operations-management`,
+  CREATE_OPERATIONS: `${ADMIN_BASE}/operations-management/create`,
+  PERMIT_DETAILS: `${ADMIN_BASE}/operations-management/permit/:id`,
 };
 
 const UserPath = {
@@ -35,6 +39,7 @@ const ConsultantPath = {
   SETTINGS: `${CONSULTANT_BASE}/settings`,
   HELP_SUPPORT: `${CONSULTANT_BASE}/help-support`,
   FEATURE_FLAGS: `${CONSULTANT_BASE}/feature-flags`,
+  OPERATIONS: `${CONSULTANT_BASE}/operations-management`,
 };
 
 const AuthPath = {

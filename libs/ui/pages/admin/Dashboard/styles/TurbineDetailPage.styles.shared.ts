@@ -23,6 +23,7 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
     border: '1px solid #e8eaf0',
     borderLeft: '4px solid #4f46e5',
     boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(99,102,241,0.07)',
+    position: 'relative' as const,
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       flexDirection: 'column' as const,
@@ -30,6 +31,7 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
       padding: theme.spacing(1.5),
       gap: theme.spacing(1.5),
       borderLeft: '3px solid #4f46e5',
+      paddingRight: theme.spacing(4),
     },
   },
 

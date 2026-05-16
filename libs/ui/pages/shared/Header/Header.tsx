@@ -9,6 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import AddIcon from '@mui/icons-material/Add';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
 import LogoMark from './components/LogoMark';
@@ -189,6 +190,26 @@ const Header = () => {
           </Tooltip>
 
           <Box className={classes.headerRightSpacer} />
+
+          {/* Create Operations */}
+          <Tooltip title='Create Operations' placement='bottom' arrow>
+            <IconButton
+              size='small'
+              className={classes.iconBtnBase}
+              onClick={() => navigate(AdminPath.CREATE_OPERATIONS)}
+              sx={{
+                padding: 0,
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.2)',
+                },
+              }}
+            >
+              <AddIcon className={classes.icon} />
+            </IconButton>
+          </Tooltip>
 
           {/* Wind Farm View Icon */}
           <Tooltip title='Wind Farm View' placement='bottom' arrow>

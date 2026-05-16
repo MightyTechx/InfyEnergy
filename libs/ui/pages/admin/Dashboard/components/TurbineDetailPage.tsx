@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material';
 import { constants } from '@infygen/utils';
@@ -249,6 +249,7 @@ const TurbineDetailPage: React.FC = () => {
     }, 2000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turbine?.id]);
 
   if (loading) {
@@ -361,6 +362,32 @@ const TurbineDetailPage: React.FC = () => {
             <Box>
               <Typography className={classes.heroTitleText}>WTG {turbine.turbineNo}</Typography>
               <Typography className={classes.heroSubtitle}>SCADA Live Parameters</Typography>
+              {/* Status Chip - Mobile Only: shown inline after subtitle */}
+              <Box
+                sx={{
+                  display: { xs: 'flex', sm: 'none' },
+                  mt: 0.5,
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Chip
+                  icon={getStatusIcon(turbine.status)}
+                  label={cfg.label}
+                  size='small'
+                  className={classes.statusChip}
+                  sx={{
+                    background: cfg.bgColor,
+                    border: `1px solid ${cfg.borderColor}`,
+                    color: cfg.color,
+                    fontWeight: 600,
+                    fontSize: '0.6rem',
+                    height: 20,
+                    '& .MuiChip-icon': { color: cfg.color, fontSize: 12 },
+                    '& .MuiChip-label': { px: 0.75 },
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
 
@@ -373,60 +400,94 @@ const TurbineDetailPage: React.FC = () => {
           </Box>
 
           <Box className={classes.heroRight}>
-            <Chip
-              icon={getStatusIcon(turbine.status)}
-              label={cfg.label}
-              size='small'
-              className={classes.statusChip}
-              sx={{
-                background: cfg.bgColor,
-                border: `1px solid ${cfg.borderColor}`,
-                color: cfg.color,
-                fontWeight: 600,
-                fontSize: '0.72rem',
-                height: 26,
-                mr: 1,
-                '& .MuiChip-icon': { color: cfg.color },
-                [theme.breakpoints.down('sm')]: {
-                  mr: 0.75,
-                },
-              }}
-            />
-            <Tooltip title='Back to Dashboard' arrow placement='bottom'>
-              <IconButton
-                onClick={() => navigate(AdminPath.DASHBOARD)}
+            {/* Status Chip - Desktop Only */}
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
+              <Chip
+                icon={getStatusIcon(turbine.status)}
+                label={cfg.label}
                 size='small'
-                className='closeButton'
+                className={classes.statusChip}
                 sx={{
-                  color: '#64748b',
-                  background: '#f1f5f9',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  p: 0.75,
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    background: '#fee2e2',
-                    color: '#ef4444',
-                    borderColor: '#fecaca',
-                    transform: 'scale(1.05)',
-                    '& .closeIcon': {
-                      transform: 'rotate(90deg)',
-                    },
-                  },
-                  '&:active': {
-                    transform: 'scale(0.95)',
-                  },
-                  [theme.breakpoints.down('sm')]: {
-                    p: 0.5,
-                  },
-                  '& .closeIcon': {
-                    transition: 'transform 0.2s ease',
-                  },
+                  background: cfg.bgColor,
+                  border: `1px solid ${cfg.borderColor}`,
+                  color: cfg.color,
+                  fontWeight: 600,
+                  fontSize: '0.72rem',
+                  height: '18px',
+                  '& .MuiChip-icon': { color: cfg.color },
                 }}
-              >
-                <CloseIcon className='closeIcon' sx={{ fontSize: 16 }} />
-              </IconButton>
-            </Tooltip>
+              />
+              <Tooltip title='Back to Dashboard' arrow placement='bottom'>
+                <IconButton
+                  onClick={() => navigate(AdminPath.DASHBOARD)}
+                  size='small'
+                  className='closeButton'
+                  sx={{
+                    color: '#64748b',
+                    background: '#f1f5f9',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    p: 0.75,
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      background: '#fee2e2',
+                      color: '#ef4444',
+                      borderColor: '#fecaca',
+                      transform: 'scale(1.05)',
+                      '& .closeIcon': {
+                        transform: 'rotate(90deg)',
+                      },
+                    },
+                    '&:active': {
+                      transform: 'scale(0.95)',
+                    },
+                    '& .closeIcon': {
+                      transition: 'transform 0.2s ease',
+                    },
+                  }}
+                >
+                  <CloseIcon className='closeIcon' sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            {/* Mobile Only Close Button - Top Right Corner */}
+            <Box
+              sx={{ display: { xs: 'flex', sm: 'none' }, position: 'absolute', top: 8, right: 8 }}
+            >
+              <Tooltip title='Back to Dashboard' arrow placement='bottom'>
+                <IconButton
+                  onClick={() => navigate(AdminPath.DASHBOARD)}
+                  size='small'
+                  className='closeButton'
+                  sx={{
+                    color: '#64748b',
+                    background: '#f1f5f9',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    p: 0.5,
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      background: '#fee2e2',
+                      color: '#ef4444',
+                      borderColor: '#fecaca',
+                      transform: 'scale(1.05)',
+                      '& .closeIcon': {
+                        transform: 'rotate(90deg)',
+                      },
+                    },
+                    '&:active': {
+                      transform: 'scale(0.95)',
+                    },
+                    '& .closeIcon': {
+                      transition: 'transform 0.2s ease',
+                    },
+                  }}
+                >
+                  <CloseIcon className='closeIcon' sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
 

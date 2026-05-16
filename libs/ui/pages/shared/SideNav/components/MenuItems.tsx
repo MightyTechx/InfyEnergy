@@ -7,6 +7,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import BuildIcon from '@mui/icons-material/Build';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 import { constants } from '@infygen/utils';
 import { useGetFeatureFlagsQuery } from '@infygen/services';
 
@@ -62,6 +63,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
       items: [
         { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
         { label: 'People Management', icon: <PeopleIcon />, path: AdminPath.ACCESS_MANAGEMENT },
+        { label: 'Operations Management', icon: <EngineeringIcon />, path: AdminPath.OPERATIONS },
         { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
         { label: 'Inventory Management', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
         {
@@ -79,7 +81,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
 };
 
 export const useConsultantMenuItems = (): MenuGroup[] => {
-  const { ConsultantPath, AdminPath } = constants;
+  const { ConsultantPath } = constants;
   const {
     showPeopleManagement,
     showAnalytics,

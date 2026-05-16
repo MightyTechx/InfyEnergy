@@ -6,6 +6,9 @@ export const LazyMenuItems = {
   AdminTurbineDetailPage: lazy(() =>
     import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.TurbineDetailPage })),
   ),
+  AdminFleetStatusMatrixPage: lazy(() =>
+    import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.FleetStatusMatrixPage })),
+  ),
   AdminPeopleManagementPage: lazy(() => import('@infygen/pages/admin/People/PeopleManagement')),
   AdminUserDetailPage: lazy(() => import('@infygen/pages/admin/People/UserDetail')),
   AdminProfilePage: lazy(() => import('@infygen/pages/shared/Profile')),
@@ -17,6 +20,15 @@ export const LazyMenuItems = {
   SettingsPage: lazy(() => import('@infygen/pages/shared/Settings')),
   HelpSupportPage: lazy(() => import('@infygen/pages/shared/HelpSupport')),
   AdminConfigurationPage: lazy(() => import('@infygen/pages/admin/Configuration')),
+  AdminOperationsPage: lazy(() => import('@infygen/pages/admin/Operations')),
+  AdminCreateOperationsPage: lazy(
+    () => import('@infygen/pages/admin/Operations/components/CreateOperations'),
+  ),
+  AdminPermitDetailsPage: lazy(() =>
+    import('@infygen/pages/admin/Operations/components/PermitDetails').then((m) => ({
+      default: m.PermitDetailsPage,
+    })),
+  ),
 
   // Auth pages (shared/public)
   SignInPage: lazy(() => import('@infygen/pages/shared/SignIn')),

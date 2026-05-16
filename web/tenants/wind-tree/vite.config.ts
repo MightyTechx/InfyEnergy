@@ -67,13 +67,7 @@ export default defineConfig(({ mode }) => ({
   },
 
   optimizeDeps: {
-    include: [
-      '@mui/material',
-      '@mui/icons-material',
-      'react',
-      'react-dom',
-      'react-router-dom',
-    ],
+    include: ['@mui/material', '@mui/icons-material', 'react', 'react-dom', 'react-router-dom'],
   },
 
   build: {

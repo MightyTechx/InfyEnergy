@@ -31,6 +31,7 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import GridViewIcon from '@mui/icons-material/GridView';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SearchIcon from '@mui/icons-material/Search';
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -71,6 +72,14 @@ const TURBINE_COLORS = [
 
 const MIN_DATE = dayjs('2026-01-01');
 const MAX_DATE = dayjs().startOf('day');
+
+// Custom status sort order: fault (1), stopped (2), maintenance (3), running (4)
+const STATUS_SORT_ORDER: Record<string, number> = {
+  fault: 1,
+  stopped: 2,
+  maintenance: 3,
+  running: 4,
+};
 
 // ─── Data helpers ─────────────────────────────────────────────────────────────
 
@@ -333,11 +342,23 @@ const Dashboard = () => {
   const maintCount = turbineData.filter((t) => t.status === 'maintenance').length;
   const fmtVal = (v: number, dec = 1) => v.toFixed(dec);
 
-  const filteredTurbines = turbineData.filter((t) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return t.turbineNo.toLowerCase().includes(q) || t.status.toLowerCase().includes(q);
-  });
+  const filteredTurbines = useMemo(() => {
+    const result = turbineData.filter((t) => {
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return t.turbineNo.toLowerCase().includes(q) || t.status.toLowerCase().includes(q);
+    });
+
+    // Sort by custom status order: fault (1), stopped (2), maintenance (3), running (4)
+    result.sort((a, b) => {
+      const orderA = STATUS_SORT_ORDER[a.status] ?? 99;
+      const orderB = STATUS_SORT_ORDER[b.status] ?? 99;
+      if (orderA !== orderB) return orderA - orderB;
+      return a.turbineNo.localeCompare(b.turbineNo);
+    });
+
+    return result;
+  }, [turbineData, search]);
 
   // ── Chart data ────────────────────────────────────────────────────────────────
   const chartData = useMemo(
@@ -864,6 +885,15 @@ const Dashboard = () => {
             >
               Incentive Report
             </Button>
+
+            <Button
+              variant='outlined'
+              startIcon={<GridViewIcon sx={{ fontSize: 18 }} />}
+              onClick={() => navigate(AdminPath.FLEET_STATUS_MATRIX)}
+              className={classes.toggleBtnInactive}
+            >
+              Fleet Status Matrix
+            </Button>
           </Box>
 
           {view === 'table' && (
@@ -1323,7 +1353,7 @@ const Dashboard = () => {
               />
             </Box>
           </Card>
-        ) : (
+        ) : view === 'incentive' ? (
           /* ── Incentive Report Card ── */
           <Card cardVariant='default'>
             {/* Table Section Header - Same style as Technical Documents */}
@@ -1459,7 +1489,7 @@ const Dashboard = () => {
               />
             </Box>
           </Card>
-        )}
+        ) : null}
       </Box>
 
       <ComponentDetailDialog
