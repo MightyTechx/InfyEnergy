@@ -218,12 +218,22 @@ export class AuthController {
 
   // ── Sign In ─────────────────────────────────────────────────────────────────
   private signin = async (req: Request, res: Response, db: PrismaClient) => {
+    console.log('[SIGNIN] Request body:', JSON.stringify(req.body));
     const validatedData = await SignInSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
+    console.log('[SIGNIN] Validated:', validatedData);
 
     const user = await db.user.findUnique({ where: { email: validatedData.email } });
+    console.log(
+      '[SIGNIN] User found:',
+      user?.email,
+      '| isActive:',
+      user?.isActive,
+      '| status:',
+      user?.status,
+    );
 
     if (!user) throw new UnauthorizedException('Invalid email or password');
 
@@ -254,6 +264,7 @@ export class AuthController {
     // }
 
     const isPasswordValid = await bcrypt.compare(validatedData.password, user.password);
+    console.log('[SIGNIN] Password valid:', isPasswordValid);
 
     if (!isPasswordValid) {
       // // Failed attempts tracking disabled temporarily

@@ -134,7 +134,7 @@ async function clearAndSeed() {
   console.log('Existing data cleared.');
 
   // Seed default users (admin, user, consultant)
-  const adminPassword = await bcrypt.hash('admin123', 10);
+  const adminPassword = await bcrypt.hash('Srinivas@InfyGen123', 10);
   const userPassword = await bcrypt.hash('user123', 10);
   const consultantPassword = await bcrypt.hash('consultant123', 10);
 
@@ -144,7 +144,7 @@ async function clearAndSeed() {
     data: {
       firstName: 'Admin',
       lastName: 'User',
-      email: 'admin@infygen.tech',
+      email: 'srinivas.penumalla@infygen.tech',
       password: adminPassword,
       phone: '+1-555-0001',
       workLocation: 'New York - HQ',
