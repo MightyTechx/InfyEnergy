@@ -10,15 +10,17 @@ const AdminPath = {
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
   REPORTS: `${ADMIN_BASE}/reports`,
+  INVENTORY: `${ADMIN_BASE}/inventory`,
   TECHNICAL_DOCUMENTS: `${ADMIN_BASE}/technical-documents`,
   SETTINGS: `${ADMIN_BASE}/settings`,
   HELP_SUPPORT: `${ADMIN_BASE}/help-support`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
+  FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
+  TURBINE_CONFIG: `${ADMIN_BASE}/turbine-config`,
+  CONFIGURATION: `${ADMIN_BASE}/configuration`,
   OPERATIONS: `${ADMIN_BASE}/operations-management`,
   CREATE_OPERATIONS: `${ADMIN_BASE}/operations-management/create`,
   PERMIT_DETAILS: `${ADMIN_BASE}/operations-management/permit/:id`,
-  TICKET_DETAIL: `${ADMIN_BASE}/dashboard/ticket/:id`,
-  FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
 };
 
 const UserPath = {
@@ -31,12 +33,13 @@ const ConsultantPath = {
   PEOPLE_ACCESS: `${CONSULTANT_BASE}/people-management/access`,
   PEOPLE_MANAGEMENT: `${CONSULTANT_BASE}/people-management`,
   REPORTS: `${CONSULTANT_BASE}/reports`,
+  INVENTORY: `${CONSULTANT_BASE}/inventory`,
   TECHNICAL_DOCUMENTS: `${CONSULTANT_BASE}/technical-documents`,
   ANALYTICS: `${CONSULTANT_BASE}/analytics`,
   SETTINGS: `${CONSULTANT_BASE}/settings`,
   HELP_SUPPORT: `${CONSULTANT_BASE}/help-support`,
-  OPERATIONS: `${CONSULTANT_BASE}/operations-management`,
   FEATURE_FLAGS: `${CONSULTANT_BASE}/feature-flags`,
+  OPERATIONS: `${CONSULTANT_BASE}/operations-management`,
 };
 
 const AuthPath = {

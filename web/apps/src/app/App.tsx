@@ -14,13 +14,16 @@ const {
   // Admin pages
   AdminDashboardPage,
   AdminTurbineDetailPage,
-  AdminTicketDetailPage,
   AdminFleetStatusMatrixPage,
   AdminPeopleManagementPage,
   AdminUserDetailPage,
   AdminProfilePage,
   AdminReportsPage,
+  AdminInventoryPage,
   AdminTechnicalDocumentsPage,
+  AdminFeatureFlagsPage,
+  AdminTurbineConfigPage,
+  AdminConfigurationPage,
   AdminOperationsPage,
   AdminCreateOperationsPage,
   AdminPermitDetailsPage,
@@ -83,13 +86,16 @@ const AppRoutes = () => {
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={AdminPath.TURBINE_DETAIL} element={<AdminTurbineDetailPage />} />
-            <Route path={AdminPath.TICKET_DETAIL} element={<AdminTicketDetailPage />} />
             <Route path={AdminPath.FLEET_STATUS_MATRIX} element={<AdminFleetStatusMatrixPage />} />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />
             <Route path={AdminPath.REPORTS} element={<AdminReportsPage />} />
+            <Route path={AdminPath.INVENTORY} element={<AdminInventoryPage />} />
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
+            <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
+            <Route path={AdminPath.TURBINE_CONFIG} element={<AdminTurbineConfigPage />} />
+            <Route path={AdminPath.CONFIGURATION} element={<AdminConfigurationPage />} />
             <Route path={AdminPath.OPERATIONS} element={<AdminOperationsPage />} />
             <Route path={AdminPath.CREATE_OPERATIONS} element={<AdminCreateOperationsPage />} />
             <Route path={AdminPath.PERMIT_DETAILS} element={<AdminPermitDetailsPage />} />
@@ -108,6 +114,7 @@ const AppRoutes = () => {
               element={<AdminPeopleManagementPage />}
             />
             <Route path={ConsultantPath.REPORTS} element={<AdminReportsPage />} />
+            <Route path={ConsultantPath.INVENTORY} element={<AdminInventoryPage />} />
             <Route
               path={ConsultantPath.TECHNICAL_DOCUMENTS}
               element={<AdminTechnicalDocumentsPage />}

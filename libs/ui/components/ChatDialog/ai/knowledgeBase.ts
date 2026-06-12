@@ -8,6 +8,7 @@ type IntentCategory =
   | 'maintenance'
   | 'status'
   | 'analytics'
+  | 'inventory'
   | 'troubleshooting'
   | 'system_help'
   | 'reports'
@@ -112,6 +113,20 @@ const INTENT_PATTERNS: IntentPattern[] = [
     ],
   },
   {
+    patterns: ['inventory', 'stock', 'material', 'spare', 'parts', 'equipment', 'warehouse'],
+    category: 'inventory',
+    keywords: [
+      'inventory',
+      'stock',
+      'material',
+      'spare',
+      'parts',
+      'equipment',
+      'warehouse',
+      'item',
+    ],
+  },
+  {
     patterns: ['troubleshoot', 'error', 'warning', 'alert', 'fix', 'resolve', 'help', 'how do i'],
     category: 'troubleshooting',
     keywords: [
@@ -171,7 +186,7 @@ const RESPONSE_TEMPLATES: ResponseTemplate[] = [
   {
     category: 'greeting',
     responses: [
-      "Hello! Welcome to Sprint Pulse Operations Hub. I'm your AI assistant specialized in wind turbine operations. How can I help you today?",
+      "Hello! Welcome to InfyGen Operations Hub. I'm your AI assistant specialized in wind turbine operations. How can I help you today?",
       'Hi there! I can help you with turbine monitoring, maintenance schedules, power analytics, and more. What would you like to know?',
       "Good day! I'm here to assist with wind farm operations. Ask me about turbines, power generation, maintenance, or any system features.",
     ],
@@ -200,9 +215,9 @@ const RESPONSE_TEMPLATES: ResponseTemplate[] = [
     responses: [
       'Wind turbine maintenance includes: ✅ Scheduled preventive maintenance (oil changes, inspections) ✅ Corrective maintenance (fault repair) ✅ Condition monitoring (vibration, temperature analysis). Check the Maintenance status in Fleet Overview.',
       'Maintenance schedules are critical for turbine reliability. Common tasks: Gearbox oil replacement (~8000 hours), brake pad inspection, pitch system calibration, and control system updates. Report issues immediately through the fault reporting system.',
-      'For maintenance coordination: 1) Check turbine status in Fleet Overview 2) Review SCADA parameters for anomalies 3) Log maintenance activities 4) Update spare parts used. Contact your maintenance coordinator for urgent issues.',
+      'For maintenance coordination: 1) Check turbine status in Fleet Overview 2) Review SCADA parameters for anomalies 3) Log maintenance activities 4) Update inventory for spare parts used. Contact your maintenance coordinator for urgent issues.',
     ],
-    followUp: ['turbine status', 'troubleshooting'],
+    followUp: ['turbine status', 'inventory', 'troubleshooting'],
   },
   {
     category: 'status',
@@ -223,6 +238,15 @@ const RESPONSE_TEMPLATES: ResponseTemplate[] = [
     followUp: ['power analytics', 'reports', 'turbine details'],
   },
   {
+    category: 'inventory',
+    responses: [
+      'Inventory management tracks: 🔧 Spare parts (bearings, seals, filters) 🏗️ Tools and equipment 📦 Consumables (lubricants, cleaning supplies). Access via the Inventory Management page.',
+      'Stock management includes: Add Item, Receive Material, Issue Material, Adjust Stock. Low stock alerts notify when items fall below minimum thresholds. Maintain adequate inventory for preventive maintenance.',
+      'For inventory operations: Receive adds stock from suppliers, Issue releases materials for maintenance, Adjust corrects stock levels after audit. Always reference Work Orders for traceability.',
+    ],
+    followUp: ['add item', 'receive material', 'low stock'],
+  },
+  {
     category: 'troubleshooting',
     responses: [
       'For turbine issues: 1) Check Fault status in Fleet Overview 2) Review SCADA parameters for anomalies (temperature, vibration, pressure) 3) Note error codes 4) Contact maintenance team. Critical faults should be escalated immediately.',
@@ -234,26 +258,26 @@ const RESPONSE_TEMPLATES: ResponseTemplate[] = [
   {
     category: 'system_help',
     responses: [
-      'System navigation: 📍 Dashboard (Fleet Overview) - Main monitoring view 📍 Turbine Detail - Individual turbine SCADA data 📍 Power Analytics - Generation charts 📍 Reports - Business intelligence',
-      'Key features: • Real-time turbine monitoring • Power generation analytics • Technical documents repository • User management. Use the sidebar navigation to access all features.',
-      'For best practices: ✅ Monitor Fleet Overview daily ✅ Review Power Analytics weekly ✅ Check Technical Documents for specs ✅ Document all maintenance activities',
+      'System navigation: 📍 Dashboard (Fleet Overview) - Main monitoring view 📍 Turbine Detail - Individual turbine SCADA data 📍 Power Analytics - Generation charts 📍 Inventory - Material management 📍 Reports - Business intelligence',
+      'Key features: • Real-time turbine monitoring • Power generation analytics • Inventory management • Technical documents repository • User management. Use the sidebar navigation to access all features.',
+      'For best practices: ✅ Monitor Fleet Overview daily ✅ Review Power Analytics weekly ✅ Update inventory after each maintenance ✅ Check Technical Documents for specs ✅ Document all maintenance activities',
     ],
-    followUp: ['dashboard', 'power analytics', 'reports'],
+    followUp: ['dashboard', 'power analytics', 'inventory'],
   },
   {
     category: 'reports',
     responses: [
-      'Report types available: 📊 Power Analytics - Energy generation data 📋 Incentive Report - FER and incentive calculations 📁 Technical Documents - Manuals, specs',
+      'Report types available: 📊 Power Analytics - Energy generation data 📋 Incentive Report - FER and incentive calculations 📁 Technical Documents - Manuals, specs 📦 Inventory Reports - Stock status',
       'Incentive Report calculates: Actual vs Forecast generation, FER (Forecast Error Rate %), and incentive amounts in M.KRW. Data filtered by date range shows daily, monthly, and summary rows.',
-      'For business reporting: Use Power Analytics for generation trends, Incentive Report for certificate calculations. Export to PDF/Excel for stakeholder presentations.',
+      'For business reporting: Use Power Analytics for generation trends, Incentive Report for certificate calculations, Inventory for stock valuation. Export to PDF/Excel for stakeholder presentations.',
     ],
-    followUp: ['power analytics', 'incentive report', 'reports'],
+    followUp: ['power analytics', 'incentive report', 'inventory'],
   },
   {
     category: 'unknown',
     responses: [
-      "I'd be happy to help with wind turbine operations! I can assist with: turbine monitoring, power generation, maintenance schedules, SCADA parameters, and system navigation. Could you rephrase your question?",
-      "I'm specialized in wind energy operations. For your query, I need a bit more context. Are you asking about: turbine status, power analytics, maintenance, or system navigation?",
+      "I'd be happy to help with wind turbine operations! I can assist with: turbine monitoring, power generation, maintenance schedules, SCADA parameters, inventory management, and system navigation. Could you rephrase your question?",
+      "I'm specialized in wind energy operations. For your query, I need a bit more context. Are you asking about: turbine status, power analytics, maintenance, inventory, or system navigation?",
       "I understand you're looking for information. Let me help you find it: What specific aspect would you like to explore - turbines, power, maintenance, or reports?",
     ],
     followUp: ['turbine status', 'power analytics', 'maintenance'],
@@ -408,6 +432,12 @@ export const QUICK_ACTIONS: QuickAction[] = [
     icon: 'build',
     action: 'maintenance',
     description: 'Check maintenance schedule',
+  },
+  {
+    label: 'Inventory',
+    icon: 'inventory',
+    action: 'inventory',
+    description: 'Manage spare parts and materials',
   },
   {
     label: 'Reports',

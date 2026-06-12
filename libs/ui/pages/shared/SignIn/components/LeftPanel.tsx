@@ -20,12 +20,12 @@ const TurbineSVG = ({ className }: { className?: string }) => (
 );
 
 const FEATURES = [
-  { label: 'Sprint Planning' },
-  { label: 'Ticket & Issue Tracking' },
-  { label: 'Defect Management' },
-  { label: 'Team Workflows' },
-  { label: 'Agile Boards' },
-  { label: 'Project Collaboration' },
+  { label: 'SCADA Monitoring' },
+  { label: 'Real-Time Wind Tracking' },
+  { label: 'Grid Integration' },
+  { label: 'Predictive Maintenance' },
+  { label: 'Energy Analytics' },
+  { label: 'Fleet Lifecycle Management' },
 ];
 
 interface LeftPanelProps {
@@ -42,22 +42,22 @@ const LeftPanel = ({ classes, onNavigateSignUp }: LeftPanelProps) => {
       <Box className={classes.circle3} />
 
       <Box className={classes.logoContainer}>
-        {/* <Box component='span' className={classes.brandIcon}>
+        <Box component='span' className={classes.brandIcon}>
           <TurbineSVG />
-        </Box> */}
+        </Box>
         <Typography component='span' className={classes.brandTitle}>
           {metadata.tenet}
         </Typography>
       </Box>
 
       <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
-        Agile Project
+        Wind Energy
         <br />
-        Management
+        Intelligence System
       </Typography>
       <Typography className={classes.heroSubtitle}>
-        A Jira-like platform for managing sprint planning, tasks, bugs, and project progress across
-        your Agile teams.
+        Centralized wind farm monitoring, SCADA integration, and predictive analytics for optimal
+        energy yield.
       </Typography>
 
       {FEATURES.map(({ label }) => (

@@ -13,7 +13,7 @@ export function buildHeader(metadata: ReportMetadata): Content {
           {
             stack: [
               {
-                text: 'SprintPulse',
+                text: 'InfyGen',
                 style: 'companyName',
                 margin: [0, 0, 0, 2] as [number, number, number, number],
               },

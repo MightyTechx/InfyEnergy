@@ -8,6 +8,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import AddIcon from '@mui/icons-material/Add';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
@@ -207,6 +208,13 @@ const Header = () => {
               }}
             >
               <AddIcon className={classes.icon} />
+            </IconButton>
+          </Tooltip>
+
+          {/* Wind Farm View Icon */}
+          <Tooltip title='Wind Farm View' placement='bottom' arrow>
+            <IconButton size='small' className={classes.iconBtnBase}>
+              <ViewInArIcon className={classes.icon} />
             </IconButton>
           </Tooltip>
 

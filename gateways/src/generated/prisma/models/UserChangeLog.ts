@@ -242,7 +242,7 @@ export type UserChangeLogGroupByOutputType = {
   _max: UserChangeLogMaxAggregateOutputType | null
 }
 
-export type GetUserChangeLogGroupByPayload<T extends UserChangeLogGroupByArgs> = Prisma.PrismaPromise<
+type GetUserChangeLogGroupByPayload<T extends UserChangeLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserChangeLogGroupByOutputType, T['by']> &
       {
@@ -1175,11 +1175,6 @@ export type UserChangeLogFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` UserChangeLogs.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of UserChangeLogs.
-   */
   distinct?: Prisma.UserChangeLogScalarFieldEnum | Prisma.UserChangeLogScalarFieldEnum[]
 }
 

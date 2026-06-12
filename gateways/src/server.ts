@@ -1,8 +1,7 @@
-// Force DNS resolution order — must be set before any network connections
-// Current Supabase project (db.kpbyogndzjptqcpmoaxw.supabase.co) only publishes
-// an AAAA record (no A record), so we must try IPv6 first.
+// Force IPv4 DNS resolution — must be set before any network connections
+// Render free tier does not support outbound IPv6; Node 18+ defaults to IPv6-first
 import dns from 'dns';
-dns.setDefaultResultOrder('verbatim');
+dns.setDefaultResultOrder('ipv4first');
 
 // Load environment variables from .env file
 import dotenv from 'dotenv';
@@ -35,7 +34,7 @@ import { logger } from '@infygen/config';
 import { prisma } from '@infygen/database';
 
 // Server configuration
-const PORT = parseInt(process.env.PORT || '3600', 10);
+const PORT = parseInt(process.env.PORT || '3001', 10);
 const HOST = process.env.HOST || '0.0.0.0';
 
 /**
@@ -67,6 +66,11 @@ const NAV_FLAGS = [
     key: 'nav_analytics',
     name: 'Analytics Nav',
     description: 'Controls visibility of Analytics in the consultant navigation',
+  },
+  {
+    key: 'nav_feature_flags',
+    name: 'Feature Flags Nav',
+    description: 'Controls visibility of Feature Flags in the consultant navigation',
   },
 ] as const;
 
@@ -110,7 +114,7 @@ async function startServer() {
     // Start HTTP server
     const server = app.listen(PORT, HOST, () => {
       logger.info('='.repeat(60));
-      logger.info(`SprintPulse Backend API Server Started`);
+      logger.info(`InfyGen Backend API Server Started`);
       logger.info('='.repeat(60));
       logger.info(`Server running on: http://${HOST}:${PORT}`);
       logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);

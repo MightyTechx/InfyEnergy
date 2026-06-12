@@ -11,5 +11,7 @@ export enum ADMIN_PATHS {
   SERVICE_REQUESTS = 'service-requests',
   ADVISORY_REQUESTS = 'advisory-requests',
   TICKETS = 'tickets',
+  CONFIGURATION = 'configuration',
   FEATURE_FLAGS = 'feature-flags',
+  TURBINE_CONFIG = 'turbine-config',
 }
