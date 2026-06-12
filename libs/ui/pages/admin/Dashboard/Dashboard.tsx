@@ -40,12 +40,13 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RouterIcon from '@mui/icons-material/Router';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
-import { TurbineData, STATUS_CONFIG } from './types/turbineData.types';
-import { MOCK_TURBINE_DATA } from './utils/dashboard.utils';
+import { TurbineData, TICKET_STATUS_CONFIG, Ticket } from './types/turbineData.types';
+import { MOCK_TURBINE_DATA, MOCK_TICKETS } from './utils/dashboard.utils';
 import { constants } from '@infygen/utils';
 import { Column, DataTable, Card } from '@infygen/component';
 import ComponentDetailDialog from './components/ComponentDetailDialog';
@@ -214,7 +215,26 @@ const Dashboard = () => {
   const [fromDate, setFromDate] = useState<Dayjs>(MIN_DATE);
   const [toDate, setToDate] = useState<Dayjs>(MAX_DATE);
   const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TURBINES);
-  const [search, setSearch] = useState('');
+
+  // Ticket search (used by the ticket table on the Dashboard)
+  const [ticketSearch, setTicketSearch] = useState('');
+
+  const filteredTickets = useMemo(() => {
+    if (!ticketSearch) return MOCK_TICKETS;
+    const q = ticketSearch.toLowerCase();
+    return MOCK_TICKETS.filter(
+      (t) =>
+        String(t.id).includes(q) ||
+        t.team.toLowerCase().includes(q) ||
+        t.assignee.toLowerCase().includes(q) ||
+        t.issueType.toLowerCase().includes(q) ||
+        t.issueNo.toLowerCase().includes(q) ||
+        t.summary.toLowerCase().includes(q) ||
+        t.timeLoggingId.toLowerCase().includes(q) ||
+        t.status.toLowerCase().includes(q) ||
+        t.fixVersion.toLowerCase().includes(q),
+    );
+  }, [ticketSearch]);
 
   // 3D View Dialog State
   const [componentDialogOpen, setComponentDialogOpen] = useState(false);
@@ -340,25 +360,8 @@ const Dashboard = () => {
   const totalGeneration = turbineData.reduce((s, t) => s + t.todayGeneration, 0);
   const faultCount = turbineData.filter((t) => t.status === 'fault').length;
   const maintCount = turbineData.filter((t) => t.status === 'maintenance').length;
+  const doneCount = MOCK_TICKETS.filter((t) => t.status === 'Done').length;
   const fmtVal = (v: number, dec = 1) => v.toFixed(dec);
-
-  const filteredTurbines = useMemo(() => {
-    const result = turbineData.filter((t) => {
-      if (!search) return true;
-      const q = search.toLowerCase();
-      return t.turbineNo.toLowerCase().includes(q) || t.status.toLowerCase().includes(q);
-    });
-
-    // Sort by custom status order: fault (1), stopped (2), maintenance (3), running (4)
-    result.sort((a, b) => {
-      const orderA = STATUS_SORT_ORDER[a.status] ?? 99;
-      const orderB = STATUS_SORT_ORDER[b.status] ?? 99;
-      if (orderA !== orderB) return orderA - orderB;
-      return a.turbineNo.localeCompare(b.turbineNo);
-    });
-
-    return result;
-  }, [turbineData, search]);
 
   // ── Chart data ────────────────────────────────────────────────────────────────
   const chartData = useMemo(
@@ -533,37 +536,104 @@ const Dashboard = () => {
     [chartData, fromDate, toDate, selectedTurbines, aggLabel],
   );
 
-  // ── Table columns (memoized to prevent recreation on every render) ─────────────
-  const columns: Column<TurbineData>[] = useMemo(
+  // ── Ticket table columns (15 columns in the requested order) ────────────────
+  const ticketColumns: Column<Ticket>[] = useMemo(
     () => [
       {
-        id: 'turbineNo',
-        label: 'Turbine No',
-        minWidth: 70,
+        id: 'id',
+        label: 'S. No',
+        minWidth: 60,
         align: 'center',
-        format: (v, row) => (
+        format: (_v, row) => (
+          <Typography sx={{ fontSize: '0.78rem', fontWeight: 600 }}>
+            {String((row as Ticket).id)}
+          </Typography>
+        ),
+      },
+      { id: 'team', label: 'Team', minWidth: 100, align: 'center' },
+      { id: 'assignee', label: 'Assignee', minWidth: 140, align: 'center' },
+      {
+        id: 'issueType',
+        label: 'Issue Type',
+        minWidth: 100,
+        align: 'center',
+        format: (v) => {
+          const palette: Record<string, { bg: string; fg: string; border: string }> = {
+            Story: { bg: 'rgba(99,102,241,0.12)', fg: '#4f46e5', border: 'rgba(99,102,241,0.3)' },
+            Task: { bg: 'rgba(6,182,212,0.12)', fg: '#0891b2', border: 'rgba(6,182,212,0.3)' },
+            Bug: { bg: 'rgba(239,68,68,0.12)', fg: '#ef4444', border: 'rgba(239,68,68,0.3)' },
+            Epic: { bg: 'rgba(139,92,246,0.12)', fg: '#7c3aed', border: 'rgba(139,92,246,0.3)' },
+            Spike: { bg: 'rgba(245,158,11,0.12)', fg: '#d97706', border: 'rgba(245,158,11,0.3)' },
+          };
+          const p = palette[String(v)] ?? palette.Task;
+          return (
+            <Chip
+              size='small'
+              label={String(v)}
+              sx={{
+                background: p.bg,
+                border: `1px solid ${p.border}`,
+                color: p.fg,
+                fontWeight: 600,
+                fontSize: '0.65rem',
+                height: 22,
+              }}
+            />
+          );
+        },
+      },
+      {
+        id: 'issueNo',
+        label: 'Issue No',
+        minWidth: 110,
+        align: 'center',
+        format: (v) => (
           <Typography
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(AdminPath.TURBINE_DETAIL.replace(':id', String((row as TurbineData).id)));
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              fontFamily: 'monospace',
+              color: '#4f46e5',
             }}
-            className={classes.cellTurbineNo}
           >
             {String(v)}
           </Typography>
         ),
       },
       {
+        id: 'summary',
+        label: 'Summary',
+        minWidth: 220,
+        align: 'left',
+        format: (v) => (
+          <Typography
+            sx={{
+              fontSize: '0.78rem',
+              fontWeight: 500,
+              color: 'text.primary',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: 280,
+            }}
+            title={String(v)}
+          >
+            {String(v)}
+          </Typography>
+        ),
+      },
+      { id: 'timeLoggingId', label: 'Time Logging ID', minWidth: 120, align: 'center' },
+      {
         id: 'status',
         label: 'Status',
-        minWidth: 90,
+        minWidth: 110,
         align: 'center',
         format: (v) => {
-          const cfg = STATUS_CONFIG[v as TurbineData['status']];
+          const cfg = TICKET_STATUS_CONFIG[v as Ticket['status']];
+          if (!cfg) return <Typography sx={{ fontSize: '0.75rem' }}>{String(v)}</Typography>;
           return (
             <Chip
               size='small'
-              icon={getStatusIcon(v as TurbineData['status'])}
               label={cfg.label}
               sx={{
                 background: cfg.bgColor,
@@ -572,148 +642,72 @@ const Dashboard = () => {
                 fontWeight: 600,
                 fontSize: '0.65rem',
                 height: 22,
-                '& .MuiChip-icon': { color: cfg.color },
               }}
             />
           );
         },
       },
-      { id: 'time', label: 'Time', minWidth: 70, align: 'center' },
       {
-        id: 'activePower',
-        label: 'AP (kW)',
-        minWidth: 85,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumericBold}>{fmtVal(v as number)}</Typography>
-        ),
-      },
-      {
-        id: 'windSpeed',
-        label: 'WS (m/s)',
-        minWidth: 85,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{fmtVal(v as number)}</Typography>
-        ),
-      },
-      {
-        id: 'windDirection',
-        label: 'Wdir (°)',
-        minWidth: 80,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°</Typography>
-        ),
-      },
-      {
-        id: 'nacellePosition',
-        label: 'Nac (°)',
-        minWidth: 75,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
-        ),
-      },
-      {
-        id: 'pitchAngle',
-        label: 'Pitch (°)',
-        minWidth: 75,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}°</Typography>
-        ),
-      },
-      {
-        id: 'rotorRpm',
-        label: 'RRPM',
-        minWidth: 65,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(1)}</Typography>
-        ),
-      },
-      {
-        id: 'generatorRpm',
-        label: 'GRPM',
-        minWidth: 65,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
-        ),
-      },
-      {
-        id: 'hydraulicPressure',
-        label: 'HydPre (bar)',
+        id: 'storyPoints',
+        label: 'Story Points',
         minWidth: 90,
         align: 'center',
         format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}</Typography>
+          <Typography sx={{ fontSize: '0.78rem', fontWeight: 700 }}>{String(v)}</Typography>
         ),
       },
+      { id: 'actualEffort', label: 'Actual Effort', minWidth: 100, align: 'center' },
+      { id: 'fixVersion', label: 'Fix Version', minWidth: 100, align: 'center' },
       {
-        id: 'todayGeneration',
-        label: 'TodayGen (kWh)',
-        minWidth: 100,
+        id: 'carryForward',
+        label: 'Carry Forward',
+        minWidth: 120,
         align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumericBold}>{(v as number).toFixed(0)}</Typography>
-        ),
+        format: (v) => {
+          const sprint = String(v ?? '').trim();
+          if (!sprint) {
+            return (
+              <Typography sx={{ fontSize: '0.7rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                —
+              </Typography>
+            );
+          }
+          return (
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.5,
+                px: 1,
+                py: 0.35,
+                borderRadius: 1.5,
+                background: 'rgba(99,102,241,0.1)',
+                border: '1px solid rgba(99,102,241,0.25)',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: '#4f46e5',
+                  boxShadow: '0 0 4px rgba(79,70,229,0.5)',
+                  flexShrink: 0,
+                }}
+              />
+              <Typography
+                sx={{ fontSize: '0.68rem', fontWeight: 700, color: '#4f46e5', lineHeight: 1 }}
+              >
+                {sprint}
+              </Typography>
+            </Box>
+          );
+        },
       },
-      {
-        id: 'outdoorTemp',
-        label: 'OutDoor (°C)',
-        minWidth: 90,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-        ),
-      },
-      {
-        id: 'gearboxTemp',
-        label: 'Gearbox (°C)',
-        minWidth: 90,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-        ),
-      },
-      {
-        id: 'generatorTemp',
-        label: 'Generator (°C)',
-        minWidth: 95,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-        ),
-      },
-      {
-        id: 'transformerTemp',
-        label: 'Trafo (°C)',
-        minWidth: 85,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-        ),
-      },
-      {
-        id: 'hubExhaustTemp',
-        label: 'H.Ex Out (°C)',
-        minWidth: 90,
-        align: 'center',
-        format: (v) => (
-          <Typography className={classes.cellNumeric}>{(v as number).toFixed(0)}°C</Typography>
-        ),
-      },
-      {
-        id: 'operatingMode',
-        label: 'OP Mode',
-        minWidth: 110,
-        align: 'center',
-        format: (v) => <Typography className={classes.cellOpMode}>{String(v)}</Typography>,
-      },
+      { id: 'workStartDate', label: 'Work Start Date', minWidth: 120, align: 'center' },
+      { id: 'workEndDate', label: 'Work End Date', minWidth: 120, align: 'center' },
     ],
-    [classes],
+    [],
   );
 
   return (
@@ -732,20 +726,20 @@ const Dashboard = () => {
             </Box>
           </Box>
           <Box className={classes.heroCenterMobile}>
-            <Typography className={classes.heroCenterMobileTitle}>OPERATIONS HUB</Typography>
+            <Typography className={classes.heroCenterMobileTitle}>SALES TEAM</Typography>
             <Box className={classes.heroCenterMobileBadge}>
               <Box className={classes.heroCenterMobileDot} />
               <Typography className={classes.heroCenterMobileLive}>LIVE</Typography>
             </Box>
           </Box>
           <Box className={classes.heroCenter}>
-            <Typography className={classes.heroCenterTitle}>OPERATIONS HUB</Typography>
+            <Typography className={classes.heroCenterTitle}>SALES TEAM</Typography>
             <Box className={classes.heroCenterBadge}>
               <Box className={classes.heroCenterDot} />
               <Typography className={classes.heroCenterLive}>Live Tracking Activity</Typography>
             </Box>
             <Typography className={classes.heroCenterFacilities}>
-              WTG Turbines · Sub Stations · Transmission Lines
+              Sprints · Tickets · Incidents · Team Workflows
             </Typography>
           </Box>
           <Box className={classes.heroRight}>
@@ -775,35 +769,35 @@ const Dashboard = () => {
               bg: 'rgba(79,70,229,0.12)',
               border: 'rgba(79,70,229,0.3)',
               value: turbineData.length,
-              label: 'Total Turbines',
+              label: 'Team Members',
             },
             {
               icon: <PlayArrowIcon sx={{ color: '#10b981', fontSize: 20 }} />,
               bg: 'rgba(16,185,129,0.12)',
               border: 'rgba(16,185,129,0.3)',
               value: runningCount,
-              label: 'Running',
+              label: 'Sprint Number',
             },
             {
               icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
               bg: 'rgba(245,158,11,0.12)',
               border: 'rgba(245,158,11,0.3)',
               value: fmtVal(totalPower),
-              label: 'Active Power (kW)',
+              label: 'Total Tickets',
             },
             {
               icon: <SpeedIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
               bg: 'rgba(139,92,246,0.12)',
               border: 'rgba(139,92,246,0.3)',
               value: fmtVal(totalGeneration, 0),
-              label: 'Today Gen (kWh)',
+              label: 'Total Incidents',
             },
             {
               icon: <AirIcon sx={{ color: '#3b82f6', fontSize: 20 }} />,
               bg: 'rgba(59,130,246,0.12)',
               border: 'rgba(59,130,246,0.3)',
               value: avgWindSpeed,
-              label: 'Avg Wind (m/s)',
+              label: 'Total In-Progress',
             },
             {
               icon: (
@@ -812,7 +806,7 @@ const Dashboard = () => {
               bg: faultCount > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)',
               border: faultCount > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)',
               value: faultCount,
-              label: 'Faults',
+              label: 'Total in-Review',
               valueColor: faultCount > 0 ? '#ef4444' : '#10b981',
             },
             {
@@ -822,8 +816,18 @@ const Dashboard = () => {
               bg: maintCount > 0 ? 'rgba(245,158,11,0.12)' : 'rgba(107,114,128,0.12)',
               border: maintCount > 0 ? 'rgba(245,158,11,0.3)' : 'rgba(107,114,128,0.3)',
               value: maintCount,
-              label: 'Maintenance',
+              label: 'Total In-Test',
               valueColor: maintCount > 0 ? '#f59e0b' : '#6b7280',
+            },
+            {
+              icon: (
+                <CheckCircleIcon sx={{ color: doneCount > 0 ? '#10b981' : '#6b7280', fontSize: 20 }} />
+              ),
+              bg: doneCount > 0 ? 'rgba(16,185,129,0.12)' : 'rgba(107,114,128,0.12)',
+              border: doneCount > 0 ? 'rgba(16,185,129,0.3)' : 'rgba(107,114,128,0.3)',
+              value: doneCount,
+              label: 'Total Done',
+              valueColor: doneCount > 0 ? '#10b981' : '#6b7280',
             },
           ].map(({ icon, bg, border, value, label, valueColor }) => (
             <Paper key={label} className={classes.statCard} elevation={0}>
@@ -855,7 +859,7 @@ const Dashboard = () => {
               onClick={() => setView('table')}
               className={view === 'table' ? classes.toggleBtnActive : classes.toggleBtnInactive}
             >
-              Fleet Overview
+              Ticket Overview
             </Button>
 
             <Button
@@ -898,9 +902,9 @@ const Dashboard = () => {
 
           {view === 'table' && (
             <TextField
-              placeholder='Search turbines…'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              placeholder='Search tickets…'
+              value={ticketSearch}
+              onChange={(e) => setTicketSearch(e.target.value)}
               size='small'
               className={classes.toolbarSearch}
               slotProps={{
@@ -1130,14 +1134,14 @@ const Dashboard = () => {
         {/* ── Content ── */}
         {view === 'table' ? (
           <DataTable
-            columns={columns}
-            data={filteredTurbines}
+            columns={ticketColumns}
+            data={filteredTickets}
             rowKey='id'
             searchable={false}
             initialRowsPerPage={10}
             onRowClick={(row) => {
-              const t = row as TurbineData;
-              navigate(AdminPath.TURBINE_DETAIL.replace(':id', String(t.id)));
+              const t = row as Ticket;
+              navigate(AdminPath.TICKET_DETAIL.replace(':id', encodeURIComponent(t.issueNo)));
             }}
           />
         ) : view === 'chart' ? (

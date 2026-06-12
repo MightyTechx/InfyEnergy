@@ -390,7 +390,7 @@ const GeneralTab = ({ classes }: { classes: Record<string, string> }) => (
             {
               title: 'Platform Name',
               desc: 'The name displayed across the admin panel and emails.',
-              value: 'InfyGen Admin',
+              value: 'SprintPulse Admin',
             },
             {
               title: 'Support Email',

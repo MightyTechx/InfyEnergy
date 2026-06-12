@@ -242,7 +242,7 @@ export type FeatureFlagGroupByOutputType = {
   _max: FeatureFlagMaxAggregateOutputType | null
 }
 
-type GetFeatureFlagGroupByPayload<T extends FeatureFlagGroupByArgs> = Prisma.PrismaPromise<
+export type GetFeatureFlagGroupByPayload<T extends FeatureFlagGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FeatureFlagGroupByOutputType, T['by']> &
       {
@@ -1175,6 +1175,11 @@ export type FeatureFlagFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` FeatureFlags.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of FeatureFlags.
+   */
   distinct?: Prisma.FeatureFlagScalarFieldEnum | Prisma.FeatureFlagScalarFieldEnum[]
 }
 

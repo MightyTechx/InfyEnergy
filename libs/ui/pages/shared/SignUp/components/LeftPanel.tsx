@@ -20,12 +20,12 @@ const TurbineSVG = ({ className }: { className?: string }) => (
 );
 
 const FEATURES = [
-  { label: 'SCADA Monitoring' },
-  { label: 'Real-Time Wind Tracking' },
-  { label: 'Grid Integration' },
-  { label: 'Predictive Maintenance' },
-  { label: 'Energy Analytics' },
-  { label: 'Fleet Lifecycle Management' },
+  { label: 'Sprint Planning' },
+  { label: 'Ticket & Issue Tracking' },
+  { label: 'Defect Management' },
+  { label: 'Team Workflows' },
+  { label: 'Agile Boards' },
+  { label: 'Project Collaboration' },
 ];
 
 interface LeftPanelProps {
@@ -42,22 +42,19 @@ const LeftPanel = ({ classes, onNavigateSignIn }: LeftPanelProps) => {
       <Box className={classes.circle3} />
 
       <Box className={classes.logoContainer}>
-        <Box component='span' className={classes.brandIcon}>
-          <TurbineSVG />
-        </Box>
         <Typography component='span' className={classes.brandTitle}>
           {metadata.tenet}
         </Typography>
       </Box>
 
       <Typography variant='h4' fontWeight={700} className={classes.heroHeading}>
-        Wind Energy
+        Agile Project
         <br />
-        Intelligence System
+        Management
       </Typography>
       <Typography className={classes.heroSubtitle}>
-        Join the {metadata.tenet} intelligence system for centralized wind farm monitoring, SCADA
-        integration, and predictive analytics.
+        Join {metadata.tenet} to plan sprints, track tickets, manage defects, and streamline your
+        team's Agile development workflows.
       </Typography>
 
       {FEATURES.map(({ label }) => (

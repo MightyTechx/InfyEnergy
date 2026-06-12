@@ -2,11 +2,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import BuildIcon from '@mui/icons-material/Build';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import { constants } from '@infygen/utils';
 import { useGetFeatureFlagsQuery } from '@infygen/services';
@@ -28,7 +25,6 @@ export const NAV_FLAG_KEYS = {
   ANALYTICS: 'nav_analytics',
   FEATURE_FLAGS: 'nav_feature_flags',
   REPORTS: 'nav_reports',
-  INVENTORY: 'nav_inventory',
   TECHNICAL_DOCUMENTS: 'nav_technical_documents',
 } as const;
 
@@ -50,7 +46,6 @@ const useNavFeatureFlags = () => {
     showAnalytics: isConsultantEnabled(NAV_FLAG_KEYS.ANALYTICS),
     showFeatureFlags: isConsultantEnabled(NAV_FLAG_KEYS.FEATURE_FLAGS),
     showReports: isConsultantEnabled(NAV_FLAG_KEYS.REPORTS),
-    showInventory: isConsultantEnabled(NAV_FLAG_KEYS.INVENTORY),
     showTechnicalDocuments: isConsultantEnabled(NAV_FLAG_KEYS.TECHNICAL_DOCUMENTS),
   };
 };
@@ -65,16 +60,13 @@ export const useAdminMenuItems = (): MenuGroup[] => {
         { label: 'People Management', icon: <PeopleIcon />, path: AdminPath.ACCESS_MANAGEMENT },
         { label: 'Operations Management', icon: <EngineeringIcon />, path: AdminPath.OPERATIONS },
         { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
-        { label: 'Inventory Management', icon: <InventoryIcon />, path: AdminPath.INVENTORY },
         {
           label: 'Technical Documents',
           icon: <DescriptionIcon />,
           path: AdminPath.TECHNICAL_DOCUMENTS,
         },
-        // { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
         { label: 'Feature Flags', icon: <TuneIcon />, path: AdminPath.FEATURE_FLAGS },
-        { label: 'Turbine Config', icon: <BuildIcon />, path: AdminPath.TURBINE_CONFIG },
-        { label: 'Configuration', icon: <ManageAccountsIcon />, path: AdminPath.CONFIGURATION },
+        // { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
       ],
     },
   ];
@@ -87,7 +79,6 @@ export const useConsultantMenuItems = (): MenuGroup[] => {
     showAnalytics,
     showFeatureFlags,
     showReports,
-    showInventory,
     showTechnicalDocuments,
   } = useNavFeatureFlags();
 
@@ -108,14 +99,6 @@ export const useConsultantMenuItems = (): MenuGroup[] => {
       label: 'Generation Reports',
       icon: <AssessmentIcon />,
       path: ConsultantPath.REPORTS,
-    });
-  }
-
-  if (showInventory) {
-    items.push({
-      label: 'Inventory Management',
-      icon: <InventoryIcon />,
-      path: ConsultantPath.INVENTORY,
     });
   }
 

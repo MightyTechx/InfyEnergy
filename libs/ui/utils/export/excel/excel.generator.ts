@@ -227,7 +227,7 @@ export function generateExcelReport(
   // Sheet 3: Report Info
   // ========================
   const infoData = [
-    ['InfyGen Wind Energy Report'],
+    ['SprintPulse Wind Energy Report'],
     [],
     ['Report Name:', metadata.reportName],
     ['Turbine:', metadata.turbine],
@@ -244,7 +244,7 @@ export function generateExcelReport(
   const cleanReportName = metadata.reportName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
   const cleanFromDate = metadata.fromDate.replace(/\//g, '-');
   const cleanToDate = metadata.toDate.replace(/\//g, '-');
-  const fileName = `InfyGen_${cleanReportName}_${cleanFromDate}_to_${cleanToDate}.xlsx`;
+  const fileName = `SprintPulse_${cleanReportName}_${cleanFromDate}_to_${cleanToDate}.xlsx`;
 
   const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const blob = new Blob([wbout], {

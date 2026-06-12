@@ -1,4 +1,4 @@
-# InfyGen — Admin & ITSM Portal
+# SprintPulse — Admin & ITSM Portal
 
 A full-stack IT Service Management platform for energy companies, built as a Nx monorepo with a React/MUI frontend, Express/Prisma backend, and multi-tenant support.
 
@@ -35,7 +35,7 @@ A full-stack IT Service Management platform for energy companies, built as a Nx 
 
 ## Overview
 
-InfyGen is an enterprise admin and IT service management portal built for energy-sector organisations. It provides user lifecycle management, role-based access control, consultant onboarding workflows, and an analytics dashboard — all in a responsive React interface backed by a Node/Express REST API.
+SprintPulse is an enterprise admin and IT service management portal built for energy-sector organisations. It provides user lifecycle management, role-based access control, consultant onboarding workflows, and an analytics dashboard — all in a responsive React interface backed by a Node/Express REST API.
 
 ### Key Principles
 
@@ -110,7 +110,7 @@ InfyGen is an enterprise admin and IT service management portal built for energy
 ## Project Structure
 
 ```
-InfyGen/
+SprintPulse/
 │
 ├── gateways/                        # Backend (Express API)
 │   ├── api/
@@ -191,7 +191,7 @@ InfyGen/
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd InfyGen
+cd SprintPulse
 
 # Install all dependencies
 npm install
@@ -248,7 +248,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-SMTP_FROM=InfyGen <noreply@infygen.tech>
+SMTP_FROM=SprintPulse <noreply@infygen.tech>
 
 # CORS
 CORS_ORIGIN=http://localhost:1600
@@ -482,7 +482,7 @@ Authorization: Bearer <jwt-token>
 
 Configured via `render.yaml`:
 
-- **Service:** `InfyGen-api`
+- **Service:** `SprintPulse-api`
 - **Region:** Oregon
 - **Build:** `npm run prisma:generate && npm run build:backend`
 - **Start:** `npx tsx gateways/src/index.ts`
@@ -499,8 +499,8 @@ Configured via `vercel.json`:
 ### Docker
 
 ```bash
-docker build -t InfyGen .
-docker run -p 3001:3001 --env-file .env InfyGen
+docker build -t SprintPulse .
+docker run -p 3001:3001 --env-file .env SprintPulse
 ```
 
 ---

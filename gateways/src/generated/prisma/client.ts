@@ -62,16 +62,6 @@ export type LoginLog = Prisma.LoginLogModel
  */
 export type FeatureFlag = Prisma.FeatureFlagModel
 /**
- * Model TurbineType
- * 
- */
-export type TurbineType = Prisma.TurbineTypeModel
-/**
- * Model TurbineParameter
- * 
- */
-export type TurbineParameter = Prisma.TurbineParameterModel
-/**
  * Model UserPreference
  * 
  */

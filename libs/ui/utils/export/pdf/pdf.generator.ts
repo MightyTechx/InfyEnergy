@@ -49,7 +49,7 @@ const buildFooter: DynamicContent = (currentPage: number, pageCount: number): Co
   return {
     columns: [
       {
-        text: 'InfyGen Wind Energy Management System',
+        text: 'SprintPulse Wind Energy Management System',
         fontSize: 8,
         color: PDF_COLORS.textLight,
         alignment: 'left',
@@ -93,7 +93,7 @@ function buildDocDefinition(
     },
     info: {
       title: `${metadata.reportName} - ${metadata.turbine}`,
-      author: 'InfyGen',
+      author: 'SprintPulse',
       subject: 'Wind Energy Report',
       keywords: 'wind turbine, energy, generation, report',
     },
@@ -106,7 +106,7 @@ function generateFileName(metadata: ReportMetadata, extension: string): string {
     metadata.reportName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') || 'Report';
   const cleanFromDate = metadata.fromDate.replace(/\//g, '-') || '01-01-2026';
   const cleanToDate = metadata.toDate.replace(/\//g, '-') || '01-01-2026';
-  return `InfyGen_${cleanReportName}_${cleanFromDate}_to_${cleanToDate}.${extension}`;
+  return `SprintPulse_${cleanReportName}_${cleanFromDate}_to_${cleanToDate}.${extension}`;
 }
 
 // Generate PDF document

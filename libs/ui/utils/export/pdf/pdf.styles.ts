@@ -1,4 +1,4 @@
-// PDF styling constants matching InfyGen brand
+// PDF styling constants matching SprintPulse brand
 
 export const PDF_COLORS = {
   // Primary brand colors

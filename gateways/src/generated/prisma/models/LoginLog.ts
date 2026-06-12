@@ -210,7 +210,7 @@ export type LoginLogGroupByOutputType = {
   _max: LoginLogMaxAggregateOutputType | null
 }
 
-type GetLoginLogGroupByPayload<T extends LoginLogGroupByArgs> = Prisma.PrismaPromise<
+export type GetLoginLogGroupByPayload<T extends LoginLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<LoginLogGroupByOutputType, T['by']> &
       {
@@ -1057,6 +1057,11 @@ export type LoginLogFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` LoginLogs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of LoginLogs.
+   */
   distinct?: Prisma.LoginLogScalarFieldEnum | Prisma.LoginLogScalarFieldEnum[]
 }
 

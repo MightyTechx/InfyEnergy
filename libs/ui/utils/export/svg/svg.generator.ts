@@ -222,7 +222,7 @@ export function generateSvgExport(
   <rect x="0" y="0" width="${width}" height="85" fill="url(#headerGrad)" />
 
   <!-- Company Name -->
-  <text x="40" y="38" class="title">InfyGen</text>
+  <text x="40" y="38" class="title">SprintPulse</text>
   <text x="40" y="58" class="subtitle" style="fill: rgba(255,255,255,0.9);">Wind Energy Management</text>
 
   <!-- Report Info -->
@@ -246,7 +246,7 @@ export function generateSvgExport(
 
   <!-- Footer Text -->
   <text x="40" y="${height - 18}" class="date">Turbine: ${escapeXml(metadata.turbine)}</text>
-  <text x="${width - 40}" y="${height - 18}" text-anchor="end" class="date">InfyGen Wind Energy Management System</text>
+  <text x="${width - 40}" y="${height - 18}" text-anchor="end" class="date">SprintPulse Wind Energy Management System</text>
 </svg>`;
 
   // Create blob and download
@@ -254,7 +254,7 @@ export function generateSvgExport(
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `InfyGen_${metadata.reportName.replace(/\s+/g, '_')}_${metadata.fromDate.replace(/\//g, '-')}.svg`;
+  link.download = `SprintPulse_${metadata.reportName.replace(/\s+/g, '_')}_${metadata.fromDate.replace(/\//g, '-')}.svg`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

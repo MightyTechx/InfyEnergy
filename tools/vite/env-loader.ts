@@ -10,7 +10,7 @@ interface PartnerConfig {
 
 export function loadPartnerEnv(root: string): PartnerConfig {
   const partner = process.env.PARTNER;
-  const apiUrl = process.env.API_URL || 'http://localhost:3001';
+  const apiUrl = process.env.API_URL || 'http://localhost:3600';
   const envDir = path.join(root, 'env', 'src');
 
   if (partner) {

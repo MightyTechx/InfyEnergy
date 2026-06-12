@@ -6,6 +6,9 @@ export const LazyMenuItems = {
   AdminTurbineDetailPage: lazy(() =>
     import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.TurbineDetailPage })),
   ),
+  AdminTicketDetailPage: lazy(() =>
+    import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.TicketDetailPage })),
+  ),
   AdminFleetStatusMatrixPage: lazy(() =>
     import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.FleetStatusMatrixPage })),
   ),
@@ -13,13 +16,9 @@ export const LazyMenuItems = {
   AdminUserDetailPage: lazy(() => import('@infygen/pages/admin/People/UserDetail')),
   AdminProfilePage: lazy(() => import('@infygen/pages/shared/Profile')),
   AdminReportsPage: lazy(() => import('@infygen/pages/admin/Reports')),
-  AdminInventoryPage: lazy(() => import('@infygen/pages/admin/Inventory')),
   AdminTechnicalDocumentsPage: lazy(() => import('@infygen/pages/admin/TechnicalDocuments')),
-  AdminFeatureFlagsPage: lazy(() => import('@infygen/pages/admin/FeatureFlags')),
-  AdminTurbineConfigPage: lazy(() => import('@infygen/pages/admin/TurbineConfig')),
   SettingsPage: lazy(() => import('@infygen/pages/shared/Settings')),
   HelpSupportPage: lazy(() => import('@infygen/pages/shared/HelpSupport')),
-  AdminConfigurationPage: lazy(() => import('@infygen/pages/admin/Configuration')),
   AdminOperationsPage: lazy(() => import('@infygen/pages/admin/Operations')),
   AdminCreateOperationsPage: lazy(
     () => import('@infygen/pages/admin/Operations/components/CreateOperations'),

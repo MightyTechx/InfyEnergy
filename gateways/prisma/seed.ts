@@ -134,7 +134,7 @@ async function clearAndSeed() {
   console.log('Existing data cleared.');
 
   // Seed default users (admin, user, consultant)
-  const adminPassword = await bcrypt.hash('Srinivas@InfyGen123', 10);
+  const adminPassword = await bcrypt.hash('Srinivas@SprintPulse123', 10);
   const userPassword = await bcrypt.hash('user123', 10);
   const consultantPassword = await bcrypt.hash('consultant123', 10);
 
@@ -242,9 +242,7 @@ async function clearAndSeed() {
     INSERT INTO "FeatureFlag" ("name", "key", "description", "environment", "status", "roles", "createdAt", "updatedAt") VALUES
       ('People Management', 'nav_people_management', 'Enable people management for consultants', 'Development', 'Enabled', '["Admin","Consultant"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
       ('Analytics', 'nav_analytics', 'Enable analytics dashboard for consultants', 'Development', 'Disabled', '["Admin"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      ('Feature Flags UI', 'nav_feature_flags', 'Enable feature flags page for consultants', 'Development', 'Enabled', '["Admin","Consultant"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
       ('Reports', 'nav_reports', 'Enable generation reports for consultants', 'Development', 'Disabled', '["Admin"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      ('Inventory Management', 'nav_inventory', 'Enable inventory management for consultants', 'Development', 'Disabled', '["Admin"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
       ('Technical Documents', 'nav_technical_documents', 'Enable technical documents for consultants', 'Development', 'Disabled', '["Admin"]', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
   `);
 

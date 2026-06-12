@@ -23,8 +23,9 @@ export class ChatAIController {
       // If no API key, return fallback response
       if (!this.genAI) {
         res.json({
-          response: "AI chat is not configured. Please set the GEMINI_API_KEY in your environment variables to enable the AI assistant.",
-          suggestions: ['Turbine status', 'Power generation', 'Maintenance schedule']
+          response:
+            'AI chat is not configured. Please set the GEMINI_API_KEY in your environment variables to enable the AI assistant.',
+          suggestions: ['Turbine status', 'Power generation', 'Maintenance schedule'],
         });
         return;
       }
@@ -34,7 +35,8 @@ export class ChatAIController {
 
       // Add previous messages as context
       if (history && Array.isArray(history) && history.length > 0) {
-        for (const msg of history.slice(-10)) { // Last 10 messages for context
+        for (const msg of history.slice(-10)) {
+          // Last 10 messages for context
           contents.push({
             role: msg.isUser ? 'user' : 'model',
             parts: [{ text: msg.text }],
@@ -53,13 +55,12 @@ export class ChatAIController {
         model: this.modelName,
         contents,
         config: {
-          systemInstruction: `You are an expert AI assistant for InfyGen Operations Hub, a wind turbine monitoring and energy management system. You help users with:
+          systemInstruction: `You are an expert AI assistant for Sprint Pulse Operations Hub, a wind turbine monitoring and energy management system. You help users with:
 
 - Wind turbine operations and monitoring
 - Power generation analytics
 - SCADA parameters and real-time data
 - Maintenance schedules and troubleshooting
-- Inventory management for spare parts
 - Reports and business intelligence
 
 Be concise, informative, and helpful. Use emojis sparingly for better readability. When discussing turbine parameters, include specific details like units (kW, m/s, RPM, etc.).`,
@@ -79,7 +80,7 @@ Be concise, informative, and helpful. Use emojis sparingly for better readabilit
       console.error('ChatAI error:', error);
       res.status(500).json({
         message: 'Failed to generate AI response',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   };
@@ -95,8 +96,6 @@ Be concise, informative, and helpful. Use emojis sparingly for better readabilit
       suggestions.push('Power analytics', 'Generation report', 'Energy efficiency');
     } else if (msg.includes('maintenance') || msg.includes('maintain')) {
       suggestions.push('Maintenance schedule', 'Spare parts', 'Service history');
-    } else if (msg.includes('inventory') || msg.includes('stock') || msg.includes('parts')) {
-      suggestions.push('Current stock', 'Low inventory alerts', 'Order parts');
     } else if (msg.includes('report') || msg.includes('analytics')) {
       suggestions.push('Daily report', 'Weekly summary', 'Export data');
     } else if (msg.includes('troubleshoot') || msg.includes('error') || msg.includes('fault')) {
@@ -105,7 +104,7 @@ Be concise, informative, and helpful. Use emojis sparingly for better readabilit
       suggestions.push('System overview', 'Navigation guide', 'Feature list');
     } else {
       // Default suggestions
-      suggestions.push('Turbine status', 'Power generation', 'Maintenance', 'Inventory');
+      suggestions.push('Turbine status', 'Power generation', 'Maintenance');
     }
 
     return suggestions.slice(0, 4);

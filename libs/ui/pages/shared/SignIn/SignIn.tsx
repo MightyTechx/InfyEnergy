@@ -38,7 +38,7 @@ const SignIn = () => {
               Welcome back
             </Typography>
             <Typography variant='body2' color='text.secondary' className={classes.formSubtitle}>
-              Sign in to your InfyGen account
+              Sign in to your Sprint Pulse account
             </Typography>
 
             <form onSubmit={formik.handleSubmit} noValidate>

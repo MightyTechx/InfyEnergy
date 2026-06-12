@@ -42,9 +42,6 @@ const LeftPanel = ({ stepIndex, classes, onNavigateSignIn }: LeftPanelProps) => 
       <Box className={classes.circle3} />
 
       <Box className={classes.logoContainer}>
-        <Box component='span' className={classes.brandIcon}>
-          <TurbineSVG />
-        </Box>
         <Typography component='span' className={classes.brandTitle}>
           {metadata.tenet}
         </Typography>
@@ -56,7 +53,8 @@ const LeftPanel = ({ stepIndex, classes, onNavigateSignIn }: LeftPanelProps) => 
         Recovery
       </Typography>
       <Typography className={classes.heroSubtitle}>
-        Regain secure access to your {metadata.tenet} wind monitoring platform in just a few steps.
+        Regain secure access to your {metadata.tenet} Agile project management workspace in just a
+        few steps.
       </Typography>
 
       {LEFT_STEPS.map((s, i) => (

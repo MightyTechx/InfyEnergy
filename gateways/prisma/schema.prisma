@@ -115,66 +115,6 @@ model FeatureFlag {
   updatedAt   DateTime @updatedAt
 }
 
-// ─── Wind Turbine Configuration Models ─────────────────────────────────────────
-
-model TurbineType {
-  id            String   @id @default(cuid())
-  name          String
-  manufacturer  String
-  ratedPower    Float
-  rotorDiameter Float?
-  hubHeight     Float?
-  parameters    TurbineParameter[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@index([manufacturer])
-  @@index([name])
-}
-
-model TurbineParameter {
-  id               String      @id @default(cuid())
-  turbineTypeId     String
-  turbineType      TurbineType @relation(fields: [turbineTypeId], references: [id], onDelete: Cascade)
-
-  // Identification
-  key              String
-  label            String
-  category         String  // electrical | mechanical | environmental | operational
-  unit             String  // m/s, kW, rpm, °C, bar, %
-
-  // Data Configuration
-  dataType         String  @default("number")  // number | boolean | enum
-
-  // Value Ranges
-  minValue         Float?
-  maxValue         Float?
-
-  // Alert Thresholds
-  warningMin       Float?
-  warningMax       Float?
-  criticalMin      Float?
-  criticalMax      Float?
-
-  // Display Settings
-  chartEnabled     Boolean @default(true)
-  dashboardVisible Boolean @default(true)
-  alertEnabled     Boolean @default(true)
-  alertSeverity    String  @default("warning")  // warning | critical
-
-  // Styling & Mapping
-  color            String?
-  scadaMapping     String?  // OPC-UA: turbine.wind.speed
-  displayOrder     Int      @default(0)
-
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  @@index([turbineTypeId])
-  @@index([key])
-  @@index([category])
-}
-
 // ─── User Preferences ──────────────────────────────────────────────────────────
 
 model UserPreference {

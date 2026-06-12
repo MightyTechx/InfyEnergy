@@ -279,17 +279,17 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   // Stats Row
   statsRow: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(7, 1fr)',
+    gridTemplateColumns: 'repeat(8, 1fr)',
     gap: theme.spacing(1.5),
     marginBottom: theme.spacing(3),
     [theme.breakpoints.down('xl')]: {
       gridTemplateColumns: 'repeat(4, 1fr)',
     },
     [theme.breakpoints.down('lg')]: {
-      gridTemplateColumns: 'repeat(3, 1fr)',
+      gridTemplateColumns: 'repeat(4, 1fr)',
     },
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'repeat(3, 1fr)',
+      gridTemplateColumns: 'repeat(2, 1fr)',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',

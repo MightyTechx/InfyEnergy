@@ -5,14 +5,19 @@ import * as dns from 'dns';
 import path from 'path';
 import fs from 'fs';
 
-// Force all DNS lookups to IPv4 — Render free tier blocks outbound IPv6
-dns.setDefaultResultOrder('ipv4first');
+// DNS resolution order: try the addresses in whatever order the OS returns them.
+// The current Supabase project (db.kpbyogndzjptqcpmoaxw.supabase.co) only publishes
+// an IPv6 (AAAA) record, so we must allow IPv6 to be used.
+dns.setDefaultResultOrder('verbatim');
 
-function resolveHostIPv4(host: string): Promise<string> {
+function resolveHost(host: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    dns.lookup(host, { family: 4 }, (err, address) => {
-      if (err) reject(err);
-      else resolve(address);
+    dns.lookup(host, { all: true }, (err, addresses) => {
+      if (err || !addresses || addresses.length === 0) {
+        reject(err ?? new Error(`No DNS records for ${host}`));
+        return;
+      }
+      resolve(addresses[0].address);
     });
   });
 }
@@ -98,8 +103,8 @@ async function getPrisma(): Promise<PrismaClient> {
     const parsed = parseDbUrl(dbUrl);
     if (process.env.DB_PASSWORD) parsed.password = process.env.DB_PASSWORD;
 
-    // Resolve hostname to IPv4 address before connecting
-    const resolvedHost = await resolveHostIPv4(parsed.host);
+    // Resolve hostname to a connectable IP (preferring whatever the OS / DNS returns)
+    const resolvedHost = await resolveHost(parsed.host);
 
     const pool = new Pool({
       ...parsed,
